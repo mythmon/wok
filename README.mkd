@@ -20,8 +20,8 @@ Content is written as Markdown formatted text (parsed with [Python Markdown][mkd
  -  Type - Used to determine the template to use. If none is specified the template `default` is used.
 
 ### Planned metadata
- -  Date - Published date in [ISO8601][8601] format
- -  Author - In "My Name <my@email.com>" format.
+ -  Date - Published date in [ISO8601][8601] format (ie: `2011-02-17T14:31`)
+ -  Author - In `My Name <my@email.com>` format.
  -  Category - Including sub categories
  -  Published status - To exclude some pages, but not remove them entirely.
 
