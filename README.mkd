@@ -1,0 +1,47 @@
+Wok
+===
+
+Wok is a static website generator. It takes a pile of layout, templates, and content and turns it into a neat stack of plain html.
+
+The idea is that you don't need a big php engine generating every page every page visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repo containing your content or layout.
+
+Content
+-------
+Content is written as Markdown formatted text (parsed with [Python Markdown][mkd]) with a YAML header, seperated by 3 hyphens alone on a line.
+
+    title: Sample Post
+    ---
+    The content of the page.
+
+    There isn't much here.
+
+### Metadata
+ -  Title - The title of the page.
+ -  Type - Used to determine the template to use. If none is specified the template `default` is used.
+
+### Planned metadata
+ -  Date - Published date in [ISO8601][8601] format
+ -  Author - In "My Name <my@email.com>" format.
+ -  Category - Including sub categories
+ -  Published status - To exclude some pages, but not remove them entirely.
+
+[mkd]: http://www.freewisdom.org/projects/python-markdown/
+[8601]: http://en.wikipedia.org/wiki/ISO_8601
+
+Templates
+---------
+This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in the templates directory.
+
+### Available variables
+ -  Title
+ -  Content
+### Planned
+ -  Author
+ -  Date
+ -  Category
+
+[jinja]: http://jinja.pocoo.org/
+
+Features
+--------
+ -  Parse markdown files, and render them to a flat set of HTML files based on the given templates.
