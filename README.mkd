@@ -21,7 +21,7 @@ Content is written as Markdown formatted text (parsed with [Python Markdown][mkd
 ### Planned metadata
  -  Date - Published date in [ISO8601][8601] format (ie: `2011-02-17T14:31`)
  -  Author - In `My Name <my@email.com>` format.
- -  Category - Including sub categories
+ -  Category - Including sub categories. `projects/wok/docs`.
  -  Published status - To exclude some pages, but not remove them entirely.
  -  Slug - Name for URLs, usually automatically generated from the title.
 
@@ -32,7 +32,7 @@ Templates
 ---------
 This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in the templates directory.
 
-### Available variables
+### Processed Variables
  -  Title
  -  Content
 
@@ -40,6 +40,8 @@ This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$t
  -  Author
  -  Date
  -  Category
+
+Additionally, any variables defined in the metadata of each page that are not recognized will be passed unproccessed to the template engine.
 
 [jinja]: http://jinja.pocoo.org/
 
