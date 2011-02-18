@@ -3,10 +3,8 @@
 import sys
 import os
 import markdown
-import re
 import jinja2
 import yaml
-from unicodedata import normalize
 
 import util
 
@@ -34,9 +32,10 @@ class Page(object):
             if not 'title' in self.meta:
                 self.meta['title'] = re.match(r'^(.*)\.mkd$', filename).group(1)
                 util.out.warn('meta', 'You didn\'t specify a title, using the file name.')
+
             if not 'slug' in self.meta:
                 self.meta['slug'] = util.slugify(self.meta['title'])
-                util.out.debug('meta', 'You didn\'t specify a title, using the file name.')
+                util.out.debug('meta', 'You didn\'t specify a slug, generating it from the title.')
             elif meta['slug'] != util.slugify(self.meta['slug']):
                 util.out.warn('meta', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
 
