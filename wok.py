@@ -19,7 +19,7 @@ class Page(object):
         self.meta = {}
 
         self.path = path
-        dir, filename = os.path.split(path)
+        _, self.filename = os.path.split(path)
 
         with open(path) as f:
             self.original = f.read()
@@ -29,17 +29,19 @@ class Page(object):
             self.content = markdown.markdown(self.original)
             self.meta = yaml.load(header)
 
-            if not 'title' in self.meta:
-                self.meta['title'] = re.match(r'^(.*)\.mkd$', filename).group(1)
-                util.out.warn('meta', 'You didn\'t specify a title, using the file name.')
-
-            if not 'slug' in self.meta:
-                self.meta['slug'] = util.slugify(self.meta['title'])
-                util.out.debug('meta', 'You didn\'t specify a slug, generating it from the title.')
-            elif meta['slug'] != util.slugify(self.meta['slug']):
-                util.out.warn('meta', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
-
+        self.build_meta()
         self.render()
+
+    def build_meta(self):
+        if not 'title' in self.meta:
+            self.meta['title'] = re.match(r'^(.*)\.mkd$', self.filename).group(1)
+            util.out.warn('metadata', 'You didn\'t specify a title, using the file name.')
+
+        if not 'slug' in self.meta:
+            self.meta['slug'] = util.slugify(self.meta['title'])
+            util.out.debug('metadata', 'You didn\'t specify a slug, generating it from the title.')
+        elif self.meta['slug'] != util.slugify(self.meta['slug']):
+            util.out.warn('metadata', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
 
     def render(self):
         type = self.meta.get('type', 'default')
