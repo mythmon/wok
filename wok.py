@@ -6,6 +6,7 @@ import markdown
 import re
 import jinja2
 import yaml
+from unicodedata import normalize
 
 tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 
@@ -19,7 +20,6 @@ class Page(object):
 
         self.path = path
         dir, filename = os.path.split(path)
-        self.name = re.match(r'^(.*)\.mkd$', filename).group(1)
 
         with open(path) as f:
             self.original = f.read()
@@ -28,6 +28,15 @@ class Page(object):
             self.original = splits[1]
             self.content = markdown.markdown(self.original)
             self.meta = yaml.load(header)
+
+            if not 'title' in self.meta:
+                self.meta['title'] = re.match(r'^(.*)\.mkd$', filename).group(1)
+                wok_out.warn('meta', 'You didn\'t specify a title, using the file name.')
+            if not 'slug' in self.meta:
+                self.meta['slug'] = slugify(self.meta['title'])
+                wok_out.debug('meta', 'You didn\'t specify a title, using the file name.')
+            elif meta['slug'] != slugify(self.meta['slug']):
+                wok_out.warn('meta', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
 
         self.render()
 
@@ -42,14 +51,22 @@ class Page(object):
         }
         self.html = template.render(templ_vars)
 
-    def write(self, dir, filename=None):
-        if filename == None:
-            filename = self.name + '.html'
+    def write(self, dir):
+        filename = self.meta['slug'] + '.html'
         with open(os.path.join(dir, filename), 'w') as f:
             f.write(self.html)
 
-def main():
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+def slugify(text, delim=u'-'):
+    """Generates a ASCII-only slug."""
+    result = []
+    for word in _punct_re.split(text.lower()):
+        word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
+        if word:
+            result.append(word)
+    return unicode(delim.join(result))
 
+def main():
     if not os.path.isdir('output'):
         os.mkdir('output')
 
