@@ -5,6 +5,8 @@ import os
 import markdown
 import jinja2
 import yaml
+from collections import namedtuple
+import re
 
 import util
 
@@ -42,6 +44,12 @@ class Page(object):
             util.out.debug('metadata', 'You didn\'t specify a slug, generating it from the title.')
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
             util.out.warn('metadata', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
+
+        if 'author' in self.meta:
+            Author = namedtuple('Author', ['raw', 'name', 'email'])
+            # Grab a name and maybe an email
+            parsed = re.match(r'([^<>]*)( +<(.*@.*)>)$', self.meta['author'])
+            self.meta['author'] = Author(self.meta['author'], parsed.group(1), parsed.group(3))
 
     def render(self):
         type = self.meta.get('type', 'default')
