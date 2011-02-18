@@ -8,9 +8,11 @@ import jinja2
 import yaml
 from unicodedata import normalize
 
-tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+import wok_out
 
 class Page(object):
+
+    tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
 
     def __init__(self, path):
         self.header = None
@@ -42,13 +44,11 @@ class Page(object):
 
     def render(self):
         type = self.meta.get('type', 'default')
-        template = tmpl_env.get_template(type + '.html')
+        template = Page.tmpl_env.get_template(type + '.html')
         templ_vars = {
-            'page': {
-                'content': self.content,
-                'title': self.meta['title'],
-            }
+            'page': { 'content': self.content, }
         }
+        templ_vars['page'].update(self.meta)
         self.html = template.render(templ_vars)
 
     def write(self, dir):
