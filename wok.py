@@ -35,22 +35,34 @@ class Page(object):
         self.build_meta()
         self.render()
 
+    remove_mkd = re.compile(r'^(.*)\.mkd$')
     def build_meta(self):
         if not 'title' in self.meta:
-            self.meta['title'] = re.match(r'^(.*)\.mkd$', self.filename).group(1)
-            util.out.warn('metadata', 'You didn\'t specify a title, using the file name.')
+            self.meta['title'] = remove_mkd.match(self.filename).group(1)
+            util.out.warn('metadata',
+                "You didn't specify a title in  {0}. Using the file name as a title."
+                .format(self.filename))
+        # Guranteed: title exists.
 
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
-            util.out.debug('metadata', 'You didn\'t specify a slug, generating it from the title.')
+            util.out.debug('metadata',
+                'You didn\'t specify a slug, generating it from the title.')
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
-            util.out.warn('metadata', 'Your slug should probably be all lower case, and match the regex "[a-z0-9-]*"')
+            util.out.warn('metadata',
+                'Your slug should probably be all lower case,' +
+                'and match the regex "[a-z0-9-]*"')
+        # Guranteed: slug exists.
 
+        Author = namedtuple('Author', ['raw', 'name', 'email'])
         if 'author' in self.meta:
-            Author = namedtuple('Author', ['raw', 'name', 'email'])
             # Grab a name and maybe an email
-            parsed = re.match(r'([^<>]*)( +<(.*@.*)>)$', self.meta['author'])
-            self.meta['author'] = Author(self.meta['author'], parsed.group(1), parsed.group(3))
+            name, _, email = re.match(r'([^<>]*)( +<(.*@.*)>)$', self.meta['author']).groups()
+            self.meta['author'] = Author(self.meta['author'], name, email)
+        else:
+            self.meta['author'] = Author(None, None, None)
+        # Guranteed: author exists.
+
 
     def render(self):
         type = self.meta.get('type', 'default')
