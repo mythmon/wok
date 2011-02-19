@@ -25,7 +25,8 @@ class Page(object):
 
         with open(path) as f:
             self.original = f.read()
-            splits = self.original.split('---')
+            # Maximum of one split, so --- in the content doesn't get split.
+            splits = self.original.split('---', 1)
             header = splits[0]
             self.original = splits[1]
             self.content = markdown.markdown(self.original)
