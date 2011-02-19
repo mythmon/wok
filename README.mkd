@@ -2,11 +2,11 @@ Wok
 ===
 Wok is a static website generator. It takes a pile of layout, templates, and content and turns it into a neat stack of plain html.
 
-The idea is that you don't need a big PHP engine generating every page every page visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repo containing your content or layout.
+The idea is that you don't need a big PHP engine generating every page every page visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repository containing your content or layout.
 
 Content
 -------
-Content is written as Markdown formatted text (parsed with [Python Markdown][mkd]) with a YAML header, seperated by 3 hyphens alone on a line.
+Content is written as Markdown formatted text (parsed with [Python Markdown][mkd]) with a YAML header, separated by 3 hyphens alone on a line.
 
     title: Sample Post
     ---
@@ -32,16 +32,20 @@ Templates
 ---------
 This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in the templates directory.
 
-### Processed Variables
- -  Title
- -  Content
- -  Author
+These variables are guaranteed to exist, but may be empty or `None`.
+
+### Variables
+ -  page.title
+ -  page.content
+ -  page.author
+    -  page.author.name
+    -  page.author.email
 
 ### Planned
- -  Date
- -  Category
+ -  page.date
+ -  page.category
 
-Additionally, any variables defined in the metadata of each page that are not recognized will be passed unproccessed to the template engine.
+Additionally, any variables defined in the metadata of each page that are not recognized will be passed unprocessed to the template engine.
 
 [jinja]: http://jinja.pocoo.org/
 
