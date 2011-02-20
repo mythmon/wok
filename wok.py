@@ -35,10 +35,13 @@ class Page(object):
         self.build_meta()
         self.render()
 
-    remove_mkd = re.compile(r'^(.*)\.mkd$')
+    Author = namedtuple('Author', ['raw', 'name', 'email'])
+    remove_mkd_re = re.compile(r'^(.*)\.mkd$')
+    parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+
     def build_meta(self):
         if not 'title' in self.meta:
-            self.meta['title'] = remove_mkd.match(self.filename).group(1)
+            self.meta['title'] = remove_mkd_re.match(self.filename).group(1)
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
@@ -54,15 +57,19 @@ class Page(object):
                 'and match the regex "[a-z0-9-]*"')
         # Gurantee: slug exists.
 
-        Author = namedtuple('Author', ['raw', 'name', 'email'])
         if 'author' in self.meta:
             # Grab a name and maybe an email
-            name, _, email = re.match(r'([^<>]*)( +<(.*@.*)>)$', self.meta['author']).groups()
-            self.meta['author'] = Author(self.meta['author'], name, email)
+            name, _, email = Page.parse_author_re.match(self.meta['author']).groups()
+            self.meta['author'] = Page.Author(self.meta['author'], name, email)
         else:
-            self.meta['author'] = Author(None, None, None)
+            self.meta['author'] = Page.Author(None, None, None)
         # Gurantee: author exists.
 
+        if 'category' in self.meta:
+            self.meta['category'] = self.meta['category'].split('/')
+        else:
+            self.meta['category'] = []
+        # Gurantee: category exists
 
     def render(self):
         self.content = markdown(self.original, ['def_list', 'footnotes'])
