@@ -55,11 +55,12 @@ These variables are guranteed to exist, but may be empty or `None`.
     -   `page.author` - A "smart object" that will parse name and email form "`My Name <me@there.com>`"
         -   `page.author.name`
         -   `page.author.email`
+    -   `page.datetime`
+    -   `page.category`
 
 ### Planned
 -   `page`
-    -   `page.datetime`
-    -   `page.category`
+    -   `subpages` - For index pages. All pages that are an immediate subpage of this page.
 -   `site`
     -   `title`
     -   `datetime` - The time the site was last generated.
