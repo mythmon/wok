@@ -2,7 +2,7 @@
 
 import sys
 import os
-import markdown
+from markdown import markdown
 import jinja2
 import yaml
 from collections import namedtuple
@@ -30,7 +30,6 @@ class Page(object):
             splits = self.original.split('---', 1)
             header = splits[0]
             self.original = splits[1]
-            self.content = markdown.markdown(self.original)
             self.meta = yaml.load(header)
 
         self.build_meta()
@@ -66,6 +65,8 @@ class Page(object):
 
 
     def render(self):
+        self.content = markdown(self.original, ['def_list', 'footnotes'])
+
         type = self.meta.get('type', 'default')
         template = Page.tmpl_env.get_template(type + '.html')
         templ_vars = {
