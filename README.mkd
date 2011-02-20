@@ -21,7 +21,7 @@ Features
 
 Content
 -------
-Content is written as [Markdown][mkd] formatted text (parsed with [Python Markdown][pymkd]) with a YAML header, separated by 3 hyphens alone on a line. For example
+Content is written as [Markdown][mkd] formatted text (parsed with [Python Markdown][pymkd]) with a [YAML][yaml] header, separated by 3 hyphens alone on a line. For example
 
     title: Sample Post
     author: Mike Cooper <mythmon@gmail.com>
@@ -50,6 +50,7 @@ These are the variables that affect the rending, layout, and categorization of p
 [mkd]: http://daringfireball.net/projects/markdown/ 
 [pymkd]: http://www.freewisdom.org/projects/python-markdown/
 [8601]: http://en.wikipedia.org/wiki/ISO_8601
+[yaml]: http://www.yaml.org/ 
 
 Templates
 ---------
