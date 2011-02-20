@@ -10,6 +10,15 @@ I made Wok because projects like [Jekyll][jekyll], [Hyde][hyde], and [Static][st
 [hyde]: https://github.com/lakshmivyas/hyde 
 [static]: http://static.newqdev.com/ 
 
+Features
+--------
+-   Parse markdown files, and render them to a flat set of HTML files based on the given templates.
+-   Provide various metadata for each page.
+-   Configuration file (YAML)
+
+### Planned features
+-   Hierarchical Pages
+
 Content
 -------
 Content is written as [Markdown][mkd] formatted text (parsed with [Python Markdown][pymkd]) with a YAML header, separated by 3 hyphens alone on a line. For example
@@ -57,23 +66,24 @@ These variables are guranteed to exist, but may be empty or `None`.
         -   `page.author.email`
     -   `page.datetime`
     -   `page.category`
+-   `site;
+    -   `site.title`
+    -   `datetime` - The time the site was last generated.
 
 ### Planned
 -   `page`
     -   `subpages` - For index pages. All pages that are an immediate subpage of this page.
--   `site`
-    -   `title`
-    -   `datetime` - The time the site was last generated.
 
 Additionally, any variables defined in the metadata of each page that are not recognized will be passed unprocessed to the template engine.
 
 [jinja]: http://jinja.pocoo.org/
 
-Features
---------
--   Parse markdown files, and render them to a flat set of HTML files based on the given templates.
--   Provide various metadata for each page.
+Configuration
+-------------
+Settings can be changed in the file `config` in the current directory.
 
-### Planned features
--   Hierarchical Pages
--   Configuration file (YAML)
+Possible configuration options (and their defaults) are
+-   output_dir ('output') - Where to put the generated files.
+-   content_dir ('content') - Where to find the content.
+-   templates_dir ('templates') - Where the templates are.
+-   site_title ('Some Random Wok Site')

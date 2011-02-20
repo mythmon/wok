@@ -11,12 +11,11 @@ import util
 class Page(object):
     """A single page on the website in all it's form, as well as it's associated metadata."""
 
-    tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
     Author = namedtuple('Author', ['raw', 'name', 'email'])
     remove_mkd_re = re.compile(r'^(.*)\.mkd$')
     parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
 
-    def __init__(self, path):
+    def __init__(self, path, options):
         """
         Load a file from disk, and parse the metadata from it.
 
@@ -27,6 +26,14 @@ class Page(object):
         self.original = None
         self.parsed = None
         self.meta = {}
+        self.options = options
+
+        # TODO: It's not good to make a new environment every time, but we if
+        # we pass the options in each time, its possible it will change per
+        # instance. Fix this.
+        self.tmpl_env = jinja2.Environment(
+            loader=jinja2.FileSystemLoader(
+                self.options.get('template_dir', 'templates')))
 
         self.path = path
         _, self.filename = os.path.split(path)
@@ -93,19 +100,24 @@ class Page(object):
         self.content = markdown(self.original, ['def_list', 'footnotes'])
 
         type = self.meta.get('type', 'default')
-        template = Page.tmpl_env.get_template(type + '.html')
+        template = self.tmpl_env.get_template(type + '.html')
         templ_vars = {
             'page': { 'content': self.content, },
             'site': {
-                'title': "Ahblah! Site Title!",
+                'title': self.options['site_title'],
                 'datetime': datetime.now(),
             }
         }
         templ_vars['page'].update(self.meta)
         self.html = template.render(templ_vars)
 
-    def write(self, dir):
+    def write(self, dir=None):
         """Write the page to an html file on disk."""
-        filename = self.meta['slug'] + '.html'
-        with open(os.path.join(dir, filename), 'w') as f:
+
+        # Use what we are passed, or the default given, or the current dir
+        if not dir:
+            dir = self.options.get('output_dir', '.')
+
+        path = os.path.join(dir, self.meta['slug'] + '.html')
+        with open(path, 'w') as f:
             f.write(self.html)
