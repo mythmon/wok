@@ -14,10 +14,12 @@ Features
 --------
 -   Parse markdown files, and render them to a flat set of HTML files based on the given templates.
 -   Provide various metadata for each page.
--   Configuration file (YAML)
+-   Configuration file (YAML).
 
 ### Planned features
--   Hierarchical Pages
+-   Hierarchical Pages.
+-   Self-serving test server.
+-   Copy site resources (images, CSS, etc) to the output directory automatically.
 
 Content
 -------
