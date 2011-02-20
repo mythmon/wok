@@ -1,8 +1,14 @@
 Wok
 ===
-Wok is a static website generator. It takes a pile of layout, templates, and content and turns it into a neat stack of plain html.
+Wok is a static website generator. It turns a pile of templates, content, and resources (like CSS and images) into a neat stack of plain html.
 
-The idea is that you don't need a big PHP engine generating every page every page visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repository containing your content or layout.
+The idea is that you don't need a big PHP engine generating every page every visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repository containing your content or layout.
+
+I made Wok because projects like [Jekyll][jekyll], [Hyde][hyde], and [Static][static] were intriguing, but in the end didn't quite match what I wanted to do with my website. So I am writing my own.
+
+[jekyll]: https://github.com/mojombo/jekyll
+[hyde]: https://github.com/lakshmivyas/hyde 
+[static]: http://static.newqdev.com/ 
 
 Content
 -------
@@ -19,9 +25,9 @@ Content is written as [Markdown][mkd] formatted text (parsed with [Python Markdo
     ligula porta vestibulum et ut sem. Cras hendrerit pulvinar metus at
     imperdiet.
 
+### Metadata
 These are the variables that affect the rending, layout, and categorization of pages.
 
-### Metadata
  -  `title` - The title of the page. If not specified, the filename (minus `.mkd`) will be used.
  -  `type` - Used to determine the template to use. If none is specified the template `default` is used.
  -  `author` - In `My Name <my@email.com>` format.
@@ -29,7 +35,7 @@ These are the variables that affect the rending, layout, and categorization of p
 
 ### Planned metadata
  -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format (ie: `2011-02-17T14:31`).
- -  `category` - Including sub categories as a slash-seperated list. `projects/wok/docs` means the page is in the category `docs` which is a subcategroy of `wok` which is a subcategory of `projects`.
+ -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the page is in the category `docs` which is a subcategory of `wok` which is a subcategory of `projects`.
  -  `published` - To exclude some pages from the site, but not remove them entirely.
 
 [mkd]: http://daringfireball.net/projects/markdown/ 
