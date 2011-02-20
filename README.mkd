@@ -1,10 +1,16 @@
 Wok
 ===
-Wok is a static website generator. It turns a pile of templates, content, and resources (like CSS and images) into a neat stack of plain html.
+Wok is a static website generator. It turns a pile of templates, content, and resources (like CSS
+and images) into a neat stack of plain html.
 
-The idea is that you don't need a big PHP engine generating every page every visit: you can generate them all ahead of time, and only regenerate things when something has changed. A good way this could be done would be with a post-commit hook on a git repository containing your content or layout.
+The idea is that you don't need a big PHP engine generating every page every visit: you can
+generate them all ahead of time, and only regenerate things when something has changed. A good way
+this could be done would be with a post-commit hook on a git repository containing your content or
+layout.
 
-I made Wok because projects like [Jekyll][jekyll], [Hyde][hyde], and [Static][static] were intriguing, but in the end didn't quite match what I wanted to do with my website. So I am writing my own.
+I made Wok because projects like [Jekyll][jekyll], [Hyde][hyde], and [Static][static] were
+intriguing, but in the end didn't quite match what I wanted to do with my website. So I am writing
+my own.
 
 [jekyll]: https://github.com/mojombo/jekyll
 [hyde]: https://github.com/lakshmivyas/hyde 
@@ -40,13 +46,16 @@ Content is written as [Markdown][mkd] formatted text (parsed with [Python Markdo
 These are the variables that affect the rending, layout, and categorization of pages.
 
  -  `title` - The title of the page. If not specified, the filename (minus `.mkd`) will be used.
- -  `type` - Used to determine the template to use. If none is specified the template `default` is used.
+ -  `type` - Used to determine the template to use. If unspecified, the template `default` is used.
  -  `author` - In `My Name <my@email.com>` format.
  -  `slug` - Name for URLs and filenames. If not specified, it will be generated from the title.
 
 ### Planned metadata
- -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format (ie: `2011-02-17T14:31`).
- -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the page is in the category `docs` which is a subcategory of `wok` which is a subcategory of `projects`.
+ -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format
+     (ie: `2011-02-17T14:31`).
+ -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the
+     page is in the category `docs` which is a subcategory of `wok` which is a subcategory of
+     `projects`.
  -  `published` - To exclude some pages from the site, but not remove them entirely.
 
 [mkd]: http://daringfireball.net/projects/markdown/ 
@@ -56,7 +65,8 @@ These are the variables that affect the rending, layout, and categorization of p
 
 Templates
 ---------
-This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in the templates directory.
+This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in
+the templates directory.
 
 These variables are guranteed to exist, but may be empty or `None`.
 
@@ -64,7 +74,8 @@ These variables are guranteed to exist, but may be empty or `None`.
 -   `page` - Variables related to the current page
     -   `page.title`
     -   `page.content`
-    -   `page.author` - A "smart object" that will parse name and email form "`My Name <me@there.com>`"
+    -   `page.author` - A "smart object" that will parse name and email form
+         "`My Name <me@there.com>`"
         -   `page.author.name`
         -   `page.author.email`
     -   `page.datetime`
@@ -77,7 +88,8 @@ These variables are guranteed to exist, but may be empty or `None`.
 -   `page`
     -   `subpages` - For index pages. All pages that are an immediate subpage of this page.
 
-Additionally, any variables defined in the metadata of each page that are not recognized will be passed unprocessed to the template engine.
+Additionally, any variables defined in the metadata of each page that are not recognized will be
+passed unprocessed to the template engine.
 
 [jinja]: http://jinja.pocoo.org/
 
