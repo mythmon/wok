@@ -71,7 +71,9 @@ Additionally, any variables defined in the metadata of each page that are not re
 
 Features
 --------
- -  Parse markdown files, and render them to a flat set of HTML files based on the given templates.
+-   Parse markdown files, and render them to a flat set of HTML files based on the given templates.
+-   Provide various metadata for each page.
 
 ### Planned features
- -  Hierarchical Pages
+-   Hierarchical Pages
+-   Configuration file (YAML)
