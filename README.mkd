@@ -46,7 +46,7 @@ Templates
 ---------
 This content is then rendered using [Jinja2][jinja] templates. Wok looks for `$templatename.html` in the templates directory.
 
-These variables are guaranteed to exist, but may be empty or `None`.
+These variables are guranteed to exist, but may be empty or `None`.
 
 ### Variables
 -   `page` - Variables related to the current page

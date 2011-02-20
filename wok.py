@@ -7,6 +7,7 @@ import jinja2
 import yaml
 from collections import namedtuple
 import re
+from datetime import datetime
 
 import util
 
@@ -42,7 +43,7 @@ class Page(object):
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
-        # Guranteed: title exists.
+        # Gurantee: title exists.
 
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
@@ -52,7 +53,7 @@ class Page(object):
             util.out.warn('metadata',
                 'Your slug should probably be all lower case,' +
                 'and match the regex "[a-z0-9-]*"')
-        # Guranteed: slug exists.
+        # Gurantee: slug exists.
 
         Author = namedtuple('Author', ['raw', 'name', 'email'])
         if 'author' in self.meta:
@@ -61,14 +62,18 @@ class Page(object):
             self.meta['author'] = Author(self.meta['author'], name, email)
         else:
             self.meta['author'] = Author(None, None, None)
-        # Guranteed: author exists.
+        # Gurantee: author exists.
 
 
     def render(self):
         type = self.meta.get('type', 'default')
         template = Page.tmpl_env.get_template(type + '.html')
         templ_vars = {
-            'page': { 'content': self.content, }
+            'page': { 'content': self.content, },
+            'site': {
+                'title': "Ahblah! Site Title!",
+                'datetime': datetime.now(),
+            }
         }
         templ_vars['page'].update(self.meta)
         self.html = template.render(templ_vars)
