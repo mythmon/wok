@@ -11,7 +11,8 @@ def main():
         # Grab all the markdown files
         for f in [f for f in files if f[-4:] == '.mkd']:
             p = Page(os.path.join(root,f))
-            p.write('output')
+            p.render()
+            p.write('./output')
 
 if __name__ == '__main__':
     main()

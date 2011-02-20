@@ -9,10 +9,20 @@ from datetime import datetime
 import util
 
 class Page(object):
+    """A single page on the website in all it's form, as well as it's associated metadata."""
 
     tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'))
+    Author = namedtuple('Author', ['raw', 'name', 'email'])
+    remove_mkd_re = re.compile(r'^(.*)\.mkd$')
+    parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
 
     def __init__(self, path):
+        """
+        Load a file from disk, and parse the metadata from it.
+
+        Note that you still need to call `render` and `write` to do anything
+        interesting.
+        """
         self.header = None
         self.original = None
         self.parsed = None
@@ -30,13 +40,17 @@ class Page(object):
             self.meta = yaml.load(header)
 
         self.build_meta()
-        self.render()
-
-    Author = namedtuple('Author', ['raw', 'name', 'email'])
-    remove_mkd_re = re.compile(r'^(.*)\.mkd$')
-    parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
 
     def build_meta(self):
+        """
+        Ensures the gurantees about metadata for documents are valid.
+
+        `page.title` - will exist.
+        `page.slug` - will exist.
+        `page.author` - will exist, and contain fields `name` and `email`.
+        `page.category` - will exist, and be a list.
+        """
+
         if not 'title' in self.meta:
             self.meta['title'] = remove_mkd_re.match(self.filename).group(1)
             util.out.warn('metadata',
@@ -69,6 +83,13 @@ class Page(object):
         # Gurantee: category exists
 
     def render(self):
+        """
+        Renders the page to full html.
+
+        First parse the markdown to html, then build a set of variables for the
+        template, finally render it with jinja2.
+        """
+
         self.content = markdown(self.original, ['def_list', 'footnotes'])
 
         type = self.meta.get('type', 'default')
@@ -84,6 +105,7 @@ class Page(object):
         self.html = template.render(templ_vars)
 
     def write(self, dir):
+        """Write the page to an html file on disk."""
         filename = self.meta['slug'] + '.html'
         with open(os.path.join(dir, filename), 'w') as f:
             f.write(self.html)
