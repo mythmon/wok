@@ -104,7 +104,7 @@ class Page(object):
         templ_vars = {
             'page': { 'content': self.content, },
             'site': {
-                'title': self.options['site_title'],
+                'title': self.options.get('site_title', 'Untitled'),
                 'datetime': datetime.now(),
             }
         }

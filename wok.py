@@ -20,7 +20,7 @@ def main():
             yaml_config = yaml.load(f)
 
         if yaml_config:
-            options.update(yaml_configt)
+            options.update(yaml_config)
 
     if os.path.isdir(options['output_dir']):
         shutil.rmtree(options['output_dir'])
@@ -31,7 +31,8 @@ def main():
         for f in [f for f in files if f[-4:] == '.mkd']:
             p = Page(os.path.join(root,f), options)
             p.render()
-            p.write()
+            if p.meta['published']:
+                p.write()
 
 if __name__ == '__main__':
     main()
