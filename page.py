@@ -89,6 +89,10 @@ class Page(object):
             self.meta['category'] = []
         # Gurantee: category exists
 
+        if not 'published' in self.meta:
+            self.meta['published'] = True
+        # Gurantee: published exists
+
     def render(self):
         """
         Renders the page to full html.
