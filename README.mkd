@@ -18,14 +18,16 @@ my own.
 
 Features
 --------
--   Parse markdown files, and render them to a flat set of HTML files based on the given templates.
+-   Parse markdown files, and render them to a set of HTML files based on the given templates.
 -   Provide various metadata for each page.
 -   Configuration file (YAML).
+-   Hierarchical Pages.
 
 ### Planned features
--   Hierarchical Pages.
+-   Access to the page hierarchy from templates.
 -   Self-serving test server.
 -   Copy site resources (images, CSS, etc) to the output directory automatically.
+-   Only regenerate pages that need it.
 
 Content
 -------
@@ -50,8 +52,6 @@ These are the variables that affect the rending, layout, and categorization of p
  -  `type` - Used to determine the template to use. If unspecified, the template `default` is used.
  -  `author` - In `My Name <my@email.com>` format.
  -  `slug` - Name for URLs and filenames. If not specified, it will be generated from the title.
-
-### Planned metadata
  -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format
      (ie: `2011-02-17T14:31`).
  -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the
