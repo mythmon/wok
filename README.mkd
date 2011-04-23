@@ -106,6 +106,7 @@ Configuration
 Settings can be changed in the file `config` in the current directory.
 
 Possible configuration options (and their defaults) are
+
 -   output_dir ('output') - Where the outputted files are put.
 -   content_dir ('content') - Where to find the content.
 -   templates_dir ('templates') - Where the templates are.
