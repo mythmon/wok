@@ -22,11 +22,11 @@ Features
 -   Provide various metadata for each page.
 -   Configuration file (YAML).
 -   Hierarchical Pages.
+-   Copy site resources (images, CSS, etc) to the output directory automatically.
 
 ### Planned features
 -   Access to the page hierarchy from templates.
 -   Self-serving test server.
--   Copy site resources (images, CSS, etc) to the output directory automatically.
 -   Only regenerate pages that need it.
 
 Content
@@ -94,12 +94,20 @@ passed unprocessed to the template engine.
 
 [jinja]: http://jinja.pocoo.org/
 
+Media
+-----
+Any files in the media directory will be copied to the output directory.
+If a file is generated that has a file name conflict, it will overwrite the media file.
+
+This feature is useful for images, css, javascript, etc.
+
 Configuration
 -------------
 Settings can be changed in the file `config` in the current directory.
 
 Possible configuration options (and their defaults) are
--   output_dir ('output') - Where to put the generated files.
+-   output_dir ('output') - Where the outputted files are put.
 -   content_dir ('content') - Where to find the content.
 -   templates_dir ('templates') - Where the templates are.
+-   media_dir ('media') - Where the media files are copied from.
 -   site_title ('Some Random Wok Site')
