@@ -1,5 +1,4 @@
 import os
-from markdown import markdown
 import jinja2
 import yaml
 from collections import namedtuple
@@ -44,9 +43,13 @@ class Page(object):
             self.original = f.read()
             # Maximum of one split, so --- in the content doesn't get split.
             splits = self.original.split('---', 1)
-            header = splits[0]
-            self.original = splits[1]
-            self.meta = yaml.load(header)
+            if len(splits) == 1:
+                self.meta = {}
+                self.original = splits[0]
+            else:
+                header = splits[0]
+                self.original = splits[1]
+                self.meta = yaml.load(header)
 
         self.build_meta()
 
