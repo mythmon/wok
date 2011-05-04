@@ -12,7 +12,6 @@ class Page(object):
     """A single page on the website in all it's form, as well as it's associated metadata."""
 
     Author = namedtuple('Author', ['raw', 'name', 'email'])
-    remove_mkd_re = re.compile(r'^(.*)\.mkd$')
     parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
 
     def __init__(self, path, options, renderer=None):
@@ -64,7 +63,10 @@ class Page(object):
         """
 
         if not 'title' in self.meta:
-            self.meta['title'] = remove_mkd_re.match(self.filename).group(1)
+            self.meta['title'] = '.'.join(self.filename.split('.')[:-1])
+            if (self.meta['title'] == ''):
+                self.meta['title'] = self.filename
+
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
