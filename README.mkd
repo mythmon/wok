@@ -18,7 +18,8 @@ my own.
 
 Features
 --------
--   Parse markdown files, and render them to a set of HTML files based on the given templates.
+-   Parse files written in various mark up languages (currently [Markdown][mkd] or
+    [reStructuredText][rst]), and render them to a set of HTML files based on the given templates.
 -   Provide various metadata for each page.
 -   Configuration file (YAML).
 -   Hierarchical Pages.
@@ -28,7 +29,10 @@ Features
 ### Planned features
 -   Self-serving test server.
 -   Only regenerate pages that need it.
--   Support for other mark up languages (next up: reStructuredText)
+-   Support for more mark up languages (next up: ???)
+
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
 
 Content
 -------
