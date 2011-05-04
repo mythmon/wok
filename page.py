@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 
 import util
+import renderers
 
 class Page(object):
     """A single page on the website in all it's form, as well as it's associated metadata."""
@@ -15,7 +16,7 @@ class Page(object):
     remove_mkd_re = re.compile(r'^(.*)\.mkd$')
     parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
 
-    def __init__(self, path, options):
+    def __init__(self, path, options, renderer=None):
         """
         Load a file from disk, and parse the metadata from it.
 
@@ -27,6 +28,7 @@ class Page(object):
         self.parsed = None
         self.meta = {}
         self.options = options
+        self.renderer = renderer if renderer else renderers.Plain
 
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
@@ -97,11 +99,11 @@ class Page(object):
         """
         Renders the page to full html.
 
-        First parse the markdown to html, then build a set of variables for the
+        First parse the content, then build a set of variables for the
         template, finally render it with jinja2.
         """
 
-        self.content = markdown(self.original, ['def_list', 'footnotes'])
+        self.content = self.renderer.render(self.original)
 
         type = self.meta.get('type', 'default')
         template = self.tmpl_env.get_template(type + '.html')
