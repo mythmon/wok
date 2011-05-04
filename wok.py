@@ -35,6 +35,8 @@ def main():
         else:
             shutil.copy(path, options['output_dir'])
 
+    site_pages = []
+
     for root, dirs, files in os.walk(options['content_dir']):
         # Grab all the parsable files
         for f in files:
@@ -45,11 +47,22 @@ def main():
                 if ext in r.extensions:
                     renderer = r
 
-            p = Page(os.path.join(root,f), options, renderer)
-            p.render()
+            site_pages.append(Page(os.path.join(root,f), options, renderer))
 
-            if p.meta['published']:
-                p.write()
+    site_tree = {}
+    site_pages.sort(key=lambda p: len(p.meta['category']))
+    for p in site_pages:
+        parent = site_tree
+        for cat in p.meta['category']:
+            assert(cat in parent)
+            parent = parent[cat].subpages
+        parent[p.meta['title']] = p
+
+    for p in site_pages:
+        p.render()
+
+        if p.meta['published']:
+            p.write()
 
 if __name__ == '__main__':
     main()

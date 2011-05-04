@@ -27,6 +27,7 @@ class Page(object):
         self.meta = {}
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
+        self.subpages = {}
 
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
@@ -48,6 +49,7 @@ class Page(object):
             else:
                 header = splits[0]
                 self.original = splits[1]
+                # TODO: I don't like using the meta variable, but I have to because of this.
                 self.meta = yaml.load(header)
 
         self.build_meta()
@@ -113,13 +115,12 @@ class Page(object):
         type = self.meta.get('type', 'default')
         template = self.tmpl_env.get_template(type + '.html')
         templ_vars = {
-            'page': { 'content': self.content, },
+            'page': self,
             'site': {
                 'title': self.options.get('site_title', 'Untitled'),
                 'datetime': datetime.now(),
-            }
+            },
         }
-        templ_vars['page'].update(self.meta)
         self.html = template.render(templ_vars)
 
     def write(self, dir=None):
@@ -132,3 +133,6 @@ class Page(object):
         path = os.path.join(dir, self.meta['slug'] + '.html')
         with open(path, 'w') as f:
             f.write(self.html)
+
+    def __getattr__(self, name):
+        return self.meta[name]
