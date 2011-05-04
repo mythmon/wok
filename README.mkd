@@ -23,11 +23,12 @@ Features
 -   Configuration file (YAML).
 -   Hierarchical Pages.
 -   Copy site resources (images, CSS, etc) to the output directory automatically.
+-   Access to the page hierarchy from templates.
 
 ### Planned features
--   Access to the page hierarchy from templates.
 -   Self-serving test server.
 -   Only regenerate pages that need it.
+-   Support for other mark up languages (next up: reStructuredText)
 
 Content
 -------
@@ -81,13 +82,13 @@ These variables are guranteed to exist, but may be empty or `None`.
         -   `page.author.email`
     -   `page.datetime`
     -   `page.category`
+    -   `page.subpages` - For index pages. All pages that are an immediate subpage of this page.
 -   `site;
     -   `site.title`
     -   `datetime` - The time the site was last generated.
 
 ### Planned
--   `page`
-    -   `subpages` - For index pages. All pages that are an immediate subpage of this page.
+-   ???
 
 Additionally, any variables defined in the metadata of each page that are not recognized will be
 passed unprocessed to the template engine.
