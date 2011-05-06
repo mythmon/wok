@@ -11,7 +11,7 @@ options_defaults = {
     'content_dir' : 'content',
     'template_dir': 'templates',
     'output_dir'  : 'output',
-    'media_dir'   : 'output',
+    'media_dir'   : 'media',
     'site_title'  : 'Some random Wok site',
 }
 
