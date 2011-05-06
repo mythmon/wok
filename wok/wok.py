@@ -12,7 +12,7 @@ options_defaults = {
     'template_dir': 'templates',
     'output_dir'  : 'output',
     'media_dir'   : 'output',
-    'site_name'   : 'Some random Wok site',
+    'site_title'  : 'Some random Wok site',
 }
 
 def main():
