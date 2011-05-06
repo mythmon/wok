@@ -89,7 +89,7 @@ These variables are guranteed to exist, but may be empty or `None`.
     -   `page.subpages` - For index pages. All pages that are an immediate subpage of this page.
 -   `site;
     -   `site.title`
-    -   `datetime` - The time the site was last generated.
+    -   `site.datetime` - The time the site was last generated.
 
 ### Planned
 -   ???
