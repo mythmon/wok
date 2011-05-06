@@ -9,7 +9,7 @@ import renderers
 
 options_defaults = {
     'content_dir' : 'content',
-    'template_dir': 'template',
+    'template_dir': 'templates',
     'output_dir'  : 'output',
     'media_dir'   : 'output',
     'site_name'   : 'Some random Wok site',
