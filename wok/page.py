@@ -9,7 +9,10 @@ import util
 import renderers
 
 class Page(object):
-    """A single page on the website in all it's form, as well as it's associated metadata."""
+    """
+    A single page on the website in all it's form, as well as it's
+    associated metadata.
+    """
 
     Author = namedtuple('Author', ['raw', 'name', 'email'])
     parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
