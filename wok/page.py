@@ -1,9 +1,11 @@
 import os
+from collections import namedtuple
+from datetime import datetime
+
 import jinja2
 import yaml
-from collections import namedtuple
 import re
-from datetime import datetime
+import isodate
 
 import util
 import renderers
@@ -85,6 +87,8 @@ class Page(object):
         `page.slug` - will exist.
         `page.author` - will exist, and contain fields `name` and `email`.
         `page.category` - will exist, and be a list.
+        `page.published` - will exist
+        `page.datetime` - will exist
         """
 
         if not 'title' in self.meta:
@@ -122,6 +126,16 @@ class Page(object):
         if not 'published' in self.meta:
             self.meta['published'] = True
         # Gurantee: published exists
+
+        datetime_name=None
+        for name in ['time', 'date', 'datetime']:
+            if name in self.meta:
+                datetime_name = 'date'
+        if datetime_name:
+            self.meta['datetime'] = isodate.parse_datetime(self.meta[datetime_name])
+        else:
+            self.meta['datetime'] = datetime.now()
+        # Gurantee: datetime exists
 
     def render(self):
         """
