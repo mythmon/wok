@@ -28,15 +28,15 @@ class Page(object):
         @classmethod
         def parse(cls, raw):
             a = cls(raw)
-            a.name, _, a.email = cls.parse_author_re.match(raw).groups()
+            a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
 
         def __str__(self):
-            if not name:
+            if not self.name:
                 return self.raw
-            if not email:
-                return name
+            if not self.email:
+                return self.name
 
-            return "{0} <{1}>".format(name, email)
+            return "{0} <{1}>".format(self.name, self.email)
 
     def __init__(self, path, options, renderer=None):
         """
@@ -81,7 +81,7 @@ class Page(object):
 
     def build_meta(self):
         """
-        Ensures the gurantees about metadata for documents are valid.
+        Ensures the guarantees about metadata for documents are valid.
 
         `page.title` - will exist.
         `page.slug` - will exist.
@@ -99,7 +99,7 @@ class Page(object):
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
-        # Gurantee: title exists.
+        # Guarantee: title exists.
 
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
@@ -109,23 +109,31 @@ class Page(object):
             util.out.warn('metadata',
                 'Your slug should probably be all lower case,' +
                 'and match the regex "[a-z0-9-]*"')
-        # Gurantee: slug exists.
+        # Guarantee: slug exists.
 
         if 'author' in self.meta:
-            self.meta['author'] = Page.parse(author)
+            self.meta['author'] = Page.Author.parse(self.meta['author'])
         else:
             self.meta['author'] = Page.Author()
-        # Gurantee: author exists.
+        # Guarantee: author exists.
 
         if 'category' in self.meta:
             self.meta['category'] = self.meta['category'].split('/')
         else:
             self.meta['category'] = []
-        # Gurantee: category exists
+        # Guarantee: category exists
 
         if not 'published' in self.meta:
             self.meta['published'] = True
-        # Gurantee: published exists
+        # Guarantee: published exists
+
+        datetime_name=None
+        for name in ['time', 'date', 'datetime']:
+            if name in self.meta:
+                self.meta['datetime'] = self.meta[name]
+        else:
+            self.meta['datetime'] = datetime.now()
+        # Guarantee: datetime exists
 
         datetime_name=None
         for name in ['time', 'date', 'datetime']:
