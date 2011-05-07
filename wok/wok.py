@@ -61,16 +61,16 @@ class Wok(object):
                 self.all_pages.append(Page(os.path.join(root,f), self.options, renderer))
 
     def make_tree(self):
-        site_tree = {}
+        site_tree = []
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.category))
 
         for p in self.all_pages:
-            parent = site_tree
+            siblings = site_tree
             for cat in p.category:
-                assert(cat in parent)
-                parent = parent[cat].subpages
-            parent[p.title] = p
+                parent = [subpage for subpage in siblings if subpage.title == cat][0]
+                siblings = parent.subpages
+            siblings.append(p)
 
     def render_site(self):
         for p in self.all_pages:

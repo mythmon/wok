@@ -30,7 +30,7 @@ class Page(object):
         self.meta = {}
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
-        self.subpages = {}
+        self.subpages = []
 
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
@@ -46,6 +46,8 @@ class Page(object):
             self.original = f.read()
             # Maximum of one split, so --- in the content doesn't get split.
             splits = self.original.split('---', 1)
+
+            # Handle the case where no meta data was provided
             if len(splits) == 1:
                 self.meta = {}
                 self.original = splits[0]
@@ -137,5 +139,7 @@ class Page(object):
         with open(path, 'w') as f:
             f.write(self.html)
 
+    # Hack hack. I don't want to use meta, but its convient for a couple things.
+    # Make the public interface what it will eventually be.
     def __getattr__(self, name):
         return self.meta[name]
