@@ -1,9 +1,11 @@
 import os
+from collections import namedtuple
+from datetime import datetime
+
 import jinja2
 import yaml
-from collections import namedtuple
 import re
-from datetime import datetime
+import isodate
 
 import util
 import renderers
@@ -14,8 +16,27 @@ class Page(object):
     associated metadata.
     """
 
-    Author = namedtuple('Author', ['raw', 'name', 'email'])
-    parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+    class Author(object):
+        """Smartly manages a author with name and email"""
+        parse_author_regex = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+
+        def __init__(self, raw='', name=None, email=None):
+            self.raw = raw
+            self.name = name
+            self.email = email
+
+        @classmethod
+        def parse(cls, raw):
+            a = cls(raw)
+            a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
+
+        def __str__(self):
+            if not self.name:
+                return self.raw
+            if not self.email:
+                return self.name
+
+            return "{0} <{1}>".format(self.name, self.email)
 
     def __init__(self, path, options, renderer=None):
         """
@@ -30,7 +51,7 @@ class Page(object):
         self.meta = {}
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
-        self.subpages = {}
+        self.subpages = []
 
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
@@ -46,25 +67,28 @@ class Page(object):
             self.original = f.read()
             # Maximum of one split, so --- in the content doesn't get split.
             splits = self.original.split('---', 1)
+
+            # Handle the case where no meta data was provided
             if len(splits) == 1:
                 self.meta = {}
                 self.original = splits[0]
             else:
                 header = splits[0]
                 self.original = splits[1]
-                # TODO: I don't like using the meta variable, but I have to because of this.
                 self.meta = yaml.load(header)
 
         self.build_meta()
 
     def build_meta(self):
         """
-        Ensures the gurantees about metadata for documents are valid.
+        Ensures the guarantees about metadata for documents are valid.
 
         `page.title` - will exist.
         `page.slug` - will exist.
         `page.author` - will exist, and contain fields `name` and `email`.
         `page.category` - will exist, and be a list.
+        `page.published` - will exist
+        `page.datetime` - will exist
         """
 
         if not 'title' in self.meta:
@@ -75,7 +99,7 @@ class Page(object):
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
-        # Gurantee: title exists.
+        # Guarantee: title exists.
 
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
@@ -85,25 +109,41 @@ class Page(object):
             util.out.warn('metadata',
                 'Your slug should probably be all lower case,' +
                 'and match the regex "[a-z0-9-]*"')
-        # Gurantee: slug exists.
+        # Guarantee: slug exists.
 
         if 'author' in self.meta:
-            # Grab a name and maybe an email
-            name, _, email = Page.parse_author_re.match(self.meta['author']).groups()
-            self.meta['author'] = Page.Author(self.meta['author'], name, email)
+            self.meta['author'] = Page.Author.parse(self.meta['author'])
         else:
-            self.meta['author'] = Page.Author(None, None, None)
-        # Gurantee: author exists.
+            self.meta['author'] = Page.Author()
+        # Guarantee: author exists.
 
         if 'category' in self.meta:
             self.meta['category'] = self.meta['category'].split('/')
         else:
             self.meta['category'] = []
-        # Gurantee: category exists
+        # Guarantee: category exists
 
         if not 'published' in self.meta:
             self.meta['published'] = True
-        # Gurantee: published exists
+        # Guarantee: published exists
+
+        datetime_name=None
+        for name in ['time', 'date', 'datetime']:
+            if name in self.meta:
+                self.meta['datetime'] = self.meta[name]
+        else:
+            self.meta['datetime'] = datetime.now()
+        # Guarantee: datetime exists
+
+        datetime_name=None
+        for name in ['time', 'date', 'datetime']:
+            if name in self.meta:
+                datetime_name = 'date'
+        if datetime_name:
+            self.meta['datetime'] = isodate.parse_datetime(self.meta[datetime_name])
+        else:
+            self.meta['datetime'] = datetime.now()
+        # Gurantee: datetime exists
 
     def render(self):
         """
@@ -133,9 +173,12 @@ class Page(object):
         if not dir:
             dir = self.options.get('output_dir', '.')
 
-        path = os.path.join(dir, self.meta['slug'] + '.html')
+        path = os.path.join(dir, self.slug + '.html')
         with open(path, 'w') as f:
             f.write(self.html)
 
+    # Make the public interface ignore the seperation between the meta
+    # dictionary and the properies of the Page object.
     def __getattr__(self, name):
-        return self.meta[name]
+        if name in self.meta:
+            return self.meta[name]

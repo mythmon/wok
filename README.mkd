@@ -87,12 +87,13 @@ These variables are guranteed to exist, but may be empty or `None`.
     -   `page.datetime`
     -   `page.category`
     -   `page.subpages` - For index pages. All pages that are an immediate subpage of this page.
--   `site;
+-   `site`
     -   `site.title`
     -   `site.datetime` - The time the site was last generated.
 
 ### Planned
--   ???
+-   `site`
+    -   `site.pages` - The list of the top level pages of the site.
 
 Additionally, any variables defined in the metadata of each page that are not recognized will be
 passed unprocessed to the template engine.
