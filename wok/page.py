@@ -54,7 +54,6 @@ class Page(object):
             else:
                 header = splits[0]
                 self.original = splits[1]
-                # TODO: I don't like using the meta variable, but I have to because of this.
                 self.meta = yaml.load(header)
 
         self.build_meta()
@@ -135,11 +134,11 @@ class Page(object):
         if not dir:
             dir = self.options.get('output_dir', '.')
 
-        path = os.path.join(dir, self.meta['slug'] + '.html')
+        path = os.path.join(dir, self.slug + '.html')
         with open(path, 'w') as f:
             f.write(self.html)
 
-    # Hack hack. I don't want to use meta, but its convient for a couple things.
-    # Make the public interface what it will eventually be.
+    # Make the public interface ignore the seperation between the meta
+    # dictionary and the properies of the Page object.
     def __getattr__(self, name):
         return self.meta[name]
