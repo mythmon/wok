@@ -7,62 +7,76 @@ import shutil
 from page import Page
 import renderers
 
-options_defaults = {
-    'content_dir' : 'content',
-    'template_dir': 'templates',
-    'output_dir'  : 'output',
-    'media_dir'   : 'media',
-    'site_title'  : 'Some random Wok site',
-}
+class Wok(object):
+    default_options = {
+        'content_dir' : 'content',
+        'template_dir': 'templates',
+        'output_dir'  : 'output',
+        'media_dir'   : 'media',
+        'site_title'  : 'Some random Wok site',
+    }
 
-def main():
-    options = options_defaults.copy()
-    if os.path.isfile('config'):
-        with open('config') as f:
-            yaml_config = yaml.load(f)
+    def __init__(self):
+        self.all_pages = []
 
-        if yaml_config:
-            options.update(yaml_config)
+        self.read_options()
+        self.prepare_output()
+        self.load_pages()
+        self.make_tree()
+        self.render_site()
 
-    if os.path.isdir(options['output_dir']):
-        shutil.rmtree(options['output_dir'])
-    os.mkdir(options['output_dir'])
+    def read_options(self):
+        self.options = Wok.default_options.copy()
 
-    for name in os.listdir(options['media_dir']):
-        path = os.path.join(options['media_dir'], name)
-        if os.path.isdir(path):
-            shutil.copytree(path, os.path.join(options['output_dir'],name), symlinks=True)
-        else:
-            shutil.copy(path, options['output_dir'])
+        if os.path.isfile('config'):
+            with open('config') as f:
+                yaml_config = yaml.load(f)
 
-    site_pages = []
+            if yaml_config:
+                self.options.update(yaml_config)
 
-    for root, dirs, files in os.walk(options['content_dir']):
-        # Grab all the parsable files
-        for f in files:
-            ext = f.split('.')[-1]
-            renderer = renderers.Plain
+    def prepare_output(self):
+        if os.path.isdir(self.options['output_dir']):
+            shutil.rmtree(self.options['output_dir'])
+        os.mkdir(self.options['output_dir'])
 
-            for r in renderers.all:
-                if ext in r.extensions:
-                    renderer = r
+        for name in os.listdir(self.options['media_dir']):
+            path = os.path.join(self.options['media_dir'], name)
+            if os.path.isdir(path):
+                shutil.copytree(path, os.path.join(self.options['output_dir'],name), symlinks=True)
+            else:
+                shutil.copy(path, self.options['output_dir'])
 
-            site_pages.append(Page(os.path.join(root,f), options, renderer))
+    def load_pages(self):
+        for root, dirs, files in os.walk(self.options['content_dir']):
+            # Grab all the parsable files
+            for f in files:
+                ext = f.split('.')[-1]
+                renderer = renderers.Plain
 
-    site_tree = {}
-    site_pages.sort(key=lambda p: len(p.meta['category']))
-    for p in site_pages:
-        parent = site_tree
-        for cat in p.meta['category']:
-            assert(cat in parent)
-            parent = parent[cat].subpages
-        parent[p.meta['title']] = p
+                for r in renderers.all:
+                    if ext in r.extensions:
+                        renderer = r
 
-    for p in site_pages:
-        p.render()
+                self.all_pages.append(Page(os.path.join(root,f), self.options, renderer))
 
-        if p.meta['published']:
-            p.write()
+    def make_tree(self):
+        site_tree = {}
+        # We want to parse these in a approximately breadth first order
+        self.all_pages.sort(key=lambda p: len(p.category))
+
+        for p in self.all_pages:
+            parent = site_tree
+            for cat in p.category:
+                assert(cat in parent)
+                parent = parent[cat].subpages
+            parent[p.title] = p
+
+    def render_site(self):
+        for p in self.all_pages:
+            if p.published:
+                p.render()
+                p.write()
 
 if __name__ == '__main__':
-    main()
+    Wok()
