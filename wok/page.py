@@ -14,8 +14,27 @@ class Page(object):
     associated metadata.
     """
 
-    Author = namedtuple('Author', ['raw', 'name', 'email'])
-    parse_author_re = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+    class Author(object):
+        """Smartly manages a author with name and email"""
+        parse_author_regex = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+
+        def __init__(self, raw='', name=None, email=None):
+            self.raw = raw
+            self.name = name
+            self.email = email
+
+        @classmethod
+        def parse(cls, raw):
+            a = cls(raw)
+            a.name, _, a.email = cls.parse_author_re.match(raw).groups()
+
+        def __str__(self):
+            if not name:
+                return self.raw
+            if not email:
+                return name
+
+            return "{0} <{1}>".format(name, email)
 
     def __init__(self, path, options, renderer=None):
         """
@@ -89,11 +108,9 @@ class Page(object):
         # Gurantee: slug exists.
 
         if 'author' in self.meta:
-            # Grab a name and maybe an email
-            name, _, email = Page.parse_author_re.match(self.meta['author']).groups()
-            self.meta['author'] = Page.Author(self.meta['author'], name, email)
+            self.meta['author'] = Page.parse(author)
         else:
-            self.meta['author'] = Page.Author(None, None, None)
+            self.meta['author'] = Page.Author()
         # Gurantee: author exists.
 
         if 'category' in self.meta:
@@ -141,4 +158,5 @@ class Page(object):
     # Make the public interface ignore the seperation between the meta
     # dictionary and the properies of the Page object.
     def __getattr__(self, name):
-        return self.meta[name]
+        if name in self.meta:
+            return self.meta[name]
