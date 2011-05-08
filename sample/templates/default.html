@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>{{ page.title }}</h1>
+    <p>by <a href="mailto:{{ page.author.email }}">{{ page.author.name }}</a></p>
+    <p>on {{page.datetime}}</p>
+    <hr>
+    <h3>subpages</h3>
+    {{page.subpages}}
+    <ul>
+    {% for subpage in page.subpages %}
+        <li>{{subpage.title}} by {{subpage.author}}</li>
+    {% endfor %}
+    <hr>
+    {{ page.content }}
+{% endblock body %}
