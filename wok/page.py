@@ -16,6 +16,8 @@ class Page(object):
     associated metadata.
     """
 
+    meta = None
+
     class Author(object):
         """Smartly manages a author with name and email"""
         parse_author_regex = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
@@ -48,7 +50,6 @@ class Page(object):
         self.header = None
         self.original = None
         self.parsed = None
-        self.meta = {}
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
         self.subpages = []
@@ -70,7 +71,6 @@ class Page(object):
 
             # Handle the case where no meta data was provided
             if len(splits) == 1:
-                self.meta = {}
                 self.original = splits[0]
             else:
                 header = splits[0]
@@ -90,6 +90,9 @@ class Page(object):
         `page.published` - will exist
         `page.datetime` - will exist
         """
+
+        if self.meta is None:
+            self.meta = {}
 
         if not 'title' in self.meta:
             self.meta['title'] = '.'.join(self.filename.split('.')[:-1])
