@@ -133,17 +133,9 @@ class Page(object):
         datetime_name=None
         for name in ['time', 'date', 'datetime']:
             if name in self.meta:
-                self.meta['datetime'] = self.meta[name]
-        else:
-            self.meta['datetime'] = datetime.now()
-        # Guarantee: datetime exists
-
-        datetime_name=None
-        for name in ['time', 'date', 'datetime']:
-            if name in self.meta:
                 datetime_name = name
         if datetime_name:
-            self.meta['datetime'] = self.meta[datetime_name] #isodate.parse_datetime(self.meta[datetime_name])
+            self.meta['datetime'] = isodate.parse_datetime(self.meta[datetime_name])
         else:
             self.meta['datetime'] = datetime.now()
         # Gurantee: datetime exists
