@@ -6,6 +6,7 @@ import shutil
 
 from page import Page
 import renderers
+import util
 
 class Wok(object):
     default_options = {
@@ -46,7 +47,7 @@ class Wok(object):
                 path = os.path.join(self.options['media_dir'], name)
                 if os.path.isdir(path):
                     shutil.copytree(
-                            path, 
+                            path,
                             os.path.join(self.options['output_dir'], name), 
                             symlinks=True
                     )
@@ -80,11 +81,19 @@ class Wok(object):
         self.all_pages.sort(key=lambda p: len(p.category))
 
         for p in self.all_pages:
-            siblings = site_tree
-            for cat in p.category:
-                parent = [subpage for subpage in siblings if subpage.title == cat][0]
-                siblings = parent.subpages
-            siblings.append(p)
+            try:
+                siblings = site_tree
+                for cat in p.category:
+                    parent = [subpage for subpage in siblings
+                                 if subpage.slug == cat][0]
+                    siblings = parent.subpages
+                siblings.append(p)
+            except IndexError:
+                util.out.error('Categories',
+                    'It looks like the page "{0}" is an orphan!  For a page to'
+                    'be in category "foo/bar", there needs to be page with'
+                    'slug "foo" with no category and a page with slug "bar"'
+                    'with category "foo".'.format(p.path))
 
     def render_site(self):
         for p in self.all_pages:
