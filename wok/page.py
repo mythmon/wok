@@ -75,6 +75,8 @@ class Page(object):
                 self.meta = yaml.load(header)
 
         self.build_meta()
+        util.out.info('Page', 'Rendering {0} with {1}'.format(
+            self.slug, self.renderer))
         self.content = self.renderer.render(self.original)
 
     def build_meta(self):

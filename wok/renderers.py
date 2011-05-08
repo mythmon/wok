@@ -1,5 +1,6 @@
 from markdown import markdown
 import docutils.core
+from docutils.writers.html4css1 import Writer as rst_html_writer
 
 class Renderer(object):
     extensions = []
@@ -20,8 +21,14 @@ class ReStructuredText(Renderer):
 
     @classmethod
     def render(cls, plain):
-        return docutils.core.publish_parts(plain)['body']
+        w = rst_html_writer()
+        return docutils.core.publish_parts(plain, writer=w)['body']
 
-Plain = Renderer
+class Plain(Renderer):
+    extensions = 'txt'
 
-all = [Plain, Markdown]
+    @classmethod
+    def render(cls, plain):
+        return plain.replace('\n', '<br>')
+
+all = [Renderer, Plain, Markdown, ReStructuredText]

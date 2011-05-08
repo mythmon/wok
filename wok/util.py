@@ -3,7 +3,7 @@ from unicodedata import normalize
 
 class out(object):
 
-    level = 1
+    level = 2
 
     @classmethod
     def error(cls, kind, message):
@@ -16,8 +16,13 @@ class out(object):
             print("Warning from {0}: {1}".format(kind, message))
 
     @classmethod
-    def debug(cls, kind, message):
+    def info(cls, kind, message):
         if cls.level >= 2:
+            print("Info from {0}: {1}".format(kind, message))
+
+    @classmethod
+    def debug(cls, kind, message):
+        if cls.level >= 3:
             print("Debug from {0}: {1}".format(kind, message))
 
 # From http://flask.pocoo.org/snippets/5/
