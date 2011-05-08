@@ -156,16 +156,27 @@ class Page(object):
         }
         self.html = template.render(templ_vars)
 
-    def write(self, dir=None):
+    def write(self, path=None):
         """Write the page to an html file on disk."""
 
         # Use what we are passed, or the default given, or the current dir
-        if not dir:
-            dir = self.options.get('output_dir', '.')
+        if not path:
+            path = self.options.get('output_dir', '.')
 
-        path = os.path.join(dir, self.slug + '.html')
-        with open(path, 'w') as f:
-            f.write(self.html)
+        for cat in self.category:
+            path = os.path.join(path, cat)
+
+        try:
+            os.makedirs(path)
+        except OSError as e:
+            pass
+            # probably that the dir already exists, so thats ok.
+
+        path = os.path.join(path, self.slug + '.html')
+
+        f = open(path, 'w')
+        f.write(self.html)
+        f.close()
 
     # Make the public interface ignore the seperation between the meta
     # dictionary and the properies of the Page object.
