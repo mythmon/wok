@@ -40,12 +40,22 @@ class Wok(object):
             shutil.rmtree(self.options['output_dir'])
         os.mkdir(self.options['output_dir'])
 
-        for name in os.listdir(self.options['media_dir']):
-            path = os.path.join(self.options['media_dir'], name)
-            if os.path.isdir(path):
-                shutil.copytree(path, os.path.join(self.options['output_dir'],name), symlinks=True)
-            else:
-                shutil.copy(path, self.options['output_dir'])
+        # Copy the media directory to the output folder
+        try:
+            for name in os.listdir(self.options['media_dir']):
+                path = os.path.join(self.options['media_dir'], name)
+                if os.path.isdir(path):
+                    shutil.copytree(
+                            path, 
+                            os.path.join(self.options['output_dir'], name), 
+                            symlinks=True
+                    )
+                else:
+                    shutil.copy(path, self.options['output_dir'])
+
+        # Do nothing if the media directory doesn't exist
+        except OSError:
+            pass
 
     def load_pages(self):
         for root, dirs, files in os.walk(self.options['content_dir']):
