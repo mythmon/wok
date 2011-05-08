@@ -75,6 +75,7 @@ class Page(object):
                 self.meta = yaml.load(header)
 
         self.build_meta()
+        self.content = self.renderer.render(self.original)
 
     def build_meta(self):
         """
@@ -137,13 +138,8 @@ class Page(object):
 
     def render(self):
         """
-        Renders the page to full html.
-
-        First parse the content, then build a set of variables for the
-        template, finally render it with jinja2.
+        Renders the page to full html with the template engine.
         """
-
-        self.content = self.renderer.render(self.original)
 
         type = self.meta.get('type', 'default')
         template = self.tmpl_env.get_template(type + '.html')
@@ -162,7 +158,6 @@ class Page(object):
         # Use what we are passed, or the default given, or the current dir
         if not path:
             path = self.options.get('output_dir', '.')
-
         for cat in self.category:
             path = os.path.join(path, cat)
 
@@ -183,3 +178,6 @@ class Page(object):
     def __getattr__(self, name):
         if name in self.meta:
             return self.meta[name]
+
+    def __str__(self):
+        return self.slug
