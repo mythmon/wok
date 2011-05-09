@@ -1,0 +1,24 @@
+Version 0.2.2
+-------------
+-   Improve the sample site.
+-   Enable syntax hilighting for Markdown.
+-   Fix requirements for PyPI/pip
+
+Version 0.2.1
+-------------
+-   Add a sample site.
+-   Actually enable ReST support.
+-   Don't try to parse hidden files.
+-   Fix datetime handling.
+-   Media directory is now optional.
+-   Make output files in a tree structure based on category.
+
+Version 0.2
+-----------
+-   Initial support for reStructuredText.
+-   Installable package.
+-   Bug fixes based on user feedback.
+
+Version 0.1
+-----------
+-   First release.
