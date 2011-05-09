@@ -1,5 +1,5 @@
 title: Tests Main
 slug: tests
-type: test
+type: index
 ---
 These are the tests
