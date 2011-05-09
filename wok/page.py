@@ -5,7 +5,6 @@ from datetime import datetime
 import jinja2
 import yaml
 import re
-import isodate
 
 import util
 import renderers
@@ -15,8 +14,6 @@ class Page(object):
     A single page on the website in all it's form, as well as it's
     associated metadata.
     """
-
-    meta = None
 
     class Author(object):
         """Smartly manages a author with name and email"""
@@ -130,13 +127,11 @@ class Page(object):
             self.meta['published'] = True
         # Guarantee: published exists
 
-        datetime_name=None
-        for name in ['time', 'date', 'datetime']:
+        for name in ['time', 'date']:
             if name in self.meta:
-                datetime_name = name
-        if datetime_name:
-            self.meta['datetime'] = isodate.parse_datetime(self.meta[datetime_name])
-        else:
+                self.meta['datetime'] = self.meta[name]
+
+        if not 'datetime' in self.meta:
             self.meta['datetime'] = datetime.now()
         # Gurantee: datetime exists
 

@@ -7,7 +7,7 @@ from wok import version
 setup(name='wok',
       version=version.encode("utf8"),
       description='Static site generator',
-      requires=['yaml', 'markdown', 'docutils', 'jinja2', 'isodate'],
+      requires=['yaml', 'markdown', 'docutils', 'jinja2'],
       author='Mike Cooper',
       author_email='mythmon@gmail.com',
       url='https://www.github.com/mythmon/wok',
