@@ -1,9 +1,0 @@
-author: Mike Cooper <mythmon@gmail.com>
-title: Test Page
-date: 2011-02-03
-category: tests
-slug: blah
----
-This is the text of blah.mkd
-
-Now it has *style*.

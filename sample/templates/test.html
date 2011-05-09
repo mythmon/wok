@@ -1,46 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
 
-<table>
-<tr>
-    <td>page.title</td>
-    <td>{{ page.title }}</td>
-</tr>
-<tr>
-    <td>page.author</td>
-    <td>{{ page.author }}</td>
-</tr>
-<tr>
-    <td>page.author.name</td>
-    <td>{{ page.author.name }}</td>
-</tr>
-<tr>
-    <td>page.author.email</td>
-    <td>{{ page.author.email }}</td>
-</tr>
-<tr>
-    <td>page.datetime</td>
-    <td>{{ page.datetime }}</td>
-</tr>
-<tr>
-    <td>page.category</td>
-    <td>{{ page.category }}</td>
-</tr>
-<tr>
-    <td>site.title</td>
-    <td>{{ site.title }}</td>
-</tr>
-<tr>
-    <td>site.datetime</td>
-    <td>{{ site.datetime }}</td>
-</tr>
-<tr>
-    <td>site.datetime, formatted</td>
-    <td>{{ site.datetime.strftime('%c')}}</td>
-</tr>
-</table>
-
-page.content <br/>
+<h1>{{page.title}}</h1>
 {{ page.content }}
+
+{% for subpage in page.subpages %}
+    <h2>{{subpage.title}}</h2>
+    {{subpage.content}}
+{% endfor %}
 
 {% endblock body %}

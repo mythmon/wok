@@ -1,0 +1,7 @@
+title: Plaintext Test Page
+slug: plain
+category: tests
+---
+This should be plain text
+With *none* of that "mark up" crap
+And look like haiku

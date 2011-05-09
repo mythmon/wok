@@ -1,7 +1,0 @@
-title: foo
-category: tests
----
-This is a plain text document
-=============================
-
-It should have *no* styling.

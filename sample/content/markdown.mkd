@@ -1,0 +1,29 @@
+title: Markdown Test Page
+slug: markdown
+category: tests
+---
+This is the markdown test page
+------------------------------
+This page tests
+
+-   That markdown rendering works
+-   That it supports footnotes[^1].
+-   That code syntax highlighting works
+-   That definition lists work
+
+The plugins enabled are
+
+Definition Lists
+:   To do this
+Footnotes
+:   Cause they are nice
+CodeHilite
+:   To do syntax highlighting
+
+[^1]: Because those are nice.
+
+### Code Sample
+
+    #!python
+    for i in range(5):
+        print("Hello world for the {0}th time!".format(i))
