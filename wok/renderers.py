@@ -14,7 +14,7 @@ class Markdown(Renderer):
 
     @classmethod
     def render(cls, plain):
-        return markdown(plain, ['def_list', 'footnotes'])
+        return markdown(plain, ['def_list', 'footnotes', 'codehilite'])
 
 class ReStructuredText(Renderer):
     extensions = ['rst']
