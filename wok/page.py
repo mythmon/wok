@@ -83,12 +83,13 @@ class Page(object):
         """
         Ensures the guarantees about metadata for documents are valid.
 
-        `page.title` - will exist.
-        `page.slug` - will exist.
+        `page.title` - will exist and will be a string.
+        `page.slug` - will exist and will be a string.
         `page.author` - will exist, and contain fields `name` and `email`.
-        `page.category` - will exist, and be a list.
-        `page.published` - will exist
-        `page.datetime` - will exist
+        `page.category` - will be a list.
+        `page.published` - will exist.
+        `page.datetime` - will be a datetime.
+        `page.tags` - will be a list.
         """
 
         if self.meta is None:
@@ -102,7 +103,7 @@ class Page(object):
             util.out.warn('metadata',
                 "You didn't specify a title in  {0}. Using the file name as a title."
                 .format(self.filename))
-        # Guarantee: title exists.
+        # Guarantee: title exists, will be a string.
 
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
@@ -112,31 +113,37 @@ class Page(object):
             util.out.warn('metadata',
                 'Your slug should probably be all lower case,' +
                 'and match the regex "[a-z0-9-]*"')
-        # Guarantee: slug exists.
+        # Guarantee: slug exists, will be a string.
 
         if 'author' in self.meta:
             self.meta['author'] = Page.Author.parse(self.meta['author'])
         else:
             self.meta['author'] = Page.Author()
-        # Guarantee: author exists.
+        # Guarantee: author exists, may be (None, None, None).
 
         if 'category' in self.meta:
             self.meta['category'] = self.meta['category'].split('/')
         else:
             self.meta['category'] = []
-        # Guarantee: category exists
+        # Guarantee: category exists, is a list
 
         if not 'published' in self.meta:
             self.meta['published'] = True
-        # Guarantee: published exists
+        # Guarantee: published exists, boolean
 
         for name in ['time', 'date']:
             if name in self.meta:
                 self.meta['datetime'] = self.meta[name]
-
         if not 'datetime' in self.meta:
             self.meta['datetime'] = datetime.now()
-        # Gurantee: datetime exists
+        # Guarantee: datetime exists, is a datetime
+
+        if not 'tags' in self.meta:
+            self.meta['tags'] = []
+        else:
+            self.meta['tags'] = [t.strip() for t in self.meta['tags'].split(',')]
+        util.out.debug('page.tags', 'Tags for {0}: {1}'.format(self.slug, self.meta['tags']))
+        # Guarantee: tags exists, is a list
 
     def render(self):
         """

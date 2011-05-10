@@ -1,6 +1,7 @@
 title: Plaintext Test Page
 slug: plain
 category: tests
+tags: plain, sample
 ---
 This should be plain text
 With *none* of that "mark up" crap

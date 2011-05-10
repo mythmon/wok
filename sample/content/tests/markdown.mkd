@@ -1,6 +1,7 @@
 title: Markdown Test Page
 slug: markdown
 category: tests
+tags: markdown, sample
 ---
 This is the markdown test page
 ------------------------------
