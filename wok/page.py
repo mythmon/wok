@@ -145,20 +145,18 @@ class Page(object):
         util.out.debug('page.tags', 'Tags for {0}: {1}'.format(self.slug, self.meta['tags']))
         # Guarantee: tags exists, is a list
 
-    def render(self):
+    def render(self, templ_vars=None):
         """
         Renders the page to full html with the template engine.
         """
-
         type = self.meta.get('type', 'default')
         template = self.tmpl_env.get_template(type + '.html')
-        templ_vars = {
+
+        if not templ_vars:
+            templ_vars = {}
+        templ_vars.update({
             'page': self,
-            'site': {
-                'title': self.options.get('site_title', 'Untitled'),
-                'datetime': datetime.now(),
-            },
-        }
+        })
         self.html = template.render(templ_vars)
 
     def write(self, path=None):

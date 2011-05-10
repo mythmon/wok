@@ -3,6 +3,7 @@
 import os
 import yaml
 import shutil
+from datetime import datetime
 
 from page import Page
 import renderers
@@ -97,9 +98,25 @@ class Wok(object):
                     'with category "foo".'.format(p.path))
 
     def render_site(self):
+        # Gather tags
+        tag_set = set()
+        for p in self.all_pages:
+            tag_set = tag_set.union(p.tags)
+        tag_dict = dict()
+        for tag in tag_set:
+            tag_dict[tag] = [p for p in self.all_pages if tag in p.tags]
+
+        templ_vars = {
+            'site': {
+                'title': self.options.get('site_title', 'Untitled'),
+                'datetime': datetime.now(),
+                'tags': tag_dict,
+            },
+        }
+
         for p in self.all_pages:
             if p.published:
-                p.render()
+                p.render(templ_vars)
                 p.write()
 
 if __name__ == '__main__':
