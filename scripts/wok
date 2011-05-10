@@ -1,3 +1,16 @@
 #!/usr/bin/python2
+from optparse import OptionParser
+
 from wok import wok
-wok.Wok()
+
+parser = OptionParser()
+
+parser.set_defaults(verbose=1)
+parser.add_option('-q', '--quiet', action='store_const', const=0, dest='verbose')
+parser.add_option('--warnings', action='store_const', const=1, dest='verbose')
+parser.add_option('-v', '--verbose', action='store_const', const=2, dest='verbose')
+parser.add_option('--debug', action='store_const', const=3, dest='verbose')
+
+options, args = parser.parse_args()
+
+wok.Wok(output_lvl = options.verbose)

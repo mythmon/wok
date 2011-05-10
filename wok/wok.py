@@ -17,8 +17,10 @@ class Wok(object):
         'site_title'  : 'Some random Wok site',
     }
 
-    def __init__(self):
+    def __init__(self, output_lvl = 1):
         self.all_pages = []
+        util.out.level = output_lvl
+        print('output_lvl is {0}'.format(output_lvl))
 
         self.read_options()
         self.prepare_output()

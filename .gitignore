@@ -1,4 +1,5 @@
 .*.swp
 *.pyc
-notes
 build
+MANIFEST
+sample/output

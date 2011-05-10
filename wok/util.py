@@ -1,29 +1,28 @@
 import re
 from unicodedata import normalize
 
-class out(object):
+class Out(object):
 
-    level = 2
+    def __init__(self):
+        self.level = 1
 
-    @classmethod
-    def error(cls, kind, message):
-        if cls.level >= 0:
+    def error(self, kind, message):
+        if self.level >= 0:
             print("Error from {0}: {1}".format(kind, message))
 
-    @classmethod
-    def warn(cls, kind, message):
-        if cls.level >= 1:
+    def warn(self, kind, message):
+        if self.level >= 1:
             print("Warning from {0}: {1}".format(kind, message))
 
-    @classmethod
-    def info(cls, kind, message):
-        if cls.level >= 2:
+    def info(self, kind, message):
+        if self.level >= 2:
             print("Info from {0}: {1}".format(kind, message))
 
-    @classmethod
-    def debug(cls, kind, message):
-        if cls.level >= 3:
+    def debug(self, kind, message):
+        if self.level >= 3:
             print("Debug from {0}: {1}".format(kind, message))
+
+out = Out()
 
 # From http://flask.pocoo.org/snippets/5/
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
