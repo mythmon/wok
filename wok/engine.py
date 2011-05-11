@@ -1,15 +1,15 @@
 #!/usr/bin/python2
-
 import os
 import yaml
 import shutil
 from datetime import datetime
+from optparse import OptionParser
 
-from page import Page
-import renderers
-import util
+from wok import page
+from wok import renderers
+from wok import util
 
-class Wok(object):
+class Engine(object):
     default_options = {
         'content_dir' : 'content',
         'template_dir': 'templates',
@@ -19,6 +19,21 @@ class Wok(object):
     }
 
     def __init__(self, output_lvl = 1):
+
+        parser = OptionParser()
+
+        parser.set_defaults(verbose=1)
+        parser.add_option('-q', '--quiet', action='store_const', const=0,
+                dest='verbose')
+        parser.add_option('--warnings', action='store_const', const=1,
+                dest='verbose')
+        parser.add_option('-v', '--verbose', action='store_const', const=2,
+                dest='verbose')
+        parser.add_option('--debug', action='store_const', const=3,
+                dest='verbose')
+
+        options, args = parser.parse_args()
+
         self.all_pages = []
         util.out.level = output_lvl
 
@@ -29,7 +44,7 @@ class Wok(object):
         self.render_site()
 
     def read_options(self):
-        self.options = Wok.default_options.copy()
+        self.options = Engine.default_options.copy()
 
         if os.path.isfile('config'):
             with open('config') as f:
@@ -75,7 +90,8 @@ class Wok(object):
                             renderer = r
 
                     self.all_pages.append(
-                        Page(os.path.join(root,f), self.options, renderer))
+                        page.Page(os.path.join(root,f), self.options,
+                            renderer))
 
     def make_tree(self):
         site_tree = []
@@ -120,4 +136,4 @@ class Wok(object):
                 p.write()
 
 if __name__ == '__main__':
-    Wok()
+    Engine()

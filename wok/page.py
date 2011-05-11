@@ -6,8 +6,8 @@ import jinja2
 import yaml
 import re
 
-import util
-import renderers
+from wok import util
+from wok import renderers
 
 class Page(object):
     """
@@ -101,8 +101,8 @@ class Page(object):
                 self.meta['title'] = self.filename
 
             util.out.warn('metadata',
-                "You didn't specify a title in  {0}. Using the file name as a title."
-                .format(self.filename))
+                "You didn't specify a title in {0}."
+                "Using the file name as a title." .format(self.filename))
         # Guarantee: title exists, will be a string.
 
         if not 'slug' in self.meta:
@@ -141,8 +141,10 @@ class Page(object):
         if not 'tags' in self.meta:
             self.meta['tags'] = []
         else:
-            self.meta['tags'] = [t.strip() for t in self.meta['tags'].split(',')]
-        util.out.debug('page.tags', 'Tags for {0}: {1}'.format(self.slug, self.meta['tags']))
+            self.meta['tags'] = [t.strip() for t in
+                    self.meta['tags'].split(',')]
+        util.out.debug('page.tags', 'Tags for {0}: {1}'.
+                format(self.slug, self.meta['tags']))
         # Guarantee: tags exists, is a list
 
     def render(self, templ_vars=None):
