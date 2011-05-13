@@ -5,6 +5,7 @@ import shutil
 from datetime import datetime
 from optparse import OptionParser
 
+import wok
 from wok import page
 from wok import renderers
 from wok import util
@@ -20,7 +21,7 @@ class Engine(object):
 
     def __init__(self, output_lvl = 1):
 
-        parser = OptionParser()
+        parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
         parser.set_defaults(verbose=1)
         parser.add_option('-q', '--quiet', action='store_const', const=0,
