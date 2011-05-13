@@ -25,6 +25,6 @@ CodeHilite
 
 ### Code Sample
 
-    #!python
+    ::python
     for i in range(5):
         print("Hello world for the {0}th time!".format(i))

@@ -1,6 +1,10 @@
+# Markdown
 from markdown import markdown
+# reStructuredText
 import docutils.core
 from docutils.writers.html4css1 import Writer as rst_html_writer
+from docutils.parsers.rst import directives
+from wok.rst_pygments import Pygments as RST_Pygments
 
 class Renderer(object):
     extensions = []
@@ -14,9 +18,11 @@ class Markdown(Renderer):
 
     @classmethod
     def render(cls, plain):
-        return markdown(plain, ['def_list', 'footnotes', 'codehilite'])
+        return markdown(plain, ['def_list', 'footnotes', 'codehilite(css_class=highlight )'])
 
 class ReStructuredText(Renderer):
+    directives.register_directive('Pygments', RST_Pygments)
+
     extensions = ['rst']
 
     @classmethod
