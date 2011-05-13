@@ -20,7 +20,7 @@ Installation
 ------------
 Note that wok is alpha-grade software at this point. It is under active
 development, and its features are still in flux and there are bugs. If you
-still want to use it, the recommended way to install wok is from the the
+still want to use it, the recommended way to install wok is from the
 [Python Package Index][pypi] with this command.
 
     sudo pip install wok
@@ -37,7 +37,7 @@ Usage
 -----
 To run wok, go to the directory where your site files are located, and run wok.
 For now, no output will be given unless something goes wrong. If it returns
-without error, you should have a shiny new output folder containg some html,
+without error, you should have a shiny new output folder containing some html,
 and your media that represents your shiny new site.
 
 wok pulls the pieces of your site from three places. For each of these places,
@@ -49,13 +49,21 @@ mark up language, or as plain text, with an optional YAML header section. The
 directory structure of the file mean nothing to wok. It builds the structure
 of the site based on the titles and the category meta data.
 
+Since wok uses lightweight mark up languages like [Markdown][mkd] and
+[reStructuredText][rst], it is easy to do nice formatting in the pages without
+using a GUI editor or a complicated language like HTML. Built in syntax
+highlighting and media copying make things even easier.
+
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+
 [More info][more_content]
 
 [more_content]: https://github.com/mythmon/wok/wiki/Content
 
 ### Templates ###
 Pulled from `templates` by default. wok uses [Jinja2][jinja] templates, with
-various variables exposed to build pages. This is a very flexible templating
+various variables exposed to build pages. This is a very flexible temperating
 environment, with control flow, filters and other ways to slice and dice the
 data that wok gives you.
 
