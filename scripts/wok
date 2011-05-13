@@ -1,6 +1,4 @@
 #!/usr/bin/python2
-from optparse import OptionParser
-
 from wok.engine import Engine
 
 Engine()
