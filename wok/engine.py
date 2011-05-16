@@ -127,6 +127,7 @@ class Engine(object):
                 'title': self.options.get('site_title', 'Untitled'),
                 'datetime': datetime.now(),
                 'tags': tag_dict,
+                'pages': self.all_pages,
             },
         }
 
