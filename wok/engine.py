@@ -81,7 +81,7 @@ class Engine(object):
             for f in files:
                 # As long as the current file is not hidden, append it to the
                 # page list
-                if f[0] is not '.':
+                if not f.startswith('.'):
                     ext = f.split('.')[-1]
                     renderer = renderers.Plain
 
