@@ -188,5 +188,5 @@ class Page(object):
         if name in self.meta:
             return self.meta[name]
 
-    def __str__(self):
-        return self.slug
+    def __repr__(self):
+        return "&ltwok.page.Page '%s'&gt"%self.slug

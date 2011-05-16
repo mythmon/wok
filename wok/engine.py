@@ -82,7 +82,7 @@ class Engine(object):
             for f in files:
                 # As long as the current file is not hidden, append it to the
                 # page list
-                if f[0] is not '.':
+                if not f.startswith('.'):
                     ext = f.split('.')[-1]
                     renderer = renderers.Plain
 
@@ -109,9 +109,9 @@ class Engine(object):
                 siblings.append(p)
             except IndexError:
                 util.out.error('Categories',
-                    'It looks like the page "{0}" is an orphan!  For a page to'
-                    'be in category "foo/bar", there needs to be page with'
-                    'slug "foo" with no category and a page with slug "bar"'
+                    'It looks like the page "{0}" is an orphan!  For a page '
+                    'to be in category "foo/bar", there needs to be page with '
+                    'slug "foo" with no category, and a page with slug "bar" '
                     'with category "foo".'.format(p.path))
 
     def render_site(self):
@@ -128,6 +128,7 @@ class Engine(object):
                 'title': self.options.get('site_title', 'Untitled'),
                 'datetime': datetime.now(),
                 'tags': tag_dict,
+                'pages': self.all_pages,
             },
         }
 
