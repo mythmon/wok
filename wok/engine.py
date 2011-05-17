@@ -9,6 +9,7 @@ import wok
 from wok import page
 from wok import renderers
 from wok import util
+from wok import devserver
 
 class Engine(object):
     default_options = {
@@ -33,6 +34,9 @@ class Engine(object):
         parser.add_option('--debug', action='store_const', const=3,
                 dest='verbose')
 
+        # note if user says to run the dev server after generating
+        parser.add_option('--server', action='store_true', dest='runserver')
+
         options, args = parser.parse_args()
 
         self.all_pages = []
@@ -43,6 +47,10 @@ class Engine(object):
         self.load_pages()
         self.make_tree()
         self.render_site()
+
+        # run the dev server after generating pages (if user says to)
+        if options.runserver:
+            devserver.run(serv_dir=os.path.join(self.options['output_dir']))
 
     def read_options(self):
         self.options = Engine.default_options.copy()
