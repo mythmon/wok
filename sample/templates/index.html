@@ -7,7 +7,7 @@
 <hr>
 
 {% for subpage in page.subpages %}
-    <h2>{{subpage.title}}</h2>
+    <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
     {{subpage.content}}
 {% endfor %}
 
