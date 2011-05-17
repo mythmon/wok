@@ -36,7 +36,7 @@ class Engine(object):
         options, args = parser.parse_args()
 
         self.all_pages = []
-        util.out.level = output_lvl
+        util.out.level = options.verbose
 
         self.read_options()
         self.prepare_output()
