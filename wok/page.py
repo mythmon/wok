@@ -90,6 +90,7 @@ class Page(object):
         `page.published` - will exist.
         `page.datetime` - will be a datetime.
         `page.tags` - will be a list.
+        `page.url` - will be the url of the page, relative to the web root.
         """
 
         if self.meta is None:
@@ -125,6 +126,8 @@ class Page(object):
             self.meta['category'] = self.meta['category'].split('/')
         else:
             self.meta['category'] = []
+        if self.meta['category'] == None:
+            self.meta = []
         # Guarantee: category exists, is a list
 
         if not 'published' in self.meta:
@@ -147,6 +150,15 @@ class Page(object):
                 format(self.slug, self.meta['tags']))
         # Guarantee: tags exists, is a list
 
+        if not 'url' in self.meta:
+            # /category/subcategory/slug.html
+            util.out.debug('building the url', self.categories)
+            self.meta['url'] = '/'
+            for cat in self.category:
+                self.meta['url']= os.path.join(self.meta['url'], cat)
+            self.meta['url'] = os.path.join(self.meta['url'],
+                    self.slug + '.html')
+
     def render(self, templ_vars=None):
         """
         Renders the page to full html with the template engine.
@@ -161,22 +173,21 @@ class Page(object):
         })
         self.html = template.render(templ_vars)
 
-    def write(self, path=None):
+    def write(self):
         """Write the page to an html file on disk."""
 
         # Use what we are passed, or the default given, or the current dir
-        if not path:
-            path = self.options.get('output_dir', '.')
-        for cat in self.category:
-            path = os.path.join(path, cat)
+        path = self.options.get('output_dir', '.')
+        path += self.url
 
         try:
-            os.makedirs(path)
+            os.makedirs(os.path.dirname(path))
         except OSError as e:
-            pass
-            # probably that the dir already exists, so thats ok.
-
-        path = os.path.join(path, self.slug + '.html')
+            util.out.debug('writing files', 'makedirs failed for {0}'.format(
+                os.path.basename(path)))
+            # Probably that the dir already exists, so thats ok.
+            # TODO: double check this. Permission errors are something to worry
+            # about
 
         f = open(path, 'w')
         f.write(self.html)
