@@ -34,7 +34,7 @@ class Engine(object):
         parser.add_option('--debug', action='store_const', const=3,
                 dest='verbose')
 
-        # note if user says to run the dev server after generating
+        # Add option to to run the development server after generating pages
         parser.add_option('--server', action='store_true', dest='runserver')
 
         options, args = parser.parse_args()
@@ -48,7 +48,7 @@ class Engine(object):
         self.make_tree()
         self.render_site()
 
-        # run the dev server after generating pages (if user says to)
+        # Run the dev server after generating pages if the user said to
         if options.runserver:
             devserver.run(serv_dir=os.path.join(self.options['output_dir']))
 

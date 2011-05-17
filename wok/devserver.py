@@ -21,7 +21,10 @@ from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 def run(address='', port=8000, serv_dir=None):
-    ''' Run the development server on `address`:`port` '''
+    ''' Run the development server on `address`:`port` and server the 
+    directory `serv_dir`. (If `serv_dir` is not provided, it will use
+    the current working directory.)
+    '''
     if serv_dir:
         os.chdir(serv_dir)
     server_class = HTTPServer
