@@ -17,10 +17,10 @@ class Page(object):
 
     class Author(object):
         """Smartly manages a author with name and email"""
-        parse_author_regex = re.compile(r'([^<>]*)( +<(.*@.*)>)$')
+        parse_author_regex = re.compile(r'^([^<>]*) *(<(.*@.*)>)?$')
 
         def __init__(self, raw='', name=None, email=None):
-            self.raw = raw
+            self.raw = raw.strip()
             self.name = name
             self.email = email
 
@@ -28,6 +28,11 @@ class Page(object):
         def parse(cls, raw):
             a = cls(raw)
             a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
+            if a.name:
+                a.name = a.name.strip()
+            if a.email:
+                a.email = a.email.strip()
+            return a
 
         def __str__(self):
             if not self.name:
