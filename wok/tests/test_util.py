@@ -1,6 +1,6 @@
 try:
     from twisted.trial.unittest import TestCase
-except:
+except ImportError:
     from unittest import TestCase
 
 from wok import util
