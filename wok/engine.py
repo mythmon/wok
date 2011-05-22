@@ -24,6 +24,7 @@ class Engine(object):
 
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
+        # Options for noisiness level
         parser.set_defaults(verbose=1)
         parser.add_option('-q', '--quiet', action='store_const', const=0,
                 dest='verbose')
@@ -36,6 +37,8 @@ class Engine(object):
 
         # Add option to to run the development server after generating pages
         parser.add_option('--server', action='store_true', dest='runserver')
+        parser.add_option('--address', action='store', dest='address')
+        parser.add_option('--port', action='store', dest='port', type='int')
 
         options, args = parser.parse_args()
 
@@ -50,7 +53,8 @@ class Engine(object):
 
         # Run the dev server after generating pages if the user said to
         if options.runserver:
-            devserver.run(serv_dir=os.path.join(self.options['output_dir']))
+            devserver.run(options.address, options.port,
+                    serv_dir=os.path.join(self.options['output_dir']))
 
     def read_options(self):
         self.options = Engine.default_options.copy()
