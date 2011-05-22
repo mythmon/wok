@@ -1,3 +1,18 @@
+Version 0.4
+-----------
+### Features
+-   Added a built in testing server, to easily test absolute links on the site.
+-   Add `--version` option.
+-   Added `site.pages`, a flat list of the pages of the site.
+-   Added `site.categories`, a dictionary:
+    `{top level categories : immediate children of that category}`.
+-   Added page.url field, settable in a page's header and accessible from
+    templates.
+-   Started adding unit tests.
+### Fixes
+-   Fix `Page.author` to actually parse author strings right.
+
+
 Version 0.3
 -----------
 -   Add optional syntax highlighting using [Pygments][pyg].
