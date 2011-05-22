@@ -103,11 +103,19 @@ class Engine(object):
                             renderer))
 
     def make_tree(self):
+        self.categories = {}
         site_tree = []
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.category))
 
         for p in self.all_pages:
+            if len(p.category) > 0:
+                top_cat = p.category[0]
+                if not top_cat in self.categories:
+                    self.categories[top_cat] = []
+
+                self.categories[top_cat].append(p)
+
             try:
                 siblings = site_tree
                 for cat in p.category:
@@ -137,6 +145,7 @@ class Engine(object):
                 'datetime': datetime.now(),
                 'tags': tag_dict,
                 'pages': self.all_pages,
+                'categories': self.categories,
             },
         }
 
