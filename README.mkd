@@ -16,6 +16,15 @@ wanted to do with my website. So I am writing my own.
 [hyde]: https://github.com/lakshmivyas/hyde 
 [static]: http://static.newqdev.com/ 
 
+Sample Sites
+------------
+A bare bones site is included in the wok git repo, in the `sample` directory.
+
+For some real world examples check out these sites.
+
+-    [robmd.net](http://robmd.net)
+-    Your site here! If you are using wok to generate sites, and don't mind serving as an example, let me know and I will add a link to your site here.
+
 Installation
 ------------
 Note that wok is in alpha. It is under active development, and its features are
