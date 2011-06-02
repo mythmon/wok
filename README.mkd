@@ -23,7 +23,7 @@ A bare bones site is included in the wok git repo, in the `sample` directory.
 For some real world examples check out these sites.
 
 -    [robmd.net](http://robmd.net) ([source](https://github.com/robatron/robmd.net)) - Personal website of Rob McGuire-Dale.
--    [Bravo Server](bravoserver.org) ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) - A custom Minecraft server written in Python.
+-    [Bravo Server](http://bravoserver.org) ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) - A custom Minecraft server written in Python.
 -    Your site here! If you are using wok to generate sites, and don't mind serving as an example, let me know and I will add a link to your site here.
 
 Installation
