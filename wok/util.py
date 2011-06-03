@@ -1,3 +1,6 @@
+import os
+import sys
+import textwrap
 import re
 from unicodedata import normalize
 
@@ -5,22 +8,29 @@ class Out(object):
 
     def __init__(self):
         self.level = 1
+        self.wrap = os.isatty(sys.stdout.fileno())
 
     def error(self, kind, message):
         if self.level >= 0:
-            print("Error from {0}: {1}".format(kind, message))
+            self.wrapped_print("Error from {0}: {1}".format(kind, message))
 
     def warn(self, kind, message):
         if self.level >= 1:
-            print("Warning from {0}: {1}".format(kind, message))
+            self.wrapped_print("Warning from {0}: {1}".format(kind, message))
 
     def info(self, kind, message):
         if self.level >= 2:
-            print("Info from {0}: {1}".format(kind, message))
+            self.wrapped_print("Info from {0}: {1}".format(kind, message))
 
     def debug(self, kind, message):
         if self.level >= 3:
-            print("Debug from {0}: {1}".format(kind, message))
+            self.wrapped_print("Debug from {0}: {1}".format(kind, message))
+
+    def wrapped_print(self, message):
+        if self.wrap:
+            _,w = [int(n) for n in os.popen('stty size', 'r').read().split()]
+            message = textwrap.fill(message, w)
+        print(message)
 
 out = Out()
 
