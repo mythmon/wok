@@ -22,9 +22,15 @@ A bare bones site is included in the wok git repo, in the `sample` directory.
 
 For some real world examples check out these sites.
 
--    [robmd.net](http://robmd.net) ([source](https://github.com/robatron/robmd.net)) - Personal website of Rob McGuire-Dale.
--    [Bravo Server](http://bravoserver.org) ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) - A custom Minecraft server written in Python.
--    Your site here! If you are using wok to generate sites, and don't mind serving as an example, let me know and I will add a link to your site here.
+-    [robmd.net](http://robmd.net)
+     ([source](https://github.com/robatron/robmd.net)) - Personal website of
+     Rob McGuire-Dale.
+-    [Bravo Server](http://bravoserver.org)
+     ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) -
+     A custom Minecraft server written in Python.
+-    Your site here! If you are using wok to generate sites, and don't mind
+     serving as an example, let me know and I will add a link to your site
+     here.
 
 Installation
 ------------
@@ -37,11 +43,27 @@ Index][pypi] with this command.
 
 Alternative, if you want to hack on wok or just need the latest code, you can
 run from git head, and if you want to you can install to your system
-directories with this command.
+directories with this command. Note that you will need to install dependencies
+by hand in this case.
 
     sudo python2 setup.py install
 
 [pypi]: http://pypi.python.org/pypi
+
+###Dependencies
+All dependencies are available from pip. Although optional, you really should
+install either markdown or docutils.
+
+####Required
+
+-   `pyyaml`
+-   `jinja2`
+
+####Optional
+
+-   `markdown` - for rendering markdown documents.
+-   `docutils` - for rendering reStructuredText documents.
+-   `pygments` - for syntax highlighting.
 
 Usage
 -----
@@ -51,7 +73,7 @@ wrong. If it returns without error, you should have a shiny new output folder
 containing some html, and your media that represents your shiny new site.
 
 To aid in testing links on the site, wok includes a development server. The
-commnds on that particular file say:
+comments on that particular file say:
 
 >Do *NOT* attempt to use this as anything resembling a production server. It is
 >meant to be used as a development test server only.
