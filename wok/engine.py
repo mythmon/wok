@@ -101,10 +101,14 @@ class Engine(object):
                     for r in renderers.all:
                         if ext in r.extensions:
                             renderer = r
+                            break
+                    else:
+                        util.out.warn('Loading render', 'No parser found '
+                                'for {0}. Using default renderer.'.format(f))
+                        renderer = renderers.Renderer
 
-                    self.all_pages.append(
-                        page.Page(os.path.join(root,f), self.options,
-                            renderer))
+                    self.all_pages.append(page.Page(os.path.join(root,f),
+                            self.options, renderer))
 
     def make_tree(self):
         self.categories = {}

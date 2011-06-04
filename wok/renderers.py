@@ -1,10 +1,13 @@
-# Markdown
-from markdown import markdown
-# reStructuredText
-import docutils.core
-from docutils.writers.html4css1 import Writer as rst_html_writer
-from docutils.parsers.rst import directives
-from wok.rst_pygments import Pygments as RST_Pygments
+# Check for pygments
+try:
+    import pygments
+    have_pygments = True
+except ImportError:
+    out.util.info('Loading renderers', 'Pygments not enabled.')
+    have_pygments = False
+
+# List of available renderers
+all = []
 
 class Renderer(object):
     extensions = []
@@ -12,29 +15,57 @@ class Renderer(object):
     @classmethod
     def render(cls, plain):
         return plain
-
-class Markdown(Renderer):
-    extensions = ['markdown', 'mkd']
-
-    @classmethod
-    def render(cls, plain):
-        return markdown(plain, ['def_list', 'footnotes', 'codehilite(css_class=highlight )'])
-
-class ReStructuredText(Renderer):
-    directives.register_directive('Pygments', RST_Pygments)
-
-    extensions = ['rst']
-
-    @classmethod
-    def render(cls, plain):
-        w = rst_html_writer()
-        return docutils.core.publish_parts(plain, writer=w)['body']
+all.append(Renderer)
 
 class Plain(Renderer):
-    extensions = 'txt'
+    """Plain text renderer. Replaces new lines with html </br>s"""
+    extensions = ['txt']
 
     @classmethod
     def render(cls, plain):
         return plain.replace('\n', '<br>')
+all.append(Plain)
 
-all = [Renderer, Plain, Markdown, ReStructuredText]
+# Include markdown, if it is available.
+try:
+    from markdown import markdown
+    class Markdown(Renderer):
+        """Markdown renderer."""
+        extensions = ['markdown', 'mkd']
+
+        plugins = ['def_list', 'footnotes']
+        if have_pygments:
+            plugins.append('codehilite(css_class=highlight)')
+
+        @classmethod
+        def render(cls, plain):
+            return markdown(plain, Markdown.plugins)
+
+    all.append(Markdown)
+
+except ImportError:
+    util.out.info('Loading renderers', 'Markdown not enabled.')
+
+# Include ReStructuredText Parser, if we have docutils
+try:
+
+    import docutils.core
+    from docutils.writers.html4css1 import Writer as rst_html_writer
+    from docutils.parsers.rst import directives
+
+    if have_pygments:
+        from wok.rst_pygments import Pygments as RST_Pygments
+        directives.register_directive('Pygments', RST_Pygments)
+
+    class ReStructuredText(Renderer):
+        """reStructuredText renderer."""
+        extensions = ['rst']
+
+        @classmethod
+        def render(cls, plain):
+            w = rst_html_writer()
+            return docutils.core.publish_parts(plain, writer=w)['body']
+
+    all.append(ReStructuredText)
+except:
+    util.out.info('Loading renderers', 'reStructuredText not enabled.')
