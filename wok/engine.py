@@ -18,6 +18,7 @@ class Engine(object):
         'output_dir'  : 'output',
         'media_dir'   : 'media',
         'site_title'  : 'Some random Wok site',
+        'url_pattern' : '/{category}/{slug}.html',
     }
 
     def __init__(self, output_lvl = 1):

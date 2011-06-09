@@ -156,13 +156,11 @@ class Page(object):
         # Guarantee: tags exists, is a list
 
         if not 'url' in self.meta:
-            # /category/subcategory/slug.html
-            util.out.debug('building the url', self.categories)
-            self.meta['url'] = '/'
-            for cat in self.category:
-                self.meta['url']= os.path.join(self.meta['url'], cat)
-            self.meta['url'] = os.path.join(self.meta['url'],
-                    self.slug + '.html')
+            parts = {
+                'slug' : self.slug,
+                'category' : '/'.join(self.category),
+            }
+            self.meta['url'] = self.options['url_pattern'].format(**parts);
 
     def render(self, templ_vars=None):
         """
@@ -193,6 +191,7 @@ class Page(object):
             # Probably that the dir already exists, so thats ok.
             # TODO: double check this. Permission errors are something to worry
             # about
+        util.out.info('Page.write', 'writing to {0}'.format(path))
 
         f = open(path, 'w')
         f.write(self.html)
