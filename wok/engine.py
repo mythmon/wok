@@ -115,11 +115,11 @@ class Engine(object):
         self.categories = {}
         site_tree = []
         # We want to parse these in a approximately breadth first order
-        self.all_pages.sort(key=lambda p: len(p.category))
+        self.all_pages.sort(key=lambda p: len(p.meta['category']))
 
-        for p in self.all_pages:
-            if len(p.category) > 0:
-                top_cat = p.category[0]
+        for p in [p.meta for p in self.all_pages]:
+            if len(p['category']) > 0:
+                top_cat = p['category'][0]
                 if not top_cat in self.categories:
                     self.categories[top_cat] = []
 
@@ -127,10 +127,10 @@ class Engine(object):
 
             try:
                 siblings = site_tree
-                for cat in p.category:
+                for cat in p['category']:
                     parent = [subpage for subpage in siblings
-                                 if subpage.slug == cat][0]
-                    siblings = parent.subpages
+                                 if subpage['slug']== cat][0]
+                    siblings = parent['subpages']
                 siblings.append(p)
             except IndexError:
                 util.out.error('Categories',
@@ -143,10 +143,10 @@ class Engine(object):
         # Gather tags
         tag_set = set()
         for p in self.all_pages:
-            tag_set = tag_set.union(p.tags)
+            tag_set = tag_set.union(p.meta['tags'])
         tag_dict = dict()
         for tag in tag_set:
-            tag_dict[tag] = [p for p in self.all_pages if tag in p.tags]
+            tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
 
         templ_vars = {
             'site': {
@@ -159,7 +159,7 @@ class Engine(object):
         }
 
         for p in self.all_pages:
-            if p.published:
+            if p.meta['published']:
                 p.render(templ_vars)
                 p.write()
 

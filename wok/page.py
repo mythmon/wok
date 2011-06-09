@@ -54,14 +54,12 @@ class Page(object):
         self.parsed = None
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
-        self.subpages = []
 
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
         # instance. Fix this.
-        self.tmpl_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(
-                self.options.get('template_dir', 'templates')))
+        self.tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader(
+            self.options.get('template_dir', 'templates')))
 
         self.path = path
         _, self.filename = os.path.split(path)
@@ -81,8 +79,8 @@ class Page(object):
 
         self.build_meta()
         util.out.info('Page', 'Rendering {0} with {1}'.format(
-            self.slug, self.renderer))
-        self.content = self.renderer.render(self.original)
+            self.meta['slug'], self.renderer))
+        self.meta['content'] = self.renderer.render(self.original)
 
     def build_meta(self):
         """
@@ -96,71 +94,76 @@ class Page(object):
         `page.datetime` - will be a datetime.
         `page.tags` - will be a list.
         `page.url` - will be the url of the page, relative to the web root.
+        `page.subpages` - will be a list containing every sub page of this page
         """
 
         if self.meta is None:
             self.meta = {}
 
+        # title
         if not 'title' in self.meta:
             self.meta['title'] = '.'.join(self.filename.split('.')[:-1])
             if (self.meta['title'] == ''):
                 self.meta['title'] = self.filename
 
-            util.out.warn('metadata',
-                "You didn't specify a title in {0}."
-                "Using the file name as a title." .format(self.filename))
-        # Guarantee: title exists, will be a string.
+            util.out.warn('metadata', "You didn't specify a title in {0}."
+                    "Using the file name as a title.".format(self.filename))
 
+        # slug
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
             util.out.debug('metadata',
-                'You didn\'t specify a slug, generating it from the title.')
+                "You didn't specify a slug, generating it from the title.")
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
             util.out.warn('metadata',
                 'Your slug should probably be all lower case,' +
                 'and match the regex "[a-z0-9-]*"')
-        # Guarantee: slug exists, will be a string.
 
+        # author
         if 'author' in self.meta:
             self.meta['author'] = Page.Author.parse(self.meta['author'])
         else:
             self.meta['author'] = Page.Author()
-        # Guarantee: author exists, may be (None, None, None).
 
+        # category
         if 'category' in self.meta:
             self.meta['category'] = self.meta['category'].split('/')
         else:
             self.meta['category'] = []
         if self.meta['category'] == None:
             self.meta = []
-        # Guarantee: category exists, is a list
 
+        # published
         if not 'published' in self.meta:
             self.meta['published'] = True
-        # Guarantee: published exists, boolean
 
+        # datetime
         for name in ['time', 'date']:
             if name in self.meta:
                 self.meta['datetime'] = self.meta[name]
         if not 'datetime' in self.meta:
             self.meta['datetime'] = datetime.now()
-        # Guarantee: datetime exists, is a datetime
 
+        # tags
         if not 'tags' in self.meta:
             self.meta['tags'] = []
         else:
             self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
-        util.out.debug('page.tags', 'Tags for {0}: {1}'.
-                format(self.slug, self.meta['tags']))
-        # Guarantee: tags exists, is a list
 
+        util.out.debug('page.tags', 'Tags for {0}: {1}'.
+                format(self.meta['slug'], self.meta['tags']))
+
+        # url
         if not 'url' in self.meta:
             parts = {
-                'slug' : self.slug,
-                'category' : '/'.join(self.category),
+                'slug' : self.meta['slug'],
+                'category' : '/'.join(self.meta['category']),
             }
             self.meta['url'] = self.options['url_pattern'].format(**parts);
+
+        # subpages
+        self.meta['subpages'] = []
 
     def render(self, templ_vars=None):
         """
@@ -171,9 +174,12 @@ class Page(object):
 
         if not templ_vars:
             templ_vars = {}
-        templ_vars.update({
-            'page': self,
-        })
+
+        if not 'page' in templ_vars:
+            templ_vars.update({'page': self.meta})
+        else:
+            templ_vars['page'].update(self.meta)
+
         self.html = template.render(templ_vars)
 
     def write(self):
@@ -181,7 +187,7 @@ class Page(object):
 
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
-        path += self.url
+        path += self.meta['url']
 
         try:
             os.makedirs(os.path.dirname(path))
@@ -197,11 +203,5 @@ class Page(object):
         f.write(self.html)
         f.close()
 
-    # Make the public interface ignore the seperation between the meta
-    # dictionary and the properies of the Page object.
-    def __getattr__(self, name):
-        if name in self.meta:
-            return self.meta[name]
-
     def __repr__(self):
-        return "&ltwok.page.Page '%s'&gt"%self.slug
+        return "&ltwok.page.Page '{0}'&gt".format(self.meta['slug'])
