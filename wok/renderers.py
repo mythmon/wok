@@ -69,3 +69,8 @@ try:
     all.append(ReStructuredText)
 except:
     util.out.info('Loading renderers', 'reStructuredText not enabled.')
+
+if len(all) <= 2:
+    print('You probably want to install either Markdown or docutils '
+        '(reStructuredText). Otherwise only plain text input will be '
+        'supported.')
