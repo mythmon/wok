@@ -41,10 +41,10 @@ class Engine(object):
         parser.add_option('--address', action='store', dest='address')
         parser.add_option('--port', action='store', dest='port', type='int')
 
-        options, args = parser.parse_args()
+        cli_options, args = parser.parse_args()
 
         self.all_pages = []
-        util.out.level = options.verbose
+        util.out.level = cli_options.verbose
 
         self.read_options()
         self.prepare_output()
@@ -53,8 +53,8 @@ class Engine(object):
         self.render_site()
 
         # Run the dev server after generating pages if the user said to
-        if options.runserver:
-            devserver.run(options.address, options.port,
+        if cli_options.runserver:
+            devserver.run(cli_options.address, cli_options.port,
                     serv_dir=os.path.join(self.options['output_dir']))
 
     def read_options(self):
@@ -66,6 +66,9 @@ class Engine(object):
 
             if yaml_config:
                 self.options.update(yaml_config)
+        
+        if 'author' in self.options:
+            self.options['author'] = page.Author.parse(self.options['author'])
 
     def prepare_output(self):
         if os.path.isdir(self.options['output_dir']):
@@ -157,6 +160,8 @@ class Engine(object):
                 'categories': self.categories,
             },
         }
+        if 'author' in self.options:
+            templ_vars['site']['author'] = self.options['author']
 
         for p in self.all_pages:
             if p.meta['published']:

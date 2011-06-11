@@ -2,6 +2,7 @@ title: Markdown Test Page
 slug: markdown
 category: tests
 tags: markdown, sample
+author: Not Default
 ---
 This is the markdown test page
 ------------------------------

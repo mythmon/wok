@@ -15,33 +15,6 @@ class Page(object):
     associated metadata.
     """
 
-    class Author(object):
-        """Smartly manages a author with name and email"""
-        parse_author_regex = re.compile(r'^([^<>]*) *(<(.*@.*)>)?$')
-
-        def __init__(self, raw='', name=None, email=None):
-            self.raw = raw.strip()
-            self.name = name
-            self.email = email
-
-        @classmethod
-        def parse(cls, raw):
-            a = cls(raw)
-            a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
-            if a.name:
-                a.name = a.name.strip()
-            if a.email:
-                a.email = a.email.strip()
-            return a
-
-        def __str__(self):
-            if not self.name:
-                return self.raw
-            if not self.email:
-                return self.name
-
-            return "{0} <{1}>".format(self.name, self.email)
-
     def __init__(self, path, options, renderer=None):
         """
         Load a file from disk, and parse the metadata from it.
@@ -121,9 +94,11 @@ class Page(object):
 
         # author
         if 'author' in self.meta:
-            self.meta['author'] = Page.Author.parse(self.meta['author'])
+            self.meta['author'] = Author.parse(self.meta['author'])
+        elif 'author' in self.options:
+            self.meta['author'] = self.options['author']
         else:
-            self.meta['author'] = Page.Author()
+            self.meta['author'] = Author()
 
         # category
         if 'category' in self.meta:
@@ -175,10 +150,11 @@ class Page(object):
         if not templ_vars:
             templ_vars = {}
 
-        if not 'page' in templ_vars:
-            templ_vars.update({'page': self.meta})
-        else:
+        if 'page' in templ_vars:
+            util.out.debug('Found defaulted page data.')
             templ_vars['page'].update(self.meta)
+        else:
+            templ_vars.update({'page': self.meta})
 
         self.html = template.render(templ_vars)
 
@@ -205,3 +181,32 @@ class Page(object):
 
     def __repr__(self):
         return "&ltwok.page.Page '{0}'&gt".format(self.meta['slug'])
+
+
+class Author(object):
+    """Smartly manages a author with name and email"""
+    parse_author_regex = re.compile(r'^([^<>]*) *(<(.*@.*)>)?$')
+
+    def __init__(self, raw='', name=None, email=None):
+        self.raw = raw.strip()
+        self.name = name
+        self.email = email
+
+    @classmethod
+    def parse(cls, raw):
+        a = cls(raw)
+        a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
+        if a.name:
+            a.name = a.name.strip()
+        if a.email:
+            a.email = a.email.strip()
+        return a
+
+    def __str__(self):
+        if not self.name:
+            return self.raw
+        if not self.email:
+            return self.name
+
+        return "{0} <{1}>".format(self.name, self.email)
+
