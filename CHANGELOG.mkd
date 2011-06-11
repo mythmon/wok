@@ -1,3 +1,17 @@
+Version 0.5
+-----------
+### Features
+-   The structure of the generated files is now user configurable.
+-   New config option: `author`. See docs for more info.
+-   Markdown, Pygments, and Docutils dependencies are now optional.
+-   Output from wok will now wrap to terminal windows.
+
+### Other
+-   The readme now references some sample sites.
+-   Added a license. wok is now officially open source!
+-   Tweaked output formats.
+-   Page metadata is now stored in a more consistent way. Sure, you don't care, but I do. :)
+
 Version 0.4
 -----------
 ### Features
@@ -9,6 +23,7 @@ Version 0.4
 -   Added page.url field, settable in a page's header and accessible from
     templates.
 -   Started adding unit tests.
+
 ### Fixes
 -   Fix `Page.author` to actually parse author strings right.
 
