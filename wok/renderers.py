@@ -44,7 +44,7 @@ try:
     all.append(Markdown)
 
 except ImportError:
-    util.out.info('Loading renderers', 'Markdown not enabled.')
+    util.out.info('Markdown not enabled.')
 
 # Include ReStructuredText Parser, if we have docutils
 try:
@@ -68,7 +68,7 @@ try:
 
     all.append(ReStructuredText)
 except:
-    util.out.info('Loading renderers', 'reStructuredText not enabled.')
+    util.out.info('reStructuredText not enabled.')
 
 if len(all) <= 2:
     print('You probably want to install either Markdown or docutils '

@@ -51,7 +51,7 @@ class Page(object):
                 self.meta = yaml.load(header)
 
         self.build_meta()
-        util.out.info('Page', 'Rendering {0} with {1}'.format(
+        util.out.info('Rendering {0} with {1}'.format(
             self.meta['slug'], self.renderer))
         self.meta['content'] = self.renderer.render(self.original)
 
@@ -79,18 +79,16 @@ class Page(object):
             if (self.meta['title'] == ''):
                 self.meta['title'] = self.filename
 
-            util.out.warn('metadata', "You didn't specify a title in {0}."
+            util.out.warn("You didn't specify a title in {0}."
                     "Using the file name as a title.".format(self.filename))
 
         # slug
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
-            util.out.debug('metadata',
-                "You didn't specify a slug, generating it from the title.")
+            util.out.debug("You didn't specify a slug, generating it from the title.")
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
-            util.out.warn('metadata',
-                'Your slug should probably be all lower case,' +
-                'and match the regex "[a-z0-9-]*"')
+            util.out.warn('Your slug should probably be all lower case, and '
+                'match "[a-z0-9-]*"')
 
         # author
         if 'author' in self.meta:
@@ -126,7 +124,7 @@ class Page(object):
             self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
 
-        util.out.debug('page.tags', 'Tags for {0}: {1}'.
+        util.out.debug('Tags for {0}: {1}'.
                 format(self.meta['slug'], self.meta['tags']))
 
         # url
@@ -168,12 +166,12 @@ class Page(object):
         try:
             os.makedirs(os.path.dirname(path))
         except OSError as e:
-            util.out.debug('writing files', 'makedirs failed for {0}'.format(
+            util.out.debug('makedirs failed for {0}'.format(
                 os.path.basename(path)))
             # Probably that the dir already exists, so thats ok.
             # TODO: double check this. Permission errors are something to worry
             # about
-        util.out.info('Page.write', 'writing to {0}'.format(path))
+        util.out.info('writing to {0}'.format(path))
 
         f = open(path, 'w')
         f.write(self.html)

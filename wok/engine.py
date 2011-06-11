@@ -107,7 +107,7 @@ class Engine(object):
                             renderer = r
                             break
                     else:
-                        util.out.warn('Loading render', 'No parser found '
+                        util.out.warn('No parser found '
                                 'for {0}. Using default renderer.'.format(f))
                         renderer = renderers.Renderer
 
@@ -136,11 +136,10 @@ class Engine(object):
                     siblings = parent['subpages']
                 siblings.append(p)
             except IndexError:
-                util.out.error('Categories',
-                    'It looks like the page "{0}" is an orphan!  For a page '
-                    'to be in category "foo/bar", there needs to be page with '
-                    'slug "foo" with no category, and a page with slug "bar" '
-                    'with category "foo".'.format(p.path))
+                util.out.error('It looks like the page "{0}" is an orphan! '
+                    'For a page to be in category "foo/bar", there needs to be'
+                    'page with slug "foo" with no category, and a page with '
+                    'slug "bar" with category "foo".'.format(p.path))
 
     def render_site(self):
         # Gather tags

@@ -10,23 +10,23 @@ class Out(object):
         self.level = 1
         self.wrap = os.isatty(sys.stdout.fileno())
 
-    def error(self, kind, message):
+    def error(self, message):
         if self.level >= 0:
-            self.wrapped_print("Error from {0}: {1}".format(kind, message))
+            self.pretty_print("Error: {0}".format(message))
 
-    def warn(self, kind, message):
+    def warn(self, message):
         if self.level >= 1:
-            self.wrapped_print("Warning from {0}: {1}".format(kind, message))
+            self.pretty_print("Warning: {0}".format(message))
 
-    def info(self, kind, message):
+    def info(self, message):
         if self.level >= 2:
-            self.wrapped_print("Info from {0}: {1}".format(kind, message))
+            self.pretty_print("Info: {0}".format(message))
 
-    def debug(self, kind, message):
+    def debug(self, message):
         if self.level >= 3:
-            self.wrapped_print("Debug from {0}: {1}".format(kind, message))
+            self.pretty_print("Debug: {0}".format(message))
 
-    def wrapped_print(self, message):
+    def pretty_print(self, message):
         if self.wrap:
             _,w = [int(n) for n in os.popen('stty size', 'r').read().split()]
             message = textwrap.fill(message, w)
