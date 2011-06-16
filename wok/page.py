@@ -79,7 +79,7 @@ class Page(object):
             if (self.meta['title'] == ''):
                 self.meta['title'] = self.filename
 
-            util.out.warn("You didn't specify a title in {0}."
+            util.out.warn("You didn't specify a title in {0}. "
                     "Using the file name as a title.".format(self.filename))
 
         # slug

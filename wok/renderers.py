@@ -1,9 +1,11 @@
+from wok import util
+
 # Check for pygments
 try:
     import pygments
     have_pygments = True
 except ImportError:
-    out.util.info('Loading renderers', 'Pygments not enabled.')
+    util.out.info('Pygments not enabled.')
     have_pygments = False
 
 # List of available renderers

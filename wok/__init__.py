@@ -1,1 +1,1 @@
-version = u'0.5'
+version = u'0.5.1'

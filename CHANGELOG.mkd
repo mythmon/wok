@@ -1,3 +1,9 @@
+Version 0.5.1
+-------------
+### Fixes
+-   Fix a bug related to optionally depending on pygments.
+-   Fix some output formatting.
+
 Version 0.5
 -----------
 ### Features
