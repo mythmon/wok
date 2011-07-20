@@ -135,9 +135,9 @@ Possible configuration options (and their defaults) are
     `page.author`.
 -   `url_pattern` (`/{category}/{slug}.html`) - The pattern used to name and
     place the output files. The default produces URLs like
-    `/category/subcategory/foo.html`
+    `/category/subcategory/foo.html`. To get "wordpress style" urls, you could use `/{category}/{slug}/index.html`.
 
     Available variables:
 
-    -   `{content}` - The category of the site, slash seperated.
+    -   `{category}` - The category of the site, slash seperated.
     -   `{slug}` - The slug of the page.
