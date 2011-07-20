@@ -120,9 +120,9 @@ class Engine(object):
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.meta['category']))
 
-        for p in [p.meta for p in self.all_pages]:
-            if len(p['category']) > 0:
-                top_cat = p['category'][0]
+        for p in self.all_pages:
+            if len(p.meta['category']) > 0:
+                top_cat = p.meta['category'][0]
                 if not top_cat in self.categories:
                     self.categories[top_cat] = []
 
@@ -130,10 +130,10 @@ class Engine(object):
 
             try:
                 siblings = site_tree
-                for cat in p['category']:
+                for cat in p.meta['category']:
                     parent = [subpage for subpage in siblings
-                                 if subpage['slug']== cat][0]
-                    siblings = parent['subpages']
+                                if subpage.meta['slug'] == cat][0]
+                    siblings = parent.meta['subpages']
                 siblings.append(p)
             except IndexError:
                 util.out.error('It looks like the page "{0}" is an orphan! '
