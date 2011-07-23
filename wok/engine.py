@@ -137,9 +137,9 @@ class Engine(object):
                 siblings.append(p)
             except IndexError:
                 util.out.error('It looks like the page "{0}" is an orphan! '
-                    'For a page to be in category "foo/bar", there needs to be'
-                    'page with slug "foo" with no category, and a page with '
-                    'slug "bar" with category "foo".'.format(p.path))
+                    'For a page to be in category "foo/bar", there needs to '
+                    'be a page with slug "foo" with no category, and a page '
+                    'with slug "bar" with category "foo".'.format(p.path))
 
     def render_site(self):
         # Gather tags
