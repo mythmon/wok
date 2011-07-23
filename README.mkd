@@ -1,12 +1,13 @@
 wok
 ===
 wok is a static website generator. It turns a pile of templates, content, and
-resources (like CSS and images) into a neat stack of plain html.
+resources (like CSS and images) into a neat stack of plain HTML.
 
-The idea is that you don't need a big PHP engine generating every page every
-visit: you can generate them all ahead of time, and only regenerate things
-when something has changed. A good way this could be done would be with a
-post-commit hook on a git repository containing your content or layout.
+The idea is that you don't need a big server-side engine like PHP to generate 
+every page every visit: you can generate them all ahead of time, and only 
+regenerate things when something has changed. A good way this could be done
+would be with a post-commit hook on a git repository containing your content 
+or layout.
 
 I made wok because projects like [Jekyll][jekyll], [Hyde][hyde], and
 [Static][static] were intriguing, but in the end didn't quite match what I
@@ -34,14 +35,14 @@ For some real world examples check out these sites.
 
 Installation
 ------------
-Note that wok is in alpha. It is under active development, and its features are
-still in flux and there are probably bugs. That being said, it is still quite
+Note that wok is in alpha. It is under active development; Its features are
+still in flux, and there are probably bugs. That being said, it is still quite
 usable. The recommended way to install wok is from the [Python Package
 Index][pypi] with this command.
 
     sudo pip install wok
 
-Alternative, if you want to hack on wok or just need the latest code, you can
+Alternatively, if you want to hack on wok or just need the latest code, you can
 run from git head, and if you want to you can install to your system
 directories with this command. Note that you will need to install dependencies
 by hand in this case.
@@ -70,7 +71,7 @@ Usage
 To use wok, go to the directory where your site files are located, and issue
 the command `wok`.  For now, no output will be given unless something goes
 wrong. If it returns without error, you should have a shiny new output folder
-containing some html, and your media that represents your shiny new site.
+containing some HTML, and your media that represents your shiny new site.
 
 To aid in testing links on the site, wok includes a development server. The
 comments on that particular file say:
@@ -85,14 +86,14 @@ wok pulls the pieces of your site from three places. For each of these places,
 you can modify the path wok looks for them in the config file.
 
 ### Content ###
-Pulled from a directory named `content` by default. Content is written in a
-mark up language, or as plain text, with an optional YAML header section. The
+Pulled from a directory named `content` by default. Content is written in 
+lightweight markup or in plain text, with an optional YAML header section. The
 directory structure of the file mean nothing to wok. It builds the structure
 of the site based on the titles and the category meta data.
 
 Since wok uses lightweight mark up languages like [Markdown][mkd] and
 [reStructuredText][rst], it is easy to do nice formatting in the pages without
-using a GUI editor or a complicated language like HTML. Built in syntax
+using a GUI editor or a cumbersome language like HTML. Built in syntax
 highlighting and media copying make things even easier.
 
 [mkd]: http://daringfireball.net/projects/markdown/
@@ -104,8 +105,8 @@ highlighting and media copying make things even easier.
 
 ### Templates ###
 Pulled from `templates` by default. wok uses [Jinja2][jinja] templates, with
-various variables exposed to build pages. This is a very flexible temperating
-environment, with control flow, filters and other ways to slice and dice the
+various variables exposed to build pages. This is a very flexible templating
+environment with control flow, filters, and other ways to slice and dice the
 data that wok gives you.
 
 [More info][more_templates]
@@ -135,7 +136,8 @@ Possible configuration options (and their defaults) are
     `page.author`.
 -   `url_pattern` (`/{category}/{slug}.html`) - The pattern used to name and
     place the output files. The default produces URLs like
-    `/category/subcategory/foo.html`. To get "wordpress style" urls, you could use `/{category}/{slug}/index.html`.
+    `/category/subcategory/foo.html`. To get "wordpress style" urls, you could
+    use `/{category}/{slug}/index.html`.
 
     Available variables:
 
