@@ -1,6 +1,7 @@
 import os
 from collections import namedtuple
 from datetime import datetime
+import logging
 
 import jinja2
 import yaml
@@ -51,7 +52,7 @@ class Page(object):
                 self.meta = yaml.load(header)
 
         self.build_meta()
-        util.out.info('Rendering {0} with {1}'.format(
+        logging.info('Rendering {0} with {1}'.format(
             self.meta['slug'], self.renderer))
         self.meta['content'] = self.renderer.render(self.original)
 
@@ -79,15 +80,15 @@ class Page(object):
             if (self.meta['title'] == ''):
                 self.meta['title'] = self.filename
 
-            util.out.warn("You didn't specify a title in {0}. "
+            logging.warning("You didn't specify a title in {0}. "
                     "Using the file name as a title.".format(self.filename))
 
         # slug
         if not 'slug' in self.meta:
             self.meta['slug'] = util.slugify(self.meta['title'])
-            util.out.debug("You didn't specify a slug, generating it from the title.")
+            logging.debug("You didn't specify a slug, generating it from the title.")
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
-            util.out.warn('Your slug should probably be all lower case, and '
+            logging.warning('Your slug should probably be all lower case, and '
                 'match "[a-z0-9-]*"')
 
         # author
@@ -124,7 +125,7 @@ class Page(object):
             self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
 
-        util.out.debug('Tags for {0}: {1}'.
+        logging.debug('Tags for {0}: {1}'.
                 format(self.meta['slug'], self.meta['tags']))
 
         # url
@@ -149,7 +150,7 @@ class Page(object):
             templ_vars = {}
 
         if 'page' in templ_vars:
-            util.out.debug('Found defaulted page data.')
+            logging.debug('Found defaulted page data.')
             templ_vars['page'].update(self.meta)
         else:
             templ_vars.update({'page': self.meta})
@@ -166,12 +167,12 @@ class Page(object):
         try:
             os.makedirs(os.path.dirname(path))
         except OSError as e:
-            util.out.debug('makedirs failed for {0}'.format(
+            logging.debug('makedirs failed for {0}'.format(
                 os.path.basename(path)))
             # Probably that the dir already exists, so thats ok.
             # TODO: double check this. Permission errors are something to worry
             # about
-        util.out.info('writing to {0}'.format(path))
+        logging.info('writing to {0}'.format(path))
 
         f = open(path, 'w')
         f.write(self.html)
