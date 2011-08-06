@@ -1,9 +1,11 @@
 #!/usr/bin/python2
 import os
-import yaml
 import shutil
 from datetime import datetime
 from optparse import OptionParser
+import logging
+
+import yaml
 
 import wok
 from wok import page
@@ -25,16 +27,18 @@ class Engine(object):
 
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
-        # Options for noisiness level
-        parser.set_defaults(verbose=1)
-        parser.add_option('-q', '--quiet', action='store_const', const=0,
-                dest='verbose')
-        parser.add_option('--warnings', action='store_const', const=1,
-                dest='verbose')
-        parser.add_option('-v', '--verbose', action='store_const', const=2,
-                dest='verbose')
-        parser.add_option('--debug', action='store_const', const=3,
-                dest='verbose')
+        # Options for noisiness level and logging
+        parser.set_defaults(loglevel=logging.WARNING)
+        parser.add_option('-q', '--quiet', action='store_const',
+                const=logging.ERROR, dest='loglevel')
+        parser.add_option('--warnings', action='store_const',
+                const=logging.WARNING, dest='loglevel')
+        parser.add_option('-v', '--verbose', action='store_const',
+                const=logging.INFO, dest='loglevel')
+        parser.add_option('--debug', action='store_const',
+                const=logging.DEBUG, dest='loglevel')
+
+        parser.add_option('--log', '-l', dest='logfile')
 
         # Add option to to run the development server after generating pages
         parser.add_option('--server', action='store_true', dest='runserver')
@@ -42,9 +46,13 @@ class Engine(object):
         parser.add_option('--port', action='store', dest='port', type='int')
 
         cli_options, args = parser.parse_args()
+        logging.basicConfig(
+            format='%(levelname)s: %(message)s',
+            level=cli_options.loglevel,
+            filename=cli_options.logfile,
+            )
 
         self.all_pages = []
-        util.out.level = cli_options.verbose
 
         self.read_options()
         self.prepare_output()
@@ -107,7 +115,7 @@ class Engine(object):
                             renderer = r
                             break
                     else:
-                        util.out.warn('No parser found '
+                        logging.warning('No parser found '
                                 'for {0}. Using default renderer.'.format(f))
                         renderer = renderers.Renderer
 
@@ -136,7 +144,7 @@ class Engine(object):
                     siblings = parent.meta['subpages']
                 siblings.append(p)
             except IndexError:
-                util.out.error('It looks like the page "{0}" is an orphan! '
+                logging.error('It looks like the page "{0}" is an orphan! '
                     'For a page to be in category "foo/bar", there needs to '
                     'be a page with slug "foo" with no category, and a page '
                     'with slug "bar" with category "foo".'.format(p.path))

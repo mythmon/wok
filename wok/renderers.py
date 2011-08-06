@@ -1,3 +1,5 @@
+import logging
+
 from wok import util
 
 # Check for pygments
@@ -5,7 +7,7 @@ try:
     import pygments
     have_pygments = True
 except ImportError:
-    util.out.info('Pygments not enabled.')
+    logging.info('Pygments not enabled.')
     have_pygments = False
 
 # List of available renderers
@@ -46,7 +48,7 @@ try:
     all.append(Markdown)
 
 except ImportError:
-    util.out.info('Markdown not enabled.')
+    logging.info('Markdown not enabled.')
 
 # Include ReStructuredText Parser, if we have docutils
 try:
@@ -70,7 +72,7 @@ try:
 
     all.append(ReStructuredText)
 except:
-    util.out.info('reStructuredText not enabled.')
+    logging.info('reStructuredText not enabled.')
 
 if len(all) <= 2:
     print('You probably want to install either Markdown or docutils '
