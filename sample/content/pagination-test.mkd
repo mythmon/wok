@@ -1,0 +1,8 @@
+title: Pagination Test
+slug: pagination
+type: index
+pagination:
+    list: page.subpages
+    limit: 3
+---
+Let's test pagination.

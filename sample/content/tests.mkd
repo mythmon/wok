@@ -1,6 +1,6 @@
 title: Tests Main
 slug: tests
 type: index
-url: /index.html
+url: /index{page}.html
 ---
 These are the tests
