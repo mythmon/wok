@@ -14,3 +14,9 @@ def slugify(text, delim=u'-'):
         if word:
             result.append(word)
     return unicode(delim.join(result))
+
+
+def chunk(li, n):
+    """Yield succesive n-size chunks from l."""
+    for i in xrange(0, len(li), n):
+        yield li[i:i+n]

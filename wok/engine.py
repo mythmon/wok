@@ -172,8 +172,11 @@ class Engine(object):
 
         for p in self.all_pages:
             if p.meta['published']:
-                p.render(templ_vars)
+                new_pages = p.render(templ_vars)
                 p.write()
+                if new_pages:
+                    logging.debug('found new_pages')
+                    self.all_pages += new_pages
 
 if __name__ == '__main__':
     Engine()
