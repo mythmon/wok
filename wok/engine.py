@@ -27,16 +27,18 @@ class Engine(object):
 
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
-        # Options for noisiness level
-        parser.set_defaults(logginglevel=logging.WARNING)
+        # Options for noisiness level and logging
+        parser.set_defaults(loglevel=logging.WARNING)
         parser.add_option('-q', '--quiet', action='store_const',
                 const=logging.ERROR, dest='loglevel')
         parser.add_option('--warnings', action='store_const',
-                const=logging.WARNING, dest='logginglevel')
+                const=logging.WARNING, dest='loglevel')
         parser.add_option('-v', '--verbose', action='store_const',
-                const=logging.INFO, dest='logginglevel')
+                const=logging.INFO, dest='loglevel')
         parser.add_option('--debug', action='store_const',
-                const=logging.DEBUG, dest='logginglevel')
+                const=logging.DEBUG, dest='loglevel')
+
+        parser.add_option('--log', '-l', dest='logfile')
 
         # Add option to to run the development server after generating pages
         parser.add_option('--server', action='store_true', dest='runserver')
@@ -46,7 +48,9 @@ class Engine(object):
         cli_options, args = parser.parse_args()
         logging.basicConfig(
             format='%(levelname)s: %(message)s',
-            level=cli_options.logginglevel)
+            level=cli_options.loglevel,
+            filename=cli_options.logfile,
+            )
 
         self.all_pages = []
 
