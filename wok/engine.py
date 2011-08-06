@@ -20,7 +20,7 @@ class Engine(object):
         'output_dir'  : 'output',
         'media_dir'   : 'media',
         'site_title'  : 'Some random Wok site',
-        'url_pattern' : '/{category}/{slug}.html',
+        'url_pattern' : '/{category}/{slug}{page}.html',
     }
 
     def __init__(self, output_lvl = 1):
@@ -74,7 +74,7 @@ class Engine(object):
 
             if yaml_config:
                 self.options.update(yaml_config)
-        
+
         if 'author' in self.options:
             self.options['author'] = page.Author.parse(self.options['author'])
 

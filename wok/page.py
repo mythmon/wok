@@ -180,9 +180,10 @@ class Page(object):
                 source = self.meta['subpages']
                 # for now we assume they meant `page.subpages`
 
+                source.sort(key=lambda x: x['slug'])
                 chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
-                for idx, chunk in enumerate(chunks):
+                for idx, chunk in enumerate(chunks[1:]):
                     print('chunk is ' + repr([c['slug'] for c in chunk]))
                     logging.debug('idx: ' + repr(idx))
                     extra_meta = {
@@ -198,18 +199,18 @@ class Page(object):
 
                 for idx, page in enumerate(extra_pages):
                     if idx == 0:
-                        page.meta['pagination']['prev_page'] = self
+                        page.meta['pagination']['prev_page'] = self.meta
                     else:
-                        page.meta['pagination']['prev_page'] = extra_pages[idx-1]
+                        page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
 
                     if idx < len(extra_pages) - 1:
-                        page.meta['pagination']['next_page'] = extra_pages[idx+1]
+                        page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
 
                 self.meta['pagination'].update({
                     'page_items': chunks[0],
                     'num_pages': len(chunks),
                     'cur_page': 1,
-                    'next_page': extra_pages[0],
+                    'next_page': extra_pages[0].meta,
                 })
             else:
                 pass
@@ -251,7 +252,7 @@ class Page(object):
         f.close()
 
     def __repr__(self):
-        return "&ltwok.page.Page '{0}'&gt".format(self.meta['slug'])
+        return "&lt;wok.page.Page '{0}'&gt;".format(self.meta['slug'])
 
 
 class Author(object):
