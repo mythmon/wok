@@ -184,7 +184,7 @@ class Page(object):
                 chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
                 for idx, chunk in enumerate(chunks[1:]):
-                    print('chunk is ' + repr([c['slug'] for c in chunk]))
+                    logging.debug('chunk is ' + repr([c['slug'] for c in chunk]))
                     logging.debug('idx: ' + repr(idx))
                     extra_meta = {
                         'pagination': {

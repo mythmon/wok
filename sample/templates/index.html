@@ -6,21 +6,10 @@
 
 <hr>
 
-{% if page.pagination %}
-    <span>
-        {% if page.pagination.prev_page %}
-            <a href="{{ page.pagination.prev_page.url }}">Previous Page</a>
-        {% endif %}
-        Page {{ page.pagination.cur_page }} of {{ page.pagination.num_pages }}
-        {% if page.pagination.next_page %}
-            <a href="{{ page.pagination.next_page.url }}">Next Page</a>
-        {% endif %}
-    </span>
-    {% for subpage in page.pagination.page_items %}
-        <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
-        {{subpage.content}}
-    {% endfor %}
-{% endif %}
+{% for subpage in page.subpages %}
+    <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
+    {{subpage.content}}
+{% endfor %}
 
 <hr>
 

@@ -1,6 +1,6 @@
 title: Pagination Test
 slug: pagination
-type: index
+type: pagination
 pagination:
     list: page.subpages
     limit: 3
