@@ -179,8 +179,12 @@ class Page(object):
 
                 source = self.meta['subpages']
                 # for now we assume they meant `page.subpages`
+                sort_key = self.meta['pagination'].get('sort_key', 'slug')
+                sort_reverse = self.meta['pagination'].get('sort_reverse', False)
+                logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
+                    sort_key, sort_reverse))
 
-                source.sort(key=lambda x: x['slug'])
+                source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
                 chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
                 # Make a page for each chunk

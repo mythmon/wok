@@ -4,6 +4,7 @@ type: pagination
 pagination:
     list: page.subpages
     limit: 3
-    sort: slug
+    sort_key: slug
+    sort_reverse: True
 ---
 Let's test pagination.
