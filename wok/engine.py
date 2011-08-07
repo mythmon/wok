@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 import os
+import sys
 import shutil
 from datetime import datetime
 from optparse import OptionParser
@@ -46,11 +47,16 @@ class Engine(object):
         parser.add_option('--port', action='store', dest='port', type='int')
 
         cli_options, args = parser.parse_args()
-        logging.basicConfig(
-            format='%(levelname)s: %(message)s',
-            level=cli_options.loglevel,
-            filename=cli_options.logfile,
-            )
+        logging_options = {
+            'format': '%(levelname)s: %(message)s',
+            'level': cli_options.loglevel,
+        }
+        if cli_options.logfile:
+            logging_options['filename'] = cli_options.logfile
+        else:
+            logging_options['stream'] = sys.stdout
+
+        logging.basicConfig(**logging_options)
 
         self.all_pages = []
 
