@@ -183,6 +183,7 @@ class Page(object):
                 source.sort(key=lambda x: x['slug'])
                 chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
+                # Make a page for each chunk
                 for idx, chunk in enumerate(chunks[1:]):
                     logging.debug('chunk is ' + repr([c['slug'] for c in chunk]))
                     logging.debug('idx: ' + repr(idx))
@@ -197,6 +198,7 @@ class Page(object):
                         renderer=self.renderer, extra_meta=extra_meta)
                     extra_pages.append(new_page)
 
+                # Set up the next/previous page links
                 for idx, page in enumerate(extra_pages):
                     if idx == 0:
                         page.meta['pagination']['prev_page'] = self.meta
@@ -205,7 +207,10 @@ class Page(object):
 
                     if idx < len(extra_pages) - 1:
                         page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
+                    else:
+                        page.meta['pagination']['next_page'] = None
 
+                # Pagination date for this page
                 self.meta['pagination'].update({
                     'page_items': chunks[0],
                     'num_pages': len(chunks),
@@ -220,11 +225,14 @@ class Page(object):
             logging.debug('Found defaulted page data.')
             templ_vars['page'].update(self.meta)
         else:
-            templ_vars.update({
-                'page': self.meta,
-                'pagination': self.meta['pagination'],
-            })
+            templ_vars['page'] = self.meta
 
+        if 'pagination' in templ_vars:
+            templ_vars['pagination'].update(self.meta['pagination'])
+        else:
+            templ_vars['pagination'] = self.meta['pagination']
+
+        logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
         self.html = template.render(templ_vars)
 
         logging.debug('extra pages is: ' + repr(extra_pages))

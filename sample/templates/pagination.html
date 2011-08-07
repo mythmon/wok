@@ -6,17 +6,17 @@
 
 <hr>
 
-{% if page.pagination %}
+{% if pagination %}
     <span>
-        {% if page.pagination.prev_page %}
-            <a href="{{ page.pagination.prev_page.url }}">Previous Page</a>
+        {% if pagination.prev_page %}
+            <a href="{{ pagination.prev_page.url }}">Previous Page</a>
         {% endif %}
-        Page {{ page.pagination.cur_page }} of {{ page.pagination.num_pages }}
-        {% if page.pagination.next_page %}
-            <a href="{{ page.pagination.next_page.url }}">Next Page</a>
+        Page {{ pagination.cur_page }} of {{ pagination.num_pages }}
+        {% if pagination.next_page %}
+            <a href="{{ pagination.next_page.url }}">Next Page</a>
         {% endif %}
     </span>
-    {% for subpage in page.pagination.page_items %}
+    {% for subpage in pagination.page_items %}
         <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
         {{subpage.content}}
     {% endfor %}
