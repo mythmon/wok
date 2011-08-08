@@ -177,20 +177,38 @@ class Page(object):
             if 'page_items' not in self.meta['pagination']:
                 # This is the first page of a set of pages. Set up the rest
 
-                source = self.meta['subpages']
-                # for now we assume they meant `page.subpages`
+                source_spec = self.meta['pagination']['list'].split('.')
+                logging.debug('source spec is: ' + repr(source_spec))
+                if source_spec[0] == 'page':
+                    source = self.meta
+                    source_spec.pop(0)
+                elif source_spec[0] == 'site':
+                    source = templ_vars['site']
+                    source_spec.pop(0)
+
+                for k in source_spec:
+                    logging.debug(k)
+                    source = source[k]
+
+                logging.debug('source is: ' + repr(source))
+
                 sort_key = self.meta['pagination'].get('sort_key', 'slug')
                 sort_reverse = self.meta['pagination'].get('sort_reverse', False)
                 logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
                     sort_key, sort_reverse))
 
-                source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
+                if isinstance(source[0], Page):
+                    source = [p.meta for p in source]
+
+                if isinstance(source[0], dict):
+                    source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
+                else:
+                    source.sort(key=lambda x: x.__getattribute__(sort_key), reverse=sort_reverse)
+
                 chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
                 # Make a page for each chunk
                 for idx, chunk in enumerate(chunks[1:]):
-                    logging.debug('chunk is ' + repr([c['slug'] for c in chunk]))
-                    logging.debug('idx: ' + repr(idx))
                     extra_meta = {
                         'pagination': {
                             'page_items': chunk,
