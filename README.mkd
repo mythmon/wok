@@ -117,6 +117,29 @@ data that wok gives you.
 [more_templates]: https://github.com/mythmon/wok/wiki/Templates
 [jinja]: http://jinja.pocoo.org/
 
+### Pagination ###
+Pagination requires teamwork from both the templates and the content of a page.
+In the content, place a new item, `pagination`, with sub-items `limit` and
+`list`. Optionally you can also include `sort_key` and `sort_reverse`.
+
+Example
+
+    title: Pagination Test
+    pagination:
+        list: page.subpages
+        limit: 3
+        sort_key: slug
+        sort_reverse: True
+    ---
+    Let's test pagination.
+
+Then the template for this page will get a new variable `pagination` with
+useful things like `pagination.page_items` and `pagination.next_page`.
+
+[More info][more_pagination]
+
+[more_pagination]: https://github.com/mythmon/wok/wiki/Pagination
+
 ### Media ###
 Media is pretty simple. It is intended to be used for things like site wide
 images, style sheets and javascript. wok will copy everything from the media

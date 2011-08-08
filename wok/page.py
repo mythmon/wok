@@ -16,7 +16,7 @@ class Page(object):
     associated metadata.
     """
 
-    def __init__(self, path, options, renderer=None):
+    def __init__(self, path, options, renderer=None, extra_meta=None):
         """
         Load a file from disk, and parse the metadata from it.
 
@@ -51,9 +51,13 @@ class Page(object):
                 self.original = splits[1]
                 self.meta = yaml.load(header)
 
+        if extra_meta:
+            logging.debug('Got extra_meta')
+            self.meta.update(extra_meta)
+
         self.build_meta()
-        logging.info('Rendering {0} with {1}'.format(
-            self.meta['slug'], self.renderer))
+        logging.info('Rendering {0} with {1} (pagination? {2})'.format(
+            self.meta['slug'], self.renderer, 'pagination' in self.meta))
         self.meta['content'] = self.renderer.render(self.original)
 
     def build_meta(self):
@@ -71,7 +75,7 @@ class Page(object):
         `page.subpages` - will be a list containing every sub page of this page
         """
 
-        if self.meta is None:
+        if not self.meta:
             self.meta = {}
 
         # title
@@ -128,13 +132,32 @@ class Page(object):
         logging.debug('Tags for {0}: {1}'.
                 format(self.meta['slug'], self.meta['tags']))
 
+        # pagination
+        if 'pagination' not in self.meta:
+            self.meta['pagination'] = {}
+
+        if 'cur_page' not in self.meta['pagination']:
+            self.meta['pagination']['cur_page'] = 1
+        if 'num_pages' not in self.meta['pagination']:
+            self.meta['pagination']['num_pages'] = 1
+
         # url
+        parts = {
+            'slug': self.meta['slug'],
+            'category': '/'.join(self.meta['category']),
+            'page': self.meta['pagination']['cur_page'],
+        }
+        logging.debug('current page: ' + repr(parts['page']))
+        if parts['page'] == 1:
+            parts['page'] = ''
+
         if not 'url' in self.meta:
-            parts = {
-                'slug' : self.meta['slug'],
-                'category' : '/'.join(self.meta['category']),
-            }
             self.meta['url'] = self.options['url_pattern'].format(**parts);
+        else:
+            self.meta['url'] = self.meta['url'].format(**parts);
+        # Get rid of extra slashes
+        self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
+        logging.debug(self.meta['url'])
 
         # subpages
         self.meta['subpages'] = []
@@ -149,13 +172,93 @@ class Page(object):
         if not templ_vars:
             templ_vars = {}
 
+        extra_pages = []
+        if 'pagination' in self.meta and 'list' in self.meta['pagination']:
+            if 'page_items' not in self.meta['pagination']:
+                # This is the first page of a set of pages. Set up the rest
+
+                source_spec = self.meta['pagination']['list'].split('.')
+                logging.debug('source spec is: ' + repr(source_spec))
+                if source_spec[0] == 'page':
+                    source = self.meta
+                    source_spec.pop(0)
+                elif source_spec[0] == 'site':
+                    source = templ_vars['site']
+                    source_spec.pop(0)
+
+                for k in source_spec:
+                    logging.debug(k)
+                    source = source[k]
+
+                logging.debug('source is: ' + repr(source))
+
+                sort_key = self.meta['pagination'].get('sort_key', 'slug')
+                sort_reverse = self.meta['pagination'].get('sort_reverse', False)
+                logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
+                    sort_key, sort_reverse))
+
+                if isinstance(source[0], Page):
+                    source = [p.meta for p in source]
+
+                if isinstance(source[0], dict):
+                    source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
+                else:
+                    source.sort(key=lambda x: x.__getattribute__(sort_key), reverse=sort_reverse)
+
+                chunks = list(util.chunk(source, self.meta['pagination']['limit']))
+
+                # Make a page for each chunk
+                for idx, chunk in enumerate(chunks[1:]):
+                    extra_meta = {
+                        'pagination': {
+                            'page_items': chunk,
+                            'num_pages': len(chunks),
+                            'cur_page': idx + 2,
+                        }
+                    }
+                    new_page = Page(self.path, self.options,
+                        renderer=self.renderer, extra_meta=extra_meta)
+                    extra_pages.append(new_page)
+
+                # Set up the next/previous page links
+                for idx, page in enumerate(extra_pages):
+                    if idx == 0:
+                        page.meta['pagination']['prev_page'] = self.meta
+                    else:
+                        page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
+
+                    if idx < len(extra_pages) - 1:
+                        page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
+                    else:
+                        page.meta['pagination']['next_page'] = None
+
+                # Pagination date for this page
+                self.meta['pagination'].update({
+                    'page_items': chunks[0],
+                    'num_pages': len(chunks),
+                    'cur_page': 1,
+                    'next_page': extra_pages[0].meta,
+                })
+            else:
+                pass
+                # Not page 1, render normally.
+
         if 'page' in templ_vars:
             logging.debug('Found defaulted page data.')
             templ_vars['page'].update(self.meta)
         else:
-            templ_vars.update({'page': self.meta})
+            templ_vars['page'] = self.meta
 
+        if 'pagination' in templ_vars:
+            templ_vars['pagination'].update(self.meta['pagination'])
+        else:
+            templ_vars['pagination'] = self.meta['pagination']
+
+        logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
         self.html = template.render(templ_vars)
+
+        logging.debug('extra pages is: ' + repr(extra_pages))
+        return extra_pages
 
     def write(self):
         """Write the page to an html file on disk."""
@@ -179,7 +282,7 @@ class Page(object):
         f.close()
 
     def __repr__(self):
-        return "&ltwok.page.Page '{0}'&gt".format(self.meta['slug'])
+        return "&lt;wok.page.Page '{0}'&gt;".format(self.meta['slug'])
 
 
 class Author(object):

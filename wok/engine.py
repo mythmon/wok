@@ -21,7 +21,7 @@ class Engine(object):
         'output_dir'  : 'output',
         'media_dir'   : 'media',
         'site_title'  : 'Some random Wok site',
-        'url_pattern' : '/{category}/{slug}.html',
+        'url_pattern' : '/{category}/{slug}{page}.html',
     }
 
     def __init__(self, output_lvl = 1):
@@ -80,7 +80,7 @@ class Engine(object):
 
             if yaml_config:
                 self.options.update(yaml_config)
-        
+
         if 'author' in self.options:
             self.options['author'] = page.Author.parse(self.options['author'])
 
@@ -134,9 +134,9 @@ class Engine(object):
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.meta['category']))
 
-        for p in self.all_pages:
-            if len(p.meta['category']) > 0:
-                top_cat = p.meta['category'][0]
+        for p in [p.meta for p in self.all_pages]:
+            if len(p['category']) > 0:
+                top_cat = p['category'][0]
                 if not top_cat in self.categories:
                     self.categories[top_cat] = []
 
@@ -144,10 +144,10 @@ class Engine(object):
 
             try:
                 siblings = site_tree
-                for cat in p.meta['category']:
+                for cat in p['category']:
                     parent = [subpage for subpage in siblings
-                                if subpage.meta['slug'] == cat][0]
-                    siblings = parent.meta['subpages']
+                                 if subpage['slug']== cat][0]
+                    siblings = parent['subpages']
                 siblings.append(p)
             except IndexError:
                 logging.error('It looks like the page "{0}" is an orphan! '
@@ -169,7 +169,7 @@ class Engine(object):
                 'title': self.options.get('site_title', 'Untitled'),
                 'datetime': datetime.now(),
                 'tags': tag_dict,
-                'pages': self.all_pages,
+                'pages': self.all_pages[:],
                 'categories': self.categories,
             },
         }
@@ -178,8 +178,11 @@ class Engine(object):
 
         for p in self.all_pages:
             if p.meta['published']:
-                p.render(templ_vars)
+                new_pages = p.render(templ_vars)
                 p.write()
+                if new_pages:
+                    logging.debug('found new_pages')
+                    self.all_pages += new_pages
 
 if __name__ == '__main__':
     Engine()
