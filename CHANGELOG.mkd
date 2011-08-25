@@ -1,3 +1,11 @@
+Version 0.6
+-----------
+### Features
+-   Pagination
+
+### Other
+-   Now using Python's built in logging module.
+
 Version 0.5.1
 -------------
 ### Fixes
