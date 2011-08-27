@@ -134,26 +134,25 @@ class Engine(object):
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.meta['category']))
 
-        for p in [p.meta for p in self.all_pages]:
-            if len(p['category']) > 0:
-                top_cat = p['category'][0]
+        for p in [p for p in self.all_pages]:
+            if len(p.meta['category']) > 0:
+                top_cat = p.meta['category'][0]
                 if not top_cat in self.categories:
                     self.categories[top_cat] = []
 
-                self.categories[top_cat].append(p)
+                self.categories[top_cat].append(p.meta)
 
             try:
                 siblings = site_tree
-                for cat in p['category']:
+                for cat in p.meta['category']:
+                    # This line will fail if the page is an orphan
                     parent = [subpage for subpage in siblings
                                  if subpage['slug']== cat][0]
                     siblings = parent['subpages']
-                siblings.append(p)
+                siblings.append(p.meta)
             except IndexError:
                 logging.error('It looks like the page "{0}" is an orphan! '
-                    'For a page to be in category "foo/bar", there needs to '
-                    'be a page with slug "foo" with no category, and a page '
-                    'with slug "bar" with category "foo".'.format(p.path))
+                        'This will probably cause problems.'.format(p.path))
 
     def render_site(self):
         # Gather tags
