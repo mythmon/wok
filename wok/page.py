@@ -64,15 +64,17 @@ class Page(object):
         """
         Ensures the guarantees about metadata for documents are valid.
 
-        `page.title` - will exist and will be a string.
-        `page.slug` - will exist and will be a string.
-        `page.author` - will exist, and contain fields `name` and `email`.
-        `page.category` - will be a list.
-        `page.published` - will exist.
-        `page.datetime` - will be a datetime.
-        `page.tags` - will be a list.
-        `page.url` - will be the url of the page, relative to the web root.
-        `page.subpages` - will be a list containing every sub page of this page
+        `page.title` - Will exist and will be a string.
+        `page.slug` - Will exist and will be a string.
+        `page.author` - Will exist, and contain fields `name` and `email`.
+        `page.category` - Will be a list.
+        `page.published` - Will exist.
+        `page.datetime` - Will be a datetime.
+        `page.date` - Will be a date
+        `page.time` - Will be a time
+        `page.tags` - Will be a list.
+        `page.url` - Will be the url of the page, relative to the web root.
+        `page.subpages` - Will be a list containing every sub page of this page
         """
 
         if not self.meta:
@@ -121,6 +123,9 @@ class Page(object):
                 self.meta['datetime'] = self.meta[name]
         if not 'datetime' in self.meta:
             self.meta['datetime'] = datetime.now()
+        # date
+        self.meta['date'] = self.meta['datetime'].date()
+        self.meta['time'] = self.meta['datetime'].time()
 
         # tags
         if not 'tags' in self.meta:
