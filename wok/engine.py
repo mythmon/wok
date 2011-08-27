@@ -163,20 +163,23 @@ class Engine(object):
         for tag in tag_set:
             tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
 
-        templ_vars = {
-            'site': {
-                'title': self.options.get('site_title', 'Untitled'),
-                'datetime': datetime.now(),
-                'tags': tag_dict,
-                'pages': self.all_pages[:],
-                'categories': self.categories,
-            },
-        }
-        if 'author' in self.options:
-            templ_vars['site']['author'] = self.options['author']
-
         for p in self.all_pages:
             if p.meta['published']:
+                # Construct this every time, to avoid sharing one instance
+                # between page objects.
+                templ_vars = {
+                    'site': {
+                        'title': self.options.get('site_title', 'Untitled'),
+                        'datetime': datetime.now(),
+                        'tags': tag_dict,
+                        'pages': self.all_pages[:],
+                        'categories': self.categories,
+                    },
+                }
+                if 'author' in self.options:
+                    templ_vars['site']['author'] = self.options['author']
+
+                # Rendering the page might give us back more pages to render.
                 new_pages = p.render(templ_vars)
                 p.write()
                 if new_pages:
