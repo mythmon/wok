@@ -1,3 +1,12 @@
+Version 0.6.1
+-------------
+### Features
+-   Added `page.date` and `page.time` template variables.
+
+### Fixes
+-   Make custom variables in pages not propogate to later pages.
+-   Make orphan pages only print an error, not throw an exception.
+
 Version 0.6
 -----------
 ### Features
