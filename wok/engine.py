@@ -61,6 +61,7 @@ class Engine(object):
         self.all_pages = []
 
         self.read_options()
+        self.sanity_check()
         self.prepare_output()
         self.load_pages()
         self.make_tree()
@@ -83,6 +84,11 @@ class Engine(object):
 
         if 'author' in self.options:
             self.options['author'] = page.Author.parse(self.options['author'])
+
+    def sanity_check(self):
+        if not (os.path.isdir('templates') or os.path.isdir('content')):
+            logging.critical("This doesn't look like a wok site. Aborting.")
+            sys.exit(1)
 
     def prepare_output(self):
         if os.path.isdir(self.options['output_dir']):
