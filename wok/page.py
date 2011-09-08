@@ -56,7 +56,7 @@ class Page(object):
             self.meta.update(extra_meta)
 
         self.build_meta()
-        logging.info('Rendering {0} with {1} (pagination? {2})'.format(
+        logging.debug('Rendering {0} with {1} (pagination? {2})'.format(
             self.meta['slug'], self.renderer, 'pagination' in self.meta))
         self.meta['content'] = self.renderer.render(self.original)
 
@@ -86,7 +86,7 @@ class Page(object):
             if (self.meta['title'] == ''):
                 self.meta['title'] = self.filename
 
-            logging.warning("You didn't specify a title in {0}. "
+            logging.info("You didn't specify a title in {0}. "
                     "Using the file name as a title.".format(self.filename))
 
         # slug
