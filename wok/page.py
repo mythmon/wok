@@ -242,8 +242,10 @@ class Page(object):
                     'page_items': chunks[0],
                     'num_pages': len(chunks),
                     'cur_page': 1,
-                    'next_page': extra_pages[0].meta,
                 })
+                if len(extra_pages) > 1:
+                    self.meta['next_page'] = extra_pages[0].meta
+
             else:
                 pass
                 # Not page 1, render normally.
