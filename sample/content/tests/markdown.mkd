@@ -2,7 +2,7 @@ title: Markdown Test Page
 slug: markdown
 category: tests
 tags: markdown, sample
-author: Not Default
+author: [Me, Myself, I]
 ---
 This is the markdown test page
 ------------------------------

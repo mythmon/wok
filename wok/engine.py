@@ -87,8 +87,11 @@ class Engine(object):
             if yaml_config:
                 self.options.update(yaml_config)
 
-        if 'author' in self.options:
-            self.options['author'] = page.Author.parse(self.options['author'])
+        authors = self.options.get('authors', self.options.get('author', None))
+        if isinstance(authors, list):
+            self.options['authors'] = [page.Author.parse(a) for a in authors]
+        elif isinstance(authors, str):
+            self.options['authors'] = [page.Author.parse(a) for a in authors.split(',')]
 
     def sanity_check(self):
         """Basic sanity checks."""

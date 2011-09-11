@@ -64,9 +64,10 @@ class Page(object):
         """
         Ensures the guarantees about metadata for documents are valid.
 
-        `page.title` - Will exist and will be a string.
-        `page.slug` - Will exist and will be a string.
-        `page.author` - Will exist, and contain fields `name` and `email`.
+        `page.title` - Will be a string.
+        `page.slug` - Will be a string.
+        `page.author` - Will have fields `name` and `email`.
+        `page.authors` - Will be a list of Authors.
         `page.category` - Will be a list.
         `page.published` - Will exist.
         `page.datetime` - Will be a datetime.
@@ -97,11 +98,25 @@ class Page(object):
             logging.warning('Your slug should probably be all lower case, and '
                 'match "[a-z0-9-]*"')
 
-        # author
-        if 'author' in self.meta:
-            self.meta['author'] = Author.parse(self.meta['author'])
-        elif 'author' in self.options:
-            self.meta['author'] = self.options['author']
+        # authors and author
+        authors = self.meta.get('authors', self.meta.get('author', None))
+        if isinstance(authors, list):
+            self.meta['authors'] = [Author.parse(a) for a in authors]
+        elif isinstance(authors, str):
+            self.meta['authors'] = [Author.parse(a) for a in authors.split(',')]
+        elif authors is None:
+            if 'authors' in self.options:
+                self.meta['authors'] = self.options['authors']
+            else:
+                self.meta['authors'] = []
+        else:
+            # wait, what?
+            self.meta['authors'] = []
+            logging.error(('Authors in {0} is an unknown type. Valid types '
+                           'are string or list.').format(self.path))
+
+        if self.meta['authors']:
+            self.meta['author'] = self.meta['authors']
         else:
             self.meta['author'] = Author()
 
@@ -267,12 +282,8 @@ class Page(object):
                 'cur_page': 1,
             })
             if len(extra_pages) > 1:
-                print 'doing next_page'
                 self.meta['pagination']['next_page'] = extra_pages[0].meta
-            else:
-                print 'skipping next_page'
 
-        print self.meta['pagination'].keys()
         return extra_pages
 
     def write(self):
