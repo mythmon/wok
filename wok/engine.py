@@ -15,6 +15,10 @@ from wok import util
 from wok import devserver
 
 class Engine(object):
+    """
+    The main engine of wok. Upon initialization, it generates a site from the
+    source files.
+    """
     default_options = {
         'content_dir' : 'content',
         'template_dir': 'templates',
@@ -73,6 +77,7 @@ class Engine(object):
                     serv_dir=os.path.join(self.options['output_dir']))
 
     def read_options(self):
+        """Load options from the config file."""
         self.options = Engine.default_options.copy()
 
         if os.path.isfile('config'):
@@ -86,11 +91,17 @@ class Engine(object):
             self.options['author'] = page.Author.parse(self.options['author'])
 
     def sanity_check(self):
+        """Basic sanity checks."""
+        # Make sure that this is (probabably) a wok source directory.
         if not (os.path.isdir('templates') or os.path.isdir('content')):
             logging.critical("This doesn't look like a wok site. Aborting.")
             sys.exit(1)
 
     def prepare_output(self):
+        """
+        Prepare the output directory. Remove any contents there already, and
+        then copy over the media files, if they exist.
+        """
         if os.path.isdir(self.options['output_dir']):
             shutil.rmtree(self.options['output_dir'])
         os.mkdir(self.options['output_dir'])
@@ -110,9 +121,11 @@ class Engine(object):
 
         # Do nothing if the media directory doesn't exist
         except OSError:
+            # XXX: We should verify that the problem was the media dir
             pass
 
     def load_pages(self):
+        """Load all the content files."""
         for root, dirs, files in os.walk(self.options['content_dir']):
             # Grab all the parsable files
             for f in files:
@@ -135,6 +148,13 @@ class Engine(object):
                             self.options, renderer))
 
     def make_tree(self):
+        """
+        Make the category pseduo-tree.
+
+        In this structure, each node is a page. Pages with sub pages are
+        interior nodes, and leaf nodes have no sub pages. It is not truely a
+        tree, because the root node doesn't exist.
+        """
         self.categories = {}
         site_tree = []
         # We want to parse these in a approximately breadth first order
@@ -161,6 +181,7 @@ class Engine(object):
                         'This will probably cause problems.'.format(p.path))
 
     def render_site(self):
+        """Render every page and write the output files."""
         # Gather tags
         tag_set = set()
         for p in self.all_pages:

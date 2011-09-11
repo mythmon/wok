@@ -12,8 +12,8 @@ from wok import renderers
 
 class Page(object):
     """
-    A single page on the website in all it's form, as well as it's
-    associated metadata.
+    A single page on the website in all it's form (raw, html, templated) , as
+    well as it's associated metadata.
     """
 
     def __init__(self, path, options, renderer=None, extra_meta=None):
@@ -177,78 +177,10 @@ class Page(object):
         if not templ_vars:
             templ_vars = {}
 
-        extra_pages = []
         if 'pagination' in self.meta and 'list' in self.meta['pagination']:
-            if 'page_items' not in self.meta['pagination']:
-                # This is the first page of a set of pages. Set up the rest
-
-                source_spec = self.meta['pagination']['list'].split('.')
-                logging.debug('source spec is: ' + repr(source_spec))
-                if source_spec[0] == 'page':
-                    source = self.meta
-                    source_spec.pop(0)
-                elif source_spec[0] == 'site':
-                    source = templ_vars['site']
-                    source_spec.pop(0)
-
-                for k in source_spec:
-                    logging.debug(k)
-                    source = source[k]
-
-                logging.debug('source is: ' + repr(source))
-
-                sort_key = self.meta['pagination'].get('sort_key', 'slug')
-                sort_reverse = self.meta['pagination'].get('sort_reverse', False)
-                logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
-                    sort_key, sort_reverse))
-
-                if isinstance(source[0], Page):
-                    source = [p.meta for p in source]
-
-                if isinstance(source[0], dict):
-                    source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
-                else:
-                    source.sort(key=lambda x: x.__getattribute__(sort_key), reverse=sort_reverse)
-
-                chunks = list(util.chunk(source, self.meta['pagination']['limit']))
-
-                # Make a page for each chunk
-                for idx, chunk in enumerate(chunks[1:]):
-                    extra_meta = {
-                        'pagination': {
-                            'page_items': chunk,
-                            'num_pages': len(chunks),
-                            'cur_page': idx + 2,
-                        }
-                    }
-                    new_page = Page(self.path, self.options,
-                        renderer=self.renderer, extra_meta=extra_meta)
-                    extra_pages.append(new_page)
-
-                # Set up the next/previous page links
-                for idx, page in enumerate(extra_pages):
-                    if idx == 0:
-                        page.meta['pagination']['prev_page'] = self.meta
-                    else:
-                        page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
-
-                    if idx < len(extra_pages) - 1:
-                        page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
-                    else:
-                        page.meta['pagination']['next_page'] = None
-
-                # Pagination date for this page
-                self.meta['pagination'].update({
-                    'page_items': chunks[0],
-                    'num_pages': len(chunks),
-                    'cur_page': 1,
-                })
-                if len(extra_pages) > 1:
-                    self.meta['next_page'] = extra_pages[0].meta
-
-            else:
-                pass
-                # Not page 1, render normally.
+            extra_pages = self.paginate()
+        else:
+            extra_pages = []
 
         if 'page' in templ_vars:
             logging.debug('Found defaulted page data.')
@@ -265,6 +197,82 @@ class Page(object):
         self.html = template.render(templ_vars)
 
         logging.debug('extra pages is: ' + repr(extra_pages))
+        return extra_pages
+
+    def paginate(self):
+        extra_pages = []
+        if 'page_items' not in self.meta['pagination']:
+            # This is the first page of a set of pages. Set up the rest. Other
+            # wise don't do anything.
+
+            source_spec = self.meta['pagination']['list'].split('.')
+            logging.debug('source spec is: ' + repr(source_spec))
+            if source_spec[0] == 'page':
+                source = self.meta
+                source_spec.pop(0)
+            elif source_spec[0] == 'site':
+                source = templ_vars['site']
+                source_spec.pop(0)
+
+            for k in source_spec:
+                logging.debug(k)
+                source = source[k]
+
+            logging.debug('source is: ' + repr(source))
+
+            sort_key = self.meta['pagination'].get('sort_key', 'slug')
+            sort_reverse = self.meta['pagination'].get('sort_reverse', False)
+            logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
+                sort_key, sort_reverse))
+
+            if isinstance(source[0], Page):
+                source = [p.meta for p in source]
+
+            if isinstance(source[0], dict):
+                source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
+            else:
+                source.sort(key=lambda x: x.__getattribute__(sort_key), reverse=sort_reverse)
+
+            chunks = list(util.chunk(source, self.meta['pagination']['limit']))
+
+            # Make a page for each chunk
+            for idx, chunk in enumerate(chunks[1:]):
+                extra_meta = {
+                    'pagination': {
+                        'page_items': chunk,
+                        'num_pages': len(chunks),
+                        'cur_page': idx + 2,
+                    }
+                }
+                new_page = Page(self.path, self.options,
+                    renderer=self.renderer, extra_meta=extra_meta)
+                extra_pages.append(new_page)
+
+            # Set up the next/previous page links
+            for idx, page in enumerate(extra_pages):
+                if idx == 0:
+                    page.meta['pagination']['prev_page'] = self.meta
+                else:
+                    page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
+
+                if idx < len(extra_pages) - 1:
+                    page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
+                else:
+                    page.meta['pagination']['next_page'] = None
+
+            # Pagination date for this page
+            self.meta['pagination'].update({
+                'page_items': chunks[0],
+                'num_pages': len(chunks),
+                'cur_page': 1,
+            })
+            if len(extra_pages) > 1:
+                print 'doing next_page'
+                self.meta['pagination']['next_page'] = extra_pages[0].meta
+            else:
+                print 'skipping next_page'
+
+        print self.meta['pagination'].keys()
         return extra_pages
 
     def write(self):
