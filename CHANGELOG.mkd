@@ -1,4 +1,10 @@
+Version 0.6.3
+-------------
+### Fixes
+-   Somehow date handling got broken. Make it better.
+
 Version 0.6.2
+-------------
 ### Features
 -   Authors can now be a list of users.
 -   If the current directory doesn't appear to be a wok site, wok will refuse
