@@ -137,15 +137,17 @@ class Page(object):
             self.meta['datetime'] = self.meta['date']
 
         if not 'datetime' in self.meta:
-            logging.debug('using now as datetime')
-            self.meta['datetime'] = datetime.now()
+            logging.debug('Date is none')
+            self.meta['datetime'] = None
+            self.meta['date'] = None
+            self.meta['time'] = None
+        else:
+            if isinstance(self.meta['datetime'], date):
+                d = self.meta['datetime']
+                self.meta['datetime'] = datetime(d.year, d.month, d.day)
 
-        if isinstance(self.meta['datetime'], date):
-            d = self.meta['datetime']
-            self.meta['datetime'] = datetime(d.year, d.month, d.day)
-
-        self.meta['date'] = self.meta['datetime'].date()
-        self.meta['time'] = self.meta['datetime'].time()
+            self.meta['date'] = self.meta['datetime'].date()
+            self.meta['time'] = self.meta['datetime'].time()
 
         # tags
         if not 'tags' in self.meta:
