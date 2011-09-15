@@ -1,6 +1,6 @@
 import os
 from collections import namedtuple
-from datetime import datetime
+from datetime import datetime, date, time
 import logging
 
 import jinja2
@@ -29,6 +29,8 @@ class Page(object):
         self.options = options
         self.renderer = renderer if renderer else renderers.Plain
 
+        logging.info('Loading {0}'.format(os.path.basename(path)))
+
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
         # instance. Fix this.
@@ -56,8 +58,6 @@ class Page(object):
             self.meta.update(extra_meta)
 
         self.build_meta()
-        logging.debug('Rendering {0} with {1} (pagination? {2})'.format(
-            self.meta['slug'], self.renderer, 'pagination' in self.meta))
         self.meta['content'] = self.renderer.render(self.original)
 
     def build_meta(self):
@@ -132,13 +132,18 @@ class Page(object):
         if not 'published' in self.meta:
             self.meta['published'] = True
 
-        # datetime
-        for name in ['time', 'date']:
-            if name in self.meta:
-                self.meta['datetime'] = self.meta[name]
+        # datetime, date, time
+        if 'date' in self.meta:
+            self.meta['datetime'] = self.meta['date']
+
         if not 'datetime' in self.meta:
+            logging.debug('using now as datetime')
             self.meta['datetime'] = datetime.now()
-        # date
+
+        if isinstance(self.meta['datetime'], date):
+            d = self.meta['datetime']
+            self.meta['datetime'] = datetime(d.year, d.month, d.day)
+
         self.meta['date'] = self.meta['datetime'].date()
         self.meta['time'] = self.meta['datetime'].time()
 
