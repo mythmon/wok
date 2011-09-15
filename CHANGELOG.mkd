@@ -1,3 +1,13 @@
+Version 0.6.2
+### Features
+-   Authors can now be a list of users.
+-   If the current directory doesn't appear to be a wok site, wok will refuse
+    to run.
+-   Change some logging message.
+
+### Fixes
+-   A pagination page that only has one page won't crash anymore.
+
 Version 0.6.1
 -------------
 ### Features
