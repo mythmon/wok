@@ -150,11 +150,15 @@ class Page(object):
             self.meta['time'] = self.meta['datetime'].time()
 
         # tags
-        if not 'tags' in self.meta:
-            self.meta['tags'] = []
-        else:
-            self.meta['tags'] = [t.strip() for t in
+        if 'tags' in self.meta:
+            if isinstance(self.meta['tags'], list):
+                # good
+                pass
+            elif isinstance(self.meta['tags'], str):
+                self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
+        else:
+            self.meta['tags'] = []
 
         logging.debug('Tags for {0}: {1}'.
                 format(self.meta['slug'], self.meta['tags']))

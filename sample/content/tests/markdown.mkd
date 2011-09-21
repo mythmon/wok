@@ -1,7 +1,7 @@
 title: Markdown Test Page
 slug: markdown
 category: tests
-tags: markdown, sample
+tags: [markdown, sample]
 author: [Me, Myself, I]
 ---
 This is the markdown test page
