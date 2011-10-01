@@ -193,6 +193,7 @@ class Engine(object):
         for tag in tag_set:
             tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
 
+
         for p in self.all_pages:
             if p.meta['published']:
                 # Construct this every time, to avoid sharing one instance
@@ -206,6 +207,13 @@ class Engine(object):
                         'categories': self.categories,
                     },
                 }
+
+                for k, v in self.options.iteritems():
+                    if k not in ('site_title', 'output_dir', 'content_dir',
+                            'templates_dir', 'media_dir', 'url_pattern'):
+
+                        templ_vars['site'][k] = v
+
                 if 'author' in self.options:
                     templ_vars['site']['author'] = self.options['author']
 
