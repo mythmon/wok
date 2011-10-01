@@ -9,11 +9,12 @@ import re
 
 from wok import util
 from wok import renderers
+from wok.jinja import GlobFileLoader
 
 class Page(object):
     """
-    A single page on the website in all it's form (raw, html, templated) , as
-    well as it's associated metadata.
+    A single page on the website in all it's form (raw, rendered, templated) ,
+    as well as it's associated metadata.
     """
 
     def __init__(self, path, options, renderer=None, extra_meta=None):
@@ -34,7 +35,7 @@ class Page(object):
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
         # instance. Fix this.
-        self.tmpl_env = jinja2.Environment(loader=jinja2.FileSystemLoader(
+        self.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
             self.options.get('template_dir', 'templates')))
 
         self.path = path
@@ -172,6 +173,10 @@ class Page(object):
         if 'num_pages' not in self.meta['pagination']:
             self.meta['pagination']['num_pages'] = 1
 
+        # template
+        template_type = self.meta.get('type', 'default')
+        self.template = self.tmpl_env.get_template(template_type + '.*')
+
         # url
         parts = {
             'slug': self.meta['slug'],
@@ -179,6 +184,14 @@ class Page(object):
             'page': self.meta['pagination']['cur_page'],
         }
         logging.debug('current page: ' + repr(parts['page']))
+
+        # Pull extensions from the template's real file name.
+        match = re.match('.*/[^\.]*\.(.*)$', self.template.filename)
+        if match:
+            parts['type'] = match.groups()[0]
+        else:
+            parts['type'] = ''
+
         if parts['page'] == 1:
             parts['page'] = ''
 
@@ -195,11 +208,8 @@ class Page(object):
 
     def render(self, templ_vars=None):
         """
-        Renders the page to full html with the template engine.
+        Renders the page with the template engine.
         """
-        type = self.meta.get('type', 'default')
-        template = self.tmpl_env.get_template(type + '.html')
-
         if not templ_vars:
             templ_vars = {}
 
@@ -220,7 +230,7 @@ class Page(object):
             templ_vars['pagination'] = self.meta['pagination']
 
         logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
-        self.html = template.render(templ_vars)
+        self.rendered = self.template.render(templ_vars)
 
         logging.debug('extra pages is: ' + repr(extra_pages))
         return extra_pages
@@ -298,7 +308,7 @@ class Page(object):
         return extra_pages
 
     def write(self):
-        """Write the page to an html file on disk."""
+        """Write the page to a rendered file on disk."""
 
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
@@ -315,7 +325,7 @@ class Page(object):
         logging.info('writing to {0}'.format(path))
 
         f = open(path, 'w')
-        f.write(self.html)
+        f.write(self.rendered)
         f.close()
 
     def __repr__(self):
