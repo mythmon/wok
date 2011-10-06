@@ -30,6 +30,8 @@ class Engine(object):
 
     def __init__(self, output_lvl = 1):
 
+        # CLI options
+        # -----------
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
         # Add option to to run the development server after generating pages
@@ -64,6 +66,9 @@ class Engine(object):
         parser.add_option_group(logging_grp)
 
         cli_options, args = parser.parse_args()
+
+        # Set up logging
+        # --------------
         logging_options = {
             'format': '%(levelname)s: %(message)s',
             'level': cli_options.loglevel,
@@ -75,6 +80,8 @@ class Engine(object):
 
         logging.basicConfig(**logging_options)
 
+        # Action!
+        # -------
         self.all_pages = []
 
         self.read_options()
@@ -84,6 +91,8 @@ class Engine(object):
         self.make_tree()
         self.render_site()
 
+        # Dev server
+        # ----------
         # Run the dev server after generating pages if the user said to
         if cli_options.runserver:
             devserver.run(cli_options.address, cli_options.port,
