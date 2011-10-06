@@ -3,7 +3,7 @@ import os
 import sys
 import shutil
 from datetime import datetime
-from optparse import OptionParser
+from optparse import OptionParser, OptionGroup
 import logging
 
 import yaml
@@ -33,30 +33,35 @@ class Engine(object):
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
         # Options for noisiness level and logging
+        logging_grp = OptionGroup(parser, "Logging")
         parser.set_defaults(loglevel=logging.WARNING)
-        parser.add_option('-q', '--quiet', action='store_const',
+        logging_grp.add_option('-q', '--quiet', action='store_const',
                 const=logging.ERROR, dest='loglevel',
                 help="be completely quiet, log nothing")
-        parser.add_option('--warnings', action='store_const',
+        logging_grp.add_option('--warnings', action='store_const',
                 const=logging.WARNING, dest='loglevel',
                 help="log warnings in addition to errors")
-        parser.add_option('-v', '--verbose', action='store_const',
+        logging_grp.add_option('-v', '--verbose', action='store_const',
                 const=logging.INFO, dest='loglevel',
                 help="log ALL the things!")
-        parser.add_option('--debug', action='store_const',
+        logging_grp.add_option('--debug', action='store_const',
                 const=logging.DEBUG, dest='loglevel',
                 help="log debugging info in addition to warnings and errors")
-
-        parser.add_option('--log', '-l', dest='logfile',
+        logging_grp.add_option('--log', '-l', dest='logfile',
                 help="log to the specified LOGFILE instead of standard out")
+        parser.add_option_group(logging_grp)
 
         # Add option to to run the development server after generating pages
-        parser.add_option('--server', action='store_true', dest='runserver',
-                help="run a development server after generating site")
-        parser.add_option('--address', action='store', dest='address',
+        devserver_grp = OptionGroup(parser, "Development server")
+        devserver_grp.add_option('--server', action='store_true',
+                dest='runserver',
+                help="run a development server after generating the site")
+        devserver_grp.add_option('--address', action='store', dest='address',
                 help="specify ADDRESS on which to run development server")
-        parser.add_option('--port', action='store', dest='port', type='int',
+        devserver_grp.add_option('--port', action='store', dest='port',
+                type='int', 
                 help="specify PORT on which to run development server")
+        parser.add_option_group(devserver_grp)
 
         cli_options, args = parser.parse_args()
         logging_options = {
