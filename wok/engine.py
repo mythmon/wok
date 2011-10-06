@@ -32,6 +32,18 @@ class Engine(object):
 
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
+        # Add option to to run the development server after generating pages
+        devserver_grp = OptionGroup(parser, "Development server")
+        devserver_grp.add_option('--server', action='store_true',
+                dest='runserver',
+                help="run a development server after generating the site")
+        devserver_grp.add_option('--address', action='store', dest='address',
+                help="specify ADDRESS on which to run development server")
+        devserver_grp.add_option('--port', action='store', dest='port',
+                type='int', 
+                help="specify PORT on which to run development server")
+        parser.add_option_group(devserver_grp)
+
         # Options for noisiness level and logging
         logging_grp = OptionGroup(parser, "Logging")
         parser.set_defaults(loglevel=logging.WARNING)
@@ -50,18 +62,6 @@ class Engine(object):
         logging_grp.add_option('--log', '-l', dest='logfile',
                 help="log to the specified LOGFILE instead of standard out")
         parser.add_option_group(logging_grp)
-
-        # Add option to to run the development server after generating pages
-        devserver_grp = OptionGroup(parser, "Development server")
-        devserver_grp.add_option('--server', action='store_true',
-                dest='runserver',
-                help="run a development server after generating the site")
-        devserver_grp.add_option('--address', action='store', dest='address',
-                help="specify ADDRESS on which to run development server")
-        devserver_grp.add_option('--port', action='store', dest='port',
-                type='int', 
-                help="specify PORT on which to run development server")
-        parser.add_option_group(devserver_grp)
 
         cli_options, args = parser.parse_args()
         logging_options = {
