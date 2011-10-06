@@ -35,7 +35,9 @@ class Engine(object):
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
         # Add option to to run the development server after generating pages
-        devserver_grp = OptionGroup(parser, "Development server")
+        devserver_grp = OptionGroup(parser, "Development server",
+                "Runs a small development server after site generation. \
+                --address and --port will be ignored if --server is absent.")
         devserver_grp.add_option('--server', action='store_true',
                 dest='runserver',
                 help="run a development server after generating the site")
@@ -47,7 +49,9 @@ class Engine(object):
         parser.add_option_group(devserver_grp)
 
         # Options for noisiness level and logging
-        logging_grp = OptionGroup(parser, "Logging")
+        logging_grp = OptionGroup(parser, "Logging",
+                "By default, log messages will be sent to standard out, \
+                and report only errors and warnings.")
         parser.set_defaults(loglevel=logging.WARNING)
         logging_grp.add_option('-q', '--quiet', action='store_const',
                 const=logging.ERROR, dest='loglevel',
