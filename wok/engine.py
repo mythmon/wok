@@ -3,7 +3,7 @@ import os
 import sys
 import shutil
 from datetime import datetime
-from optparse import OptionParser
+from optparse import OptionParser, OptionGroup
 import logging
 
 import yaml
@@ -30,27 +30,49 @@ class Engine(object):
 
     def __init__(self, output_lvl = 1):
 
+        # CLI options
+        # -----------
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
-        # Options for noisiness level and logging
-        parser.set_defaults(loglevel=logging.WARNING)
-        parser.add_option('-q', '--quiet', action='store_const',
-                const=logging.ERROR, dest='loglevel')
-        parser.add_option('--warnings', action='store_const',
-                const=logging.WARNING, dest='loglevel')
-        parser.add_option('-v', '--verbose', action='store_const',
-                const=logging.INFO, dest='loglevel')
-        parser.add_option('--debug', action='store_const',
-                const=logging.DEBUG, dest='loglevel')
-
-        parser.add_option('--log', '-l', dest='logfile')
-
         # Add option to to run the development server after generating pages
-        parser.add_option('--server', action='store_true', dest='runserver')
-        parser.add_option('--address', action='store', dest='address')
-        parser.add_option('--port', action='store', dest='port', type='int')
+        devserver_grp = OptionGroup(parser, "Development server",
+                "Runs a small development server after site generation. \
+                --address and --port will be ignored if --server is absent.")
+        devserver_grp.add_option('--server', action='store_true',
+                dest='runserver',
+                help="run a development server after generating the site")
+        devserver_grp.add_option('--address', action='store', dest='address',
+                help="specify ADDRESS on which to run development server")
+        devserver_grp.add_option('--port', action='store', dest='port',
+                type='int', 
+                help="specify PORT on which to run development server")
+        parser.add_option_group(devserver_grp)
+
+        # Options for noisiness level and logging
+        logging_grp = OptionGroup(parser, "Logging",
+                "By default, log messages will be sent to standard out, \
+                and report only errors and warnings.")
+        parser.set_defaults(loglevel=logging.WARNING)
+        logging_grp.add_option('-q', '--quiet', action='store_const',
+                const=logging.ERROR, dest='loglevel',
+                help="be completely quiet, log nothing")
+        logging_grp.add_option('--warnings', action='store_const',
+                const=logging.WARNING, dest='loglevel',
+                help="log warnings in addition to errors")
+        logging_grp.add_option('-v', '--verbose', action='store_const',
+                const=logging.INFO, dest='loglevel',
+                help="log ALL the things!")
+        logging_grp.add_option('--debug', action='store_const',
+                const=logging.DEBUG, dest='loglevel',
+                help="log debugging info in addition to warnings and errors")
+        logging_grp.add_option('--log', '-l', dest='logfile',
+                help="log to the specified LOGFILE instead of standard out")
+        parser.add_option_group(logging_grp)
 
         cli_options, args = parser.parse_args()
+
+        # Set up logging
+        # --------------
         logging_options = {
             'format': '%(levelname)s: %(message)s',
             'level': cli_options.loglevel,
@@ -62,6 +84,8 @@ class Engine(object):
 
         logging.basicConfig(**logging_options)
 
+        # Action!
+        # -------
         self.all_pages = []
 
         self.read_options()
@@ -71,6 +95,8 @@ class Engine(object):
         self.make_tree()
         self.render_site()
 
+        # Dev server
+        # ----------
         # Run the dev server after generating pages if the user said to
         if cli_options.runserver:
             devserver.run(cli_options.address, cli_options.port,
