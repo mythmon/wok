@@ -49,6 +49,7 @@ class Page(object):
             # Handle the case where no meta data was provided
             if len(splits) == 1:
                 self.original = splits[0]
+                self.meta = {}
             else:
                 header = splits[0]
                 self.original = splits[1]
