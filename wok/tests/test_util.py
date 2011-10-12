@@ -138,3 +138,29 @@ class TestDatetimes(TestCase):
 
         util.date_and_times(inp)
         self.assertEquals(inp, out)
+
+    def test_types(self):
+        """
+        YAML doesn't always give us the types we want. Handle that correctly.
+        """
+        # Yaml will only make something a datetime if it also includes a time.
+        inp = {'datetime': date(2011, 12, 25)}
+        out = {
+            'datetime': datetime(2011, 12, 25),
+            'date': date(2011, 12, 25),
+            'time': None,
+        }
+
+        util.date_and_times(inp)
+        self.assertEquals(inp, out)
+
+        # Yaml likes to give times as the number of seconds.
+        inp = {'date': self.date, 'time': 43200}
+        out = {
+            'datetime': datetime(2011, 10, 12, 12, 0, 0),
+            'date': self.date,
+            'time': time(12, 0, 0),
+        }
+
+        util.date_and_times(inp)
+        self.assertEquals(inp, out)

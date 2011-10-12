@@ -1,6 +1,6 @@
 import re
 from unicodedata import normalize
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 
 # From http://flask.pocoo.org/snippets/5/
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -29,13 +29,26 @@ def date_and_times(meta):
 
     if 'date' in meta:
         date_part = meta['date']
+
     if 'time' in meta:
         time_part = meta['time']
+
     if 'datetime' in meta:
         if date_part is None:
-            date_part = meta['datetime'].date()
-        if time_part is None:
+            if isinstance(meta['datetime'], datetime):
+                date_part = meta['datetime'].date()
+            elif isinstance(meta['datetime'], date):
+                date_part = meta['datetime']
+
+        if time_part is None and isinstance(meta['datetime'], datetime):
             time_part = meta['datetime'].time()
+
+    if isinstance(time_part, int):
+        seconds = time_part % 60
+        minutes = (time_part / 60) % 60
+        hours = (time_part / 3600)
+
+        time_part = time(hours, minutes, seconds)
 
     meta['date'] = date_part
     meta['time'] = time_part
