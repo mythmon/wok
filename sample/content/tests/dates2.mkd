@@ -1,0 +1,6 @@
+title: Date and time
+date: 2011-10-12
+time: 12:20:00
+category: tests/dates
+---
+This a date and time

@@ -4,6 +4,7 @@
     <h2>by: {% for author in page.authors %}
         {{author.name}}{% if not loop.last %}, {% endif %}
     {% endfor %}</h2>
+    <h2>datetime: {{page.datetime}}, date: {{page.date}}, time: {{page.time}}</h2>
     <h3>Tags:</h3>
     <ul>
     {% for tag in page.tags %}
