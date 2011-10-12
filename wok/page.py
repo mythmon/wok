@@ -75,9 +75,9 @@ class Page(object):
         `page.authors` - Will be a list of Authors.
         `page.category` - Will be a list.
         `page.published` - Will exist.
-        `page.datetime` - Will be a datetime.
-        `page.date` - Will be a date
-        `page.time` - Will be a time
+        `page.datetime` - Will be a datetime, or None.
+        `page.date` - Will be a dat, or None.
+        `page.time` - Will be a tim, or None.
         `page.tags` - Will be a list.
         `page.url` - Will be the url of the page, relative to the web root.
         `page.subpages` - Will be a list containing every sub page of this page
@@ -138,21 +138,7 @@ class Page(object):
             self.meta['published'] = True
 
         # datetime, date, time
-        if 'date' in self.meta:
-            self.meta['datetime'] = self.meta['date']
-
-        if not 'datetime' in self.meta:
-            logging.debug('Date is none')
-            self.meta['datetime'] = None
-            self.meta['date'] = None
-            self.meta['time'] = None
-        else:
-            if isinstance(self.meta['datetime'], date):
-                d = self.meta['datetime']
-                self.meta['datetime'] = datetime(d.year, d.month, d.day)
-
-            self.meta['date'] = self.meta['datetime'].date()
-            self.meta['time'] = self.meta['datetime'].time()
+        util.date_and_times(self.meta)
 
         # tags
         if 'tags' in self.meta:
