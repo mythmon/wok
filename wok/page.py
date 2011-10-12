@@ -17,6 +17,8 @@ class Page(object):
     as well as it's associated metadata.
     """
 
+    tmpl_env = None
+
     def __init__(self, path, options, renderer=None, extra_meta=None):
         """
         Load a file from disk, and parse the metadata from it.
@@ -35,8 +37,9 @@ class Page(object):
         # TODO: It's not good to make a new environment every time, but we if
         # we pass the options in each time, its possible it will change per
         # instance. Fix this.
-        self.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
-            self.options.get('template_dir', 'templates')))
+        if Page.tmpl_env is None:
+            Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
+                self.options.get('template_dir', 'templates')))
 
         self.path = path
         _, self.filename = os.path.split(path)
@@ -176,7 +179,7 @@ class Page(object):
 
         # template
         template_type = self.meta.get('type', 'default')
-        self.template = self.tmpl_env.get_template(template_type + '.*')
+        self.template = Page.tmpl_env.get_template(template_type + '.*')
 
         # url
         parts = {
