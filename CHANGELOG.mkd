@@ -1,3 +1,18 @@
+Version 0.7
+-----------
+### Features
+-   Define tags and authors as YAML lists, instead of CSV.
+-   File format independence. Non-html files can now be generated.
+-   The options menu is a little more user friendly now. [robatron]
+
+### Fixes
+-   Pages without a YAML header won't break things now.
+-   Fixed date/time handling.
+
+### Deprecated
+-   The old way of doing comma seperated tags and authors will continue to
+    work, but will be removed in 0.8.
+
 Version 0.6.3
 -------------
 ### Fixes
