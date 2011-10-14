@@ -158,23 +158,25 @@ class Engine(object):
         for root, dirs, files in os.walk(self.options['content_dir']):
             # Grab all the parsable files
             for f in files:
-                # As long as the current file is not hidden, append it to the
-                # page list
-                if not f.startswith('.'):
-                    ext = f.split('.')[-1]
-                    renderer = renderers.Plain
+                # Don't parse hidden files.
+                if f.startswith('.'):
+                    continue
 
-                    for r in renderers.all:
-                        if ext in r.extensions:
-                            renderer = r
-                            break
-                    else:
-                        logging.warning('No parser found '
-                                'for {0}. Using default renderer.'.format(f))
-                        renderer = renderers.Renderer
+                ext = f.split('.')[-1]
+                renderer = renderers.Plain
 
-                    self.all_pages.append(page.Page(os.path.join(root,f),
-                            self.options, renderer))
+                for r in renderers.all:
+                    if ext in r.extensions:
+                        renderer = r
+                        break
+                else:
+                    logging.warning('No parser found '
+                            'for {0}. Using default renderer.'.format(f))
+                    renderer = renderers.Renderer
+
+                p = page.Page(os.path.join(root, f), self.options, renderer)
+                if p.meta['published']:
+                    self.all_pages.append(p)
 
     def make_tree(self):
         """
@@ -221,34 +223,33 @@ class Engine(object):
 
 
         for p in self.all_pages:
-            if p.meta['published']:
-                # Construct this every time, to avoid sharing one instance
-                # between page objects.
-                templ_vars = {
-                    'site': {
-                        'title': self.options.get('site_title', 'Untitled'),
-                        'datetime': datetime.now(),
-                        'tags': tag_dict,
-                        'pages': self.all_pages[:],
-                        'categories': self.categories,
-                    },
-                }
+            # Construct this every time, to avoid sharing one instance
+            # between page objects.
+            templ_vars = {
+                'site': {
+                    'title': self.options.get('site_title', 'Untitled'),
+                    'datetime': datetime.now(),
+                    'tags': tag_dict,
+                    'pages': self.all_pages[:],
+                    'categories': self.categories,
+                },
+            }
 
-                for k, v in self.options.iteritems():
-                    if k not in ('site_title', 'output_dir', 'content_dir',
-                            'templates_dir', 'media_dir', 'url_pattern'):
+            for k, v in self.options.iteritems():
+                if k not in ('site_title', 'output_dir', 'content_dir',
+                        'templates_dir', 'media_dir', 'url_pattern'):
 
-                        templ_vars['site'][k] = v
+                    templ_vars['site'][k] = v
 
-                if 'author' in self.options:
-                    templ_vars['site']['author'] = self.options['author']
+            if 'author' in self.options:
+                templ_vars['site']['author'] = self.options['author']
 
-                # Rendering the page might give us back more pages to render.
-                new_pages = p.render(templ_vars)
-                p.write()
-                if new_pages:
-                    logging.debug('found new_pages')
-                    self.all_pages += new_pages
+            # Rendering the page might give us back more pages to render.
+            new_pages = p.render(templ_vars)
+            p.write()
+            if new_pages:
+                logging.debug('found new_pages')
+                self.all_pages += new_pages
 
 if __name__ == '__main__':
     Engine()
