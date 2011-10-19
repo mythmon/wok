@@ -232,32 +232,38 @@ class Page(object):
             # wise don't do anything.
 
             source_spec = self.meta['pagination']['list'].split('.')
-            logging.debug('source spec is: ' + repr(source_spec))
+            logging.debug('pagination source is: ' + repr(source_spec))
+
             if source_spec[0] == 'page':
                 source = self.meta
                 source_spec.pop(0)
             elif source_spec[0] == 'site':
                 source = templ_vars['site']
                 source_spec.pop(0)
+            else:
+                logging.error('Unknown pagination source! Not paginating')
+                return
 
             for k in source_spec:
                 logging.debug(k)
                 source = source[k]
 
-            logging.debug('source is: ' + repr(source))
-
-            sort_key = self.meta['pagination'].get('sort_key', 'slug')
+            sort_key = self.meta['pagination'].get('sort_key', None)
             sort_reverse = self.meta['pagination'].get('sort_reverse', False)
+
             logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
                 sort_key, sort_reverse))
 
             if isinstance(source[0], Page):
                 source = [p.meta for p in source]
 
-            if isinstance(source[0], dict):
-                source.sort(key=lambda x: x[sort_key], reverse=sort_reverse)
-            else:
-                source.sort(key=lambda x: x.__getattribute__(sort_key), reverse=sort_reverse)
+            if sort_key is not None:
+                if isinstance(source[0], dict):
+                    source.sort(key=lambda x: x[sort_key],
+                            reverse=sort_reverse)
+                else:
+                    source.sort(key=lambda x: x.__getattribute__(sort_key),
+                            reverse=sort_reverse)
 
             chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
