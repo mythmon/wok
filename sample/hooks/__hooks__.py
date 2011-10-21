@@ -11,7 +11,7 @@ except:
     logging.warning("Failed to import hook.")
 
 def basic_hook(page, templ_vars):
-    logging.info('basic_hook got page 0[slug]}.'.format(page))
+    logging.info('basic_hook got page {0[slug]}.'.format(page))
 
 hooks['page.template.pre'].append(basic_hook)
 

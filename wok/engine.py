@@ -135,9 +135,10 @@ class Engine(object):
         sys.path.append('hooks')
         try:
             import __hooks__
-            self.hooks = __hooks__.hook
+            self.hooks = __hooks__.hooks
             logging.info('Loaded hooks: {0}'.format(self.hooks))
         except:
+            self.hooks = {}
             logging.debug('No hooks found')
 
 
@@ -236,7 +237,6 @@ class Engine(object):
         for tag in tag_set:
             tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
 
-
         for p in self.all_pages:
             # Construct this every time, to avoid sharing one instance
             # between page objects.
@@ -258,6 +258,10 @@ class Engine(object):
 
             if 'author' in self.options:
                 templ_vars['site']['author'] = self.options['author']
+
+            for hook in self.hooks.get('page.template.pre', []):
+                logging.debug('running hook {0}'.format(hook))
+                hook(p.meta, templ_vars)
 
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
