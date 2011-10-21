@@ -29,6 +29,10 @@ class Engine(object):
     }
 
     def __init__(self, output_lvl = 1):
+        """
+        Set up CLI options, logging levels, and start everything off.
+        Afterwards, run a dev server if asked to.
+        """
 
         # CLI options
         # -----------
@@ -90,6 +94,7 @@ class Engine(object):
 
         self.read_options()
         self.sanity_check()
+        self.load_hooks()
         self.prepare_output()
         self.load_pages()
         self.make_tree()
@@ -125,6 +130,16 @@ class Engine(object):
         if not (os.path.isdir('templates') or os.path.isdir('content')):
             logging.critical("This doesn't look like a wok site. Aborting.")
             sys.exit(1)
+
+    def load_hooks(self):
+        sys.path.append('hooks')
+        try:
+            import __hooks__
+            self.hooks = __hooks__.hook
+            logging.info('Loaded hooks: {0}'.format(self.hooks))
+        except:
+            logging.debug('No hooks found')
+
 
     def prepare_output(self):
         """
