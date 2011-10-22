@@ -1,15 +1,19 @@
+# System
 import os
+import sys
 from collections import namedtuple
 from datetime import datetime, date, time
 import logging
 
+# Libraries
 import jinja2
 import yaml
 import re
 
+# Wok
 from wok import util
 from wok import renderers
-from wok.jinja import GlobFileLoader
+from wok.jinja import GlobFileLoader, AmbiguousTemplate
 
 class Page(object):
     """
@@ -34,9 +38,6 @@ class Page(object):
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
-        # TODO: It's not good to make a new environment every time, but we if
-        # we pass the options in each time, its possible it will change per
-        # instance. Fix this.
         if Page.tmpl_env is None:
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
                 self.options.get('template_dir', 'templates')))
@@ -164,8 +165,17 @@ class Page(object):
             self.meta['pagination']['num_pages'] = 1
 
         # template
-        template_type = self.meta.get('type', 'default')
-        self.template = Page.tmpl_env.get_template(template_type + '.*')
+        try:
+            template_type = self.meta.get('type', 'default')
+            self.template = Page.tmpl_env.get_template(template_type + '.*')
+        except jinja2.loaders.TemplateNotFound:
+            logging.error('No template "{0}.*" found in template directory. Aborting.'
+                    .format(template_type))
+            sys.exit()
+        except AmbiguousTemplate:
+            logging.error(('Ambiguous template found. There are two files that '
+                          'match "{0}.*". Aborting.').format(template_type))
+            sys.exit()
 
         # url
         parts = {
