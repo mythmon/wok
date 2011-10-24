@@ -368,3 +368,6 @@ class Author(object):
     def __repr__(self):
         return '<wok.page.Author "{0} <{1}>">'.format(self.name, self.email)
 
+    def __unicode__(self):
+        s = self.__str__()
+        return s.replace('<', '&lt;').replace('>', '&gt;')
