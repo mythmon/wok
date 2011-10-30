@@ -47,17 +47,30 @@ class Page(object):
 
         with open(path) as f:
             self.original = f.read()
-            # Maximum of one split, so --- in the content doesn't get split.
-            splits = self.original.split('---', 1)
+            splits = self.original.split('\n---\n')
+
+            if len(splits) > 3:
+                logging.warning('Found more --- delimited sections in {0} '
+                                'than expected. Squashing the extra together.'
+                                .format(self.path))
 
             # Handle the case where no meta data was provided
             if len(splits) == 1:
                 self.original = splits[0]
                 self.meta = {}
-            else:
+
+            elif len(splits) == 2:
                 header = splits[0]
-                self.original = splits[1]
                 self.meta = yaml.load(header)
+                self.original = splits[1]
+
+            elif len(splits) == 3:
+                header = splits[0]
+                self.meta = {}
+                self.original = '\n'.join(splits[1:])
+                self.meta['preview'] = splits[1]
+                self.meta.update(yaml.load(header))
+                logging.debug('Got preview')
 
         if extra_meta:
             logging.debug('Got extra_meta')
