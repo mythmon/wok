@@ -77,8 +77,8 @@ class Page(object):
         `page.category` - Will be a list.
         `page.published` - Will exist.
         `page.datetime` - Will be a datetime, or None.
-        `page.date` - Will be a dat, or None.
-        `page.time` - Will be a tim, or None.
+        `page.date` - Will be a date, or None.
+        `page.time` - Will be a time, or None.
         `page.tags` - Will be a list.
         `page.url` - Will be the url of the page, relative to the web root.
         `page.subpages` - Will be a list containing every sub page of this page
