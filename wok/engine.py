@@ -246,7 +246,9 @@ class Engine(object):
 
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
-            p.write()
+            if p.meta['make_file']:
+                p.write()
+
             if new_pages:
                 logging.debug('found new_pages')
                 self.all_pages += new_pages

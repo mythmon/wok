@@ -138,6 +138,10 @@ class Page(object):
         if not 'published' in self.meta:
             self.meta['published'] = True
 
+        # make_file
+        if not 'make_file' in self.meta:
+            self.meta['make_file'] = True
+
         # datetime, date, time
         util.date_and_times(self.meta)
 
