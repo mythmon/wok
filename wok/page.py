@@ -219,6 +219,9 @@ class Page(object):
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
         logging.debug(self.meta['url'])
+        # If we have been asked to, rip out any plain "index.html"s
+        if not self.options['url_include_index']:
+            self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
 
         # subpages
         self.meta['subpages'] = []
@@ -336,6 +339,8 @@ class Page(object):
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
         path += self.meta['url']
+        if path.endswith('/'):
+            path += 'index.' + self.meta['ext']
 
         try:
             os.makedirs(os.path.dirname(path))

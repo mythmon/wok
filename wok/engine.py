@@ -20,12 +20,13 @@ class Engine(object):
     source files.
     """
     default_options = {
-        'content_dir' : 'content',
+        'content_dir': 'content',
         'template_dir': 'templates',
-        'output_dir'  : 'output',
-        'media_dir'   : 'media',
-        'site_title'  : 'Some random Wok site',
-        'url_pattern' : '/{category}/{slug}{page}.{type}',
+        'output_dir': 'output',
+        'media_dir': 'media',
+        'site_title': 'Some random Wok site',
+        'url_pattern': '/{category}/{slug}{page}.{type}',
+        'url_include_index': True,
     }
 
     def __init__(self, output_lvl = 1):
@@ -113,6 +114,7 @@ class Engine(object):
             if yaml_config:
                 self.options.update(yaml_config)
 
+        # Make authors a list, even only a single author was specified.
         authors = self.options.get('authors', self.options.get('author', None))
         if isinstance(authors, list):
             self.options['authors'] = [page.Author.parse(a) for a in authors]
