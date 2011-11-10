@@ -25,7 +25,7 @@ class Engine(object):
         'output_dir': 'output',
         'media_dir': 'media',
         'site_title': 'Some random Wok site',
-        'url_pattern': '/{category}/{slug}{page}.{type}',
+        'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
     }
 
@@ -125,6 +125,11 @@ class Engine(object):
                         'CSV for multiple authors. i.e. ["John Doe", "Jane '
                         'Smith"] instead of "John Doe, Jane Smith". In config '
                         'file.')
+
+        if '{type}' in self.options['url_pattern']:
+            logging.warn('Deprecation Warning: You should use {ext} instead '
+                    'of {type} in the url pattern specified in the config '
+                    'file.')
 
     def sanity_check(self):
         """Basic sanity checks."""
