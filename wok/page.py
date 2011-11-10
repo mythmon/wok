@@ -205,9 +205,12 @@ class Page(object):
         # Pull extensions from the template's real file name.
         match = re.match('.*/[^\.]*\.(.*)$', self.template.filename)
         if match:
-            parts['type'] = match.groups()[0]
+            parts['ext'] = match.groups()[0]
         else:
-            parts['type'] = ''
+            parts['ext'] = ''
+        # Deprecated
+        parts['type'] = parts['ext']
+        self.meta['ext'] = parts['ext']
 
         if parts['page'] == 1:
             parts['page'] = ''
