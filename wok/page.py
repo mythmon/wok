@@ -123,6 +123,12 @@ class Page(object):
             self.meta['authors'] = [Author.parse(a) for a in authors]
         elif isinstance(authors, str):
             self.meta['authors'] = [Author.parse(a) for a in authors.split(',')]
+            if len(self.meta['authors']) > 1:
+                logging.warn('Deprecation Warning: Use YAML lists instead of '
+                        'CSV for multiple authors. i.e. ["John Doe", "Jane '
+                        'Smith"] instead of "John Doe, Jane Smith". In '
+                        '{0}.'.format(self.path))
+
         elif authors is None:
             if 'authors' in self.options:
                 self.meta['authors'] = self.options['authors']
@@ -166,6 +172,11 @@ class Page(object):
             elif isinstance(self.meta['tags'], str):
                 self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
+                if len(self.meta['tags']) > 1:
+                    logging.warn('Deprecation Warning: Use YAML lists instead '
+                            'of CSV for multiple tags. i.e. tags: [guide, '
+                            'howto] instead of tags: guide, howto. In {0}.'
+                            .format(self.path))
         else:
             self.meta['tags'] = []
 

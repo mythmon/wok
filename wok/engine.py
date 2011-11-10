@@ -120,6 +120,11 @@ class Engine(object):
             self.options['authors'] = [page.Author.parse(a) for a in authors]
         elif isinstance(authors, str):
             self.options['authors'] = [page.Author.parse(a) for a in authors.split(',')]
+            if len(self.options['authors']) > 1:
+                logging.warn('Deprecation Warning: Use YAML lists instead of '
+                        'CSV for multiple authors. i.e. ["John Doe", "Jane '
+                        'Smith"] instead of "John Doe, Jane Smith". In config '
+                        'file.')
 
     def sanity_check(self):
         """Basic sanity checks."""
