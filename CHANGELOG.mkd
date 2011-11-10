@@ -1,3 +1,21 @@
+Version 0.8
+-----------
+### Features
+-   Pagination now has saner sorting defaults.
+-   Raw author objects will now print out nicely in templates.
+-   Added `make_file` metadata option.
+-   Previews can be specified, both as part of content, or metadata headers.
+-   Add option to not put "index.html" on the end of URLs, for prettification.
+
+### Fixes
+-   The `published` metadata option will now prevent pages from showing up in
+    any page's metadata, as intended.
+
+### Deprecated
+-   URL patterns should use {ext} instead of {type} to specify the extension
+    that was used on the template, because type is confusing, being the same
+    name as the metadata option that specifies the template to choose.
+
 Version 0.7
 -----------
 ### Features
@@ -10,7 +28,7 @@ Version 0.7
 -   Fixed date/time handling.
 
 ### Deprecated
--   The old way of doing comma seperated tags and authors will continue to
+-   The old way of doing comma separated tags and authors will continue to
     work, but will be removed in 0.8.
 
 Version 0.6.3
@@ -35,7 +53,7 @@ Version 0.6.1
 -   Added `page.date` and `page.time` template variables.
 
 ### Fixes
--   Make custom variables in pages not propogate to later pages.
+-   Make custom variables in pages not propagate to later pages.
 -   Make orphan pages only print an error, not throw an exception.
 
 Version 0.6
@@ -56,13 +74,13 @@ Version 0.5
 -----------
 ### Features
 -   The structure of the generated files is now user configurable.
--   New config option: `author`. See docs for more info.
+-   New configuration option: `author`. See docs for more info.
 -   Markdown, Pygments, and Docutils dependencies are now optional.
 -   Output from wok will now wrap to terminal windows.
 
 ### Other
--   The readme now references some sample sites.
--   Added a license. wok is now officially open source!
+-   The README now references some sample sites.
+-   Added a license. Wok is now officially open source!
 -   Tweaked output formats.
 -   Page metadata is now stored in a more consistent way. Sure, you don't care, but I do. :)
 
@@ -93,13 +111,13 @@ Version 0.3
 Version 0.2.2
 -------------
 -   Improve the sample site.
--   Enable syntax hilighting for Markdown.
+-   Enable syntax highlighting for Markdown.
 -   Fix requirements for PyPI/pip
 
 Version 0.2.1
 -------------
 -   Add a sample site.
--   Actually enable ReST support.
+-   Actually enable reStructuredText support.
 -   Don't try to parse hidden files.
 -   Fix datetime handling.
 -   Media directory is now optional.
