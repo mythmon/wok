@@ -1,17 +1,19 @@
-wok
+Wok
 ===
-wok is a static website generator. It turns a pile of templates, content, and
-resources (like CSS and images) into a neat stack of plain HTML.
+Wok is a static website generator. It turns a pile of templates,
+content, and resources (like CSS and images) into a neat stack of plain
+HTML.
 
-The idea is that you don't need a big server-side engine like PHP to generate 
-every page every visit: you can generate them all ahead of time, and only 
-regenerate things when something has changed. A good way this could be done
-would be with a post-commit hook on a git repository containing your content 
-or layout.
+The idea is that you don't need a big server-side engine like PHP to
+generate every page every visit: you can generate them all ahead of
+time, and only regenerate things when something has changed. A good way
+this could be done would be with a post-commit hook on a git repository
+containing your content or layout.
 
 I made wok because projects like [Jekyll][jekyll], [Hyde][hyde], and
-[Static][static] were intriguing, but in the end didn't quite match what I
-wanted to do with my website. So I am writing my own.
+[Static][static] were intriguing, but in the end didn't quite match what
+I wanted to do with my website. So I am writing my own. Funnily, the
+mythical website that inspired wok still hasn't been written.
 
 [jekyll]: https://github.com/mojombo/jekyll
 [hyde]: https://github.com/lakshmivyas/hyde 
@@ -20,6 +22,8 @@ wanted to do with my website. So I am writing my own.
 Sample Sites
 ------------
 A bare bones site is included in the wok git repo, in the `sample` directory.
+It is really just a playground for devs to test new features, and not a good
+learning tool.
 
 For some real world examples check out these sites.
 
@@ -38,19 +42,23 @@ For some real world examples check out these sites.
      serving as an example, let me know and I will add a link to your site
      here.
 
+For some tutorials, the [wok github wiki][wiki] has some good pointers.
+
+[wiki]: https://github.com/mythmon/wok/wiki
+
 Installation
 ------------
-Note that wok is in alpha. It is under active development; Its features are
-still in flux, and there are probably bugs. That being said, it is still quite
-usable. The recommended way to install wok is from the [Python Package
-Index][pypi] with this command.
+Note that wok is beta quality software. It is under active development;
+its features are still in flux, and there are probably bugs. That being
+said, it is still quite usable. The recommended way to install wok is
+from the [Python Package Index][pypi] with this command.
 
     sudo pip install wok
 
-Alternatively, if you want to hack on wok or just need the latest code, you can
-run from git head, and if you want to you can install to your system
-directories with this command. Note that you will need to install dependencies
-by hand in this case.
+Alternatively, if you want to hack on wok or just need the latest code,
+you can run from git head, and if you want to you can install to your
+system directories with this command. Note that you will need to install
+dependencies by hand in this case.
 
     sudo python2 setup.py install
 
@@ -73,33 +81,38 @@ install either markdown or docutils.
 
 Usage
 -----
-To use wok, go to the directory where your site files are located, and issue
-the command `wok`.  For now, no output will be given unless something goes
-wrong. If it returns without error, you should have a shiny new output folder
-containing some HTML, and your media that represents your shiny new site.
+To use wok, go to the directory where your site files are located, and
+run the command `wok`. For now, no output will be given unless something
+goes wrong. If it returns without error, you should have a shiny new
+output folder containing some HTML, and your media that represents your
+shiny new site.
 
-To aid in testing links on the site, wok includes a development server. The
-comments on that particular file say:
+To aid in testing links on the site, wok includes a development server.
+You can run it with the command `wok --server`, which will generate the
+site as normal, and then run a webserver on port 8080. The comments on
+that particular file say:
 
->Do *NOT* attempt to use this as anything resembling a production server. It is
->meant to be used as a development test server only.
+> Do *NOT* attempt to use this as anything resembling a production
+> server. It is meant to be used as a development test server only.
 
-This test server is slow, and likely insecure, but for local testing of the
-site during development, it is really convenient.
+This test server is slow, and likely insecure, but for local testing of
+the site during development, it is really convenient.
 
-wok pulls the pieces of your site from three places. For each of these places,
-you can modify the path wok looks for them in the config file.
+Wok pulls the pieces of your site from three places. For each of these
+places, you can modify the path wok looks for them in the configuration
+file.
 
 ### Content ###
-Pulled from a directory named `content` by default. Content is written in 
-lightweight markup or in plain text, with an optional YAML header section. The
-directory structure of the file mean nothing to wok. It builds the structure
-of the site based on the titles and the category meta data.
+Pulled from a directory named `content` by default. Content is written
+in lightweight markup or in plain text, with an optional YAML header
+section. The directory structure of the file mean nothing to wok. It
+builds the structure of the site based on the titles and the category
+meta data.
 
 Since wok uses lightweight mark up languages like [Markdown][mkd] and
-[reStructuredText][rst], it is easy to do nice formatting in the pages without
-using a GUI editor or a cumbersome language like HTML. Built in syntax
-highlighting and media copying make things even easier.
+[reStructuredText][rst], it is easy to do nice formatting in the pages
+without using a GUI editor or a cumbersome language like HTML. Built in
+syntax highlighting and media copying make things even easier.
 
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html
@@ -109,10 +122,10 @@ highlighting and media copying make things even easier.
 [more_content]: https://github.com/mythmon/wok/wiki/Content
 
 ### Templates ###
-Pulled from `templates` by default. wok uses [Jinja2][jinja] templates, with
-various variables exposed to build pages. This is a very flexible templating
-environment with control flow, filters, and other ways to slice and dice the
-data that wok gives you.
+Pulled from `templates` by default. Wok uses [Jinja2][jinja] templates,
+with various variables exposed to build pages. This is a very flexible
+templating environment with control flow, filters, and other ways to
+slice and dice the data that wok gives you.
 
 [More info][more_templates]
 
@@ -144,7 +157,7 @@ useful things like `pagination.page_items` and `pagination.next_page`.
 
 ### Media ###
 Media is pretty simple. It is intended to be used for things like site wide
-images, style sheets and javascript. wok will copy everything from the media
+images, style sheets and JavaScript. Wok will copy everything from the media
 directory straight to the output directory before generating anything. This
 means that generated content can overwrite media.
 
