@@ -11,19 +11,19 @@
     <header>
       <h1><a href="/">wok</a></h1>
       <nav>
-        {% for nav in site.tags['_nav']|sort(attribute='nav_sort') %}
-          {% if nav.url == page.url %}
+        {%- for nav in site.tags['_nav']|sort(attribute='nav_sort') %}
+          {%- if nav.url == page.url %}
             <a href="{{ nav.url }}" class="active">{{ nav.title }}</a>
-          {% else %}
+          {%- else %}
             <a href="{{ nav.url }}">{{ nav.title }}</a>
-          {% endif %}
-        {% endfor %}
+          {%- endif %}
+        {%- endfor %}
       </nav>
     </header>
 
     <div id="content">
-      {% block content %}
-      {% endblock %}
+      {%- block content %}
+      {%- endblock %}
     </div>
 
     <footer>
