@@ -244,6 +244,7 @@ class Engine(object):
                     'tags': tag_dict,
                     'pages': self.all_pages[:],
                     'categories': self.categories,
+                    'slugs': dict((p.meta['slug'], p.meta) for p in self.all_pages),
                 },
             }
 

@@ -27,6 +27,8 @@ decently well formed, unless otherwise noted.
 -   `site.date` - The date of the last site generation.
 -   `site.time` - The time of day of the last site generation.
 -   `site.pages` - All the pages on the site, in a flat list.
+-   `site.slugs` - A dictionary where the key is the slug of the page, and the
+    value is the page itself.
 -   `site.tags` - A dictionary. The keys are tag names, and each value is a
     list of pages that have that tag.. `{tag: [list of pages]}`.
 -   `site.categories` - The top level categories of the site as a dictionary.

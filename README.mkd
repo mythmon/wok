@@ -167,18 +167,19 @@ Settings can be changed in the file `config` in the current directory.
 
 Possible configuration options (and their defaults) are
 
--   `output_dir` ('output') - Where the outputted files are put.
--   `content_dir` ('content') - Where to find the content.
--   `templates_dir` ('templates') - Where the templates are.
--   `media_dir` ('media') - Where the media files are copied from.
--   `site_title` ('Some Random wok Site') - Available to templates as
-    `site.title`.
--   `author` (No default) - Fills `site.author`, and provides a default to
-    `page.author`.
--   `url_pattern` (`/{category}/{slug}.html`) - The pattern used to name and
-    place the output files. The default produces URLs like
-    `/category/subcategory/foo.html`. To get "wordpress style" urls, you could
-    use `/{category}/{slug}/index.html`.
+- `output_dir` ('output') - Where the outputted files are put.
+- `content_dir` ('content') - Where to find the content.
+- `templates_dir` ('templates') - Where the templates are.
+- `media_dir` ('media') - Where the media files are copied from.
+- `site_title` ('Some Random wok Site') - Available to templates as
+  `site.title`.
+- `author` (No default) - Fills `site.author`, and provides a default to
+  `page.author`.
+- `url_pattern` (`/{category}/{slug}.html`) - The pattern used to name and
+  place the output files. The default produces URLs like
+  `/category/subcategory/foo.html`. To get "wordpress style" urls, you could
+  use `/{category}/{slug}/index.html`.
+- `url_use_index` (Yes) - If true, keep `index.*` in urls.
 
     Available variables:
 
