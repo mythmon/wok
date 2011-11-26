@@ -38,11 +38,12 @@ These are the variables that affect the rending, layout, and categorization of p
  -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`. ([More about tagging][tagging])
  -  `published` - To exclude some pages from the site, but not remove them entirely.
  -  `url` - To manually specify the path for the generated page. If none is specified, the global pattern defined in `url_pattern` in the main configuration file will be used. ([More about managing URLs][URLs])
--   `pagination` - An object who's presence will trigger paginating this page. See [[pagination]] for more details.
+-   `pagination` - An object who's presence will trigger paginating this page. See [pagination][] for more details.
 
 [8601]: http://en.wikipedia.org/wiki/ISO_8601
-[URLs]: URLs
-[tagging]: Tagging
+[URLs]: /docs/urls/
+[tagging]: /docs/content/tagging/
+[pagination]: /docs/pagination/
 
 Categories
 ----------

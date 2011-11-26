@@ -1,0 +1,59 @@
+title: Managing URLs
+slug: urls
+category: docs
+---
+Wok offers a flexible and easy-to-use mechanism for managing URLs. There are
+two components: The global `url_pattern` setting in the main configuration
+file, and the `url` setting in a [page's content metadata][content].
+
+[content]: /docs/content/
+
+Global URL settings
+-------------------
+
+In the main configuration file, you can define a global URL pattern by defining
+the `url_pattern` setting. There are a few available variables, which you can
+arrange to your liking:
+
+- `{category}` - The category of the site, separated by forward slashes ('/').
+- `{slug}` - The slug of the page.
+- `{page}` - The current page number, when [pagination][] is used. On the first
+  page, this will always be an empty string.
+- `{ext}` - The file extension of the template that was used to generate this
+  file.
+
+If you don't include `{page}` in your `url_pattern`, then pagination won't
+work. Instead it will overwrite each page with it's sequel, resulting in only
+the last page remaining.
+
+Any time two or more forward slashes are generated, they will be replaced by a
+single forward slash. If you set the option `url_include_index` to `false`,
+then any time the url ends with `index.*`, that will also be removed from the
+url patterns. The files will still be named `index.*`, however.
+
+### Examples:
+
+#### The default pattern.
+This will produce boring, old school URLs, like `/docs/urls.html` for this page, or `/news/cool5.html` for the fifth page of a cool news article.
+
+    url_pattern: /{category}/{slug}{page}.{ext}
+
+#### The "Wordpress" pattern.
+These are "clean" urls popularized by blogging tools like wordpress. This
+pattern would create the url `/docs/urls/` for this page, or
+`/news/cool/5/index.html` for the fifth page of a cool news article.
+
+    /{category}/{slug}/{page}/index.html
+
+Page-specific URL settings
+--------------------------
+In addition to the global URL pattern, every page can have its own custom URL, which is defined in the content's metadata with the `url` setting. For example:
+
+    title: Foo page
+    url: /foo/bar.html
+    ---
+    Foo page content.
+
+If you want to support pagination for this page, you must include a {page} variable in the url definition here, like
+
+    url: /foo/bar{page}.html
