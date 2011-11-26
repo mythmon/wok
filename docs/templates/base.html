@@ -29,10 +29,9 @@
     </div>
 
     <footer>
-      <span>&copy;2011 Mike Cooper, et al.</span>
-      <span>Last generated: {{ site.datetime.strftime('%c') }}</p>
-    </footer>
-  </div>
+      {{ site.slugs.footer.content|safe }}
+      <p>Last generated: {{ site.datetime.strftime('%c') }}.</p>
+    </footer> </div>
 </body>
 
 </html>
