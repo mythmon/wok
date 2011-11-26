@@ -16,14 +16,14 @@ changed. A good way this could be done would be with a post-commit hook
 on a git repository containing your content or layout.
 
 Wok is similar in concept to other static site generators, like
-[Jekyll][], [Hyde][], and [Static][], but different in a few ways, like
+[Jekyll][], [Hyde][], and [nanoc][], but different in a few ways, like
 a page/subpage category system, and a restricted focus of features. For
 example, instead of providing tools to generate RSS feeds directly, the
 tools that are needed to build a generic XML document are provided.
 
 [jekyll]: https://github.com/mojombo/jekyll
 [hyde]: https://github.com/lakshmivyas/hyde
-[static]: http://static.newqdev.com/
+[nanoc]: http://nanoc.stoneship.org/
 
 Features
 --------
