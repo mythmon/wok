@@ -54,6 +54,10 @@ header nav a.active {
 /* Body */
 #content {
     padding: 10px;
+    color: #4E3434;
+    line-height: 1.5;
+    font-size: 16px;
+    font-family: serif;
 }
 
 a {
@@ -62,12 +66,24 @@ a {
     text-decoration: none;
 }
 a:hover {
-    color: #FF4040;
+    color: #EF4030;
     text-decoration: underline;
 }
-h1, h2, h3, h4, h5, h6 {
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
     font-family: 'Carter One', sans-serif;
     font-weight: 100;
+    color: #322;
+    margin: 5px 0 10px;
+}
+p {
+    margin: 0 0 20px 0;
+}
+pre {
+    padding-left: 10px;
+    border-left: 3px solid #DDD;
+    font-family: Monospace;
+    font-size: 14px;
+    color: #555;
 }
 
 /* Footer */
@@ -75,7 +91,7 @@ footer {
     border-top: 1px solid #A60000;
     padding: 10px;
     font-size: 0.7em;
-    color: #AAA;
+    color: #999;
 }
 footer span {
     margin-right: 10px;
