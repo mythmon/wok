@@ -1,0 +1,42 @@
+title: Home
+url: "/index.html"
+tags: [_nav]
+nav_sort: 1
+---
+Wok is a static website generator. It turns a pile of templates,
+content, and resources (like CSS and images) into a neat stack of plain
+HTML. You run it on your local computer, and it generates a directory of
+web files that you can upload to your web server, or serve directly.
+
+The idea is that you don't need a big server-side engine like Drupal or
+Django to generate every page, every visit, for every visitor. Caching
+helps, but it can only do so much. Instead, you can generate the entire
+site once ahead of time, and only regenerate things when something has
+changed. A good way this could be done would be with a post-commit hook
+on a git repository containing your content or layout.
+
+Wok is similar in concept to other static site generators, like [Jekyll][],
+[Hyde][], and [Static][], but different in a few ways, like a page/subpage
+category system, and a restricted focus of features. For example, instead of
+providing tools to generate RSS feeds directly, the tools that are needed to
+build a generic XML document are provided.
+
+[jekyll]: https://github.com/mojombo/jekyll
+[hyde]: https://github.com/lakshmivyas/hyde
+[static]: http://static.newqdev.com/
+
+Features
+--------
+
+-   Content and presentation are separated.
+-   [Jinja2][] based templating system.
+-   [Markdown][mkd], [reStructuredText][rst], and plain text renders.
+-   Optional: Syntax highlighting via [Pygments][]
+-   Tagging and a hierarchical category system.
+-   Simple development server, for testing.
+-   Support for pagination.
+
+[jinja2]: http://jinja.pocoo.org
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+[pygments]: http://pygments.org/

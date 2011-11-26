@@ -1,0 +1,59 @@
+<html>
+
+<head>
+  <title>Wok ~ Home</title>
+  <link rel="stylesheet" type="text/css" href="/css/base.css" />
+  
+</head>
+
+<body>
+  <div id="wrap">
+    <header>
+      <h1><a href="/">wok</a></h1>
+      <nav>
+        
+          
+            <a href="/" class="active">Home</a>
+          
+        
+      </nav>
+    </header>
+
+    <div id="content">
+      
+  <p>Wok is a static website generator. It turns a pile of templates,
+content, and resources (like CSS and images) into a neat stack of plain
+HTML. You run it on your local computer, and it generates a directory of
+web files that you can upload to your web server, or serve directly.</p>
+<p>The idea is that you don't need a big server-side engine like Drupal or
+Django to generate every page, every visit, for every visitor. Caching
+helps, but it can only do so much. Instead, you can generate the entire
+site once ahead of time, and only regenerate things when something has
+changed. A good way this could be done would be with a post-commit hook
+on a git repository containing your content or layout.</p>
+<p>Wok is similar in concept to other static site generators, like <a href="https://github.com/mojombo/jekyll">Jekyll</a>,
+<a href="https://github.com/lakshmivyas/hyde">Hyde</a>, and <a href="http://static.newqdev.com/">Static</a>, but different in a few ways, like a page/subpage
+category system, and a restricted focus of features. For example, instead of
+providing tools to generate RSS feeds directly, the tools that are needed to
+build a generic XML document are provided.</p>
+<h2>Features</h2>
+<ul>
+<li>Content and presentation are separated.</li>
+<li><a href="http://jinja.pocoo.org">Jinja2</a> based templating system.</li>
+<li><a href="http://daringfireball.net/projects/markdown/">Markdown</a>, <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>, and plain text renders.</li>
+<li>Optional: Syntax highlighting via <a href="http://pygments.org/">Pygments</a></li>
+<li>Tagging and a hierarchical category system.</li>
+<li>Simple development server, for testing.</li>
+<li>Support for pagination.</li>
+</ul>
+
+    </div>
+
+    <footer>
+      <span>&copy;2011 Mike Cooper, et al.</span>
+      <span>Last generated: Fri Nov 25 19:35:51 2011</p>
+    </footer>
+  </div>
+</body>
+
+</html>

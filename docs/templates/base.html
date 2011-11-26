@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <title>{{ site.title }} ~ {{ page.title }}</title>
+  <link rel="stylesheet" type="text/css" href="/css/base.css" />
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <div id="wrap">
+    <header>
+      <h1><a href="/">wok</a></h1>
+      <nav>
+        {% for nav in site.tags['_nav']|sort(attribute=nav_sort) %}
+          {% if nav.url == page.url %}
+            <a href="{{ nav.url }}" class="active">{{ nav.title }}</a>
+          {% else %}
+            <a href="{{ nav.url }}">{{ nav.title }}</a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </header>
+
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <footer>
+      <span>&copy;2011 Mike Cooper, et al.</span>
+      <span>Last generated: {{ site.datetime.strftime('%c') }}</p>
+    </footer>
+  </div>
+</body>
+
+</html>

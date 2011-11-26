@@ -1,0 +1,72 @@
+/* Layout */
+#wrap {
+    width: 800px;
+    margin: 10px auto 20px;
+}
+
+/* Header */
+header {
+    border-bottom: 1px solid #A60000;
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+    height: 40px;
+}
+header h1 {
+    display: inline-block;
+    margin: 0px;
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    font-size: 3em;
+}
+header h1 a {
+    text-decoration: none;
+    color: #A60000;
+}
+header h1 a:hover {
+    text-decoration: overline;
+}
+header nav {
+    display: inline-block;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
+header nav a {
+    text-decoration: none;
+    font-size: 1.2em;
+    margin: 10px;
+    color: #A60000;
+}
+header nav a:hover {
+    text-decoration: overline;
+}
+header nav a.active {
+}
+
+/* Body */
+#content {
+    padding: 10px;
+}
+
+a {
+    color: #BF3030;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover {
+    color: #FF4040;
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #A60000;
+    padding: 10px;
+    font-size: 0.7em;
+    color: #AAA;
+}
+footer span {
+    margin-right: 10px;
+}
