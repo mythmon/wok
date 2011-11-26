@@ -1,0 +1,43 @@
+title: Community
+tags: [_nav]
+nav_sort: 3
+---
+In the wild
+-----------
+Wok powers an ever growing list of sites.
+
+-   This site ([source](https://github.com/mythmon/tree/master/docs))
+-   [Oregon State University LUG](http://lug.oregonstate.edu)
+    ([source](https://github.com/OSULUG/OSULUG-Website))
+-   [robmd.net](http://robmd.net)
+    ([source](https://github.com/robatron/robmd.net)) - Personal site of Rob
+    McGuire-Dale.
+-   [Bravo Server](http://bravoserver.org)
+    ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) -
+    A custom Minecraft server written in Python.
+-   [uberj.com](http://uberj.com) ([source](https://github.com/uberj/wbsite)) -
+    Personal website of Jacques Uber.
+
+Contributors
+------------
+Wok is written by Mike Cooper.
+
+### Thanks To
+Without these early adopters, wok would have lacked direction, definition, and
+a purpose. Each of them helped me work through figuring out what wok could do,
+needed do to, where it was broken, and what it should become.
+
+-   Rob Mcguire-Dale (robatron)
+-   Kevin Ngo (ngoke)
+-   Corbin Simpson (MostAwesomeDude)
+-   Jacque Uber (uberj)
+
+Support
+-------
+If there are bugs or feature requests for wok, please send them to [the issue
+tracker][gh-issues].
+
+For real time support, you can check out the irc channel `#wok` on
+irc.freenode.net.
+
+[gh-issues]: https://github.com/mythmon/wok/issues
