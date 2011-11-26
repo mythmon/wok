@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Carter+One);
+
 /* Layout */
 #wrap {
     width: 800px;
@@ -16,33 +18,31 @@ header h1 {
     display: inline-block;
     margin: 0px;
     position: absolute;
-    bottom: 0px;
+    bottom: -10px;
     right: 10px;
     font-size: 3em;
+    font-family: 'Carter One', sans-serif;
 }
 header h1 a {
     text-decoration: none;
     color: #A60000;
-}
-header h1 a:hover {
-    text-decoration: overline;
 }
 header nav {
     display: inline-block;
     position: absolute;
     left: 0px;
     bottom: 0px;
+    font-family: 'Carter One', sans-serif;
 }
 header nav a {
     text-decoration: none;
     font-size: 1.2em;
-    margin: 10px;
+    padding: 0 10px;
+    margin-right: 5px;
     color: #A60000;
 }
-header nav a:hover {
-    text-decoration: overline;
-}
 header nav a.active {
+    border-top: 1px solid #A60000;
 }
 
 /* Body */
@@ -58,6 +58,10 @@ a {
 a:hover {
     color: #FF4040;
     text-decoration: underline;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Carter One', sans-serif;
+    font-weight: 100;
 }
 
 /* Footer */

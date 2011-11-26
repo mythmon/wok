@@ -1,0 +1,106 @@
+<html>
+
+<head>
+  <title>Wok ~ Content</title>
+  <link rel="stylesheet" type="text/css" href="/css/base.css" />
+  
+</head>
+
+<body>
+  <div id="wrap">
+    <header>
+      <h1><a href="/">wok</a></h1>
+      <nav>
+        
+          
+            <a href="/">Home</a>
+          
+        
+          
+            <a href="/docs/">Docs</a>
+          
+        
+      </nav>
+    </header>
+
+    <div id="content">
+      
+  <hgroup class="pagehead">
+    <h1>Content</h1>
+    
+  </hgroup>
+  <p>Content can be written in various markup languages (currently <a href="http://daringfireball.net/projects/markdown/">Markdown</a> or <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>), with a
+<a href="http://www.yaml.org/">YAML</a> header, separated by 3 hyphens alone on a line. For example:</p>
+<div class="highlight"><pre><span class="err">title:</span> <span class="err">Sample</span> <span class="err">Post</span>
+<span class="err">author:</span> <span class="err">Mike</span> <span class="err">Cooper</span> <span class="err">&lt;mythmon@gmail.com&gt;</span>
+<span class="err">---</span>
+<span class="err">The</span> <span class="err">content</span> <span class="err">of</span> <span class="err">the</span> <span class="err">page.</span>
+
+<span class="err">Lorem</span> <span class="err">ipsum</span> <span class="err">dolor</span> <span class="err">sit</span> <span class="err">amet,</span> <span class="err">consectetur</span> <span class="err">adipiscing</span> <span class="err">elit.</span> <span class="err">Donec</span>
+<span class="err">pellentesque,</span> <span class="err">est</span> <span class="err">non</span> <span class="err">hendrerit</span> <span class="err">mattis,</span> <span class="err">arcu</span> <span class="err">nibh</span> <span class="err">venenatis</span> <span class="err">sapien,</span> <span class="err">quis</span>
+<span class="err">porta</span> <span class="err">sem</span> <span class="err">libero</span> <span class="err">placerat</span> <span class="err">magna.</span> <span class="err">Suspendisse</span> <span class="err">condimentum</span> <span class="err">turpis</span> <span class="err">fringilla</span>
+<span class="err">ligula</span> <span class="err">porta</span> <span class="err">vestibulum</span> <span class="err">et</span> <span class="err">ut</span> <span class="err">sem.</span> <span class="err">Cras</span> <span class="err">hendrerit</span> <span class="err">pulvinar</span> <span class="err">metus</span> <span class="err">at</span>
+<span class="err">imperdiet.</span>
+</pre></div>
+
+
+<h2>Metadata</h2>
+<p>These are the variables that affect the rending, layout, and categorization of pages in the YAML metadata.</p>
+<ul>
+<li><code>title</code> - The title of the page. If not specified, the filename (minus <code>.mkd</code>) will be used.</li>
+<li><code>type</code> - Used to determine the template to use. If unspecified, the template <code>default</code> is used.</li>
+<li><code>author</code> - In <code>My Name &lt;my@email.com&gt;</code> format.</li>
+<li><code>slug</code> - Name for URLs and filenames. If not specified, it will be generated from the title.</li>
+<li>
+<p><code>date</code>, <code>time</code>, or <code>datetime</code> - Published date in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO8601</a> format
+     (ie: <code>2011-02-17 14:31:00</code>).</p>
+<blockquote>
+<p>Note: There is a bug in PyYAML currently that requires the seconds in datetimes and times, otherwise 
+they will not be properly parsed.
+ -  <code>category</code> - Including sub categories as a slash-separated list. <code>projects/wok/docs</code> means the
+ page is in the category <code>docs</code> which is a subcategory of <code>wok</code> which is a subcategory of
+ <code>projects</code>.
+ -  <code>tags</code> - A comma-separated list of tags, e.g., <code>foo, bar, herp, derp</code>. (<a href="Tagging">More about tagging</a>)
+ -  <code>published</code> - To exclude some pages from the site, but not remove them entirely.
+ -  <code>url</code> - To manually specify the path for the generated page. If none is specified, the global pattern defined in <code>url_pattern</code> in the main configuration file will be used. (<a href="URLs">More about managing URLs</a>)
+-   <code>pagination</code> - An object who's presence will trigger paginating this page. See [[pagination]] for more details.</p>
+</blockquote>
+</li>
+</ul>
+<h2>Syntax Highlighting</h2>
+<p>wok can use <a href="http://pygments.org">Pygments</a> to do syntax highlighting. It will be automatically enabled if you mark a block of text as code, and assign it a language. Marking a block of text is different in each mark up language.</p>
+<h3>In reStructuredText</h3>
+<div class="highlight"><pre><span class="o">..</span><span class="n">sourcecode</span><span class="p">::</span> <span class="n">python</span>
+
+    <span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+
+
+<p>That is, define a new block with the directive <code>sourcecode</code>. Give it a parameter of the language name. Then the code must be separated from the directive by a blank line, and be indented.</p>
+<h3>In Markdown</h3>
+<div class="highlight"><pre>    <span class="o">::</span><span class="n">python</span>
+    <span class="n">class</span> <span class="n">Foo</span><span class="p">(</span><span class="n">object</span><span class="p">):</span>
+        <span class="n">pass</span>
+</pre></div>
+
+
+<p>That is, make a code block whose first line is <code>::&lt;language name&gt;</code>. This will hide that first line, and highlight the code.</p>
+<h3>CSS</h3>
+<p>Doing this will only wrap the code in CSS classes, it doesn't actually apply any styles. To do that you need to include a Pygments style CSS sheet. To get one of these style sheets, run this command </p>
+<div class="highlight"><pre><span class="n">pygmentize</span> <span class="o">-</span><span class="n">S</span> <span class="n">default</span> <span class="o">-</span><span class="n">f</span> <span class="n">html</span>
+</pre></div>
+
+
+<p>This will dump a style definition onto stdout. This command gives the default style, but there are others available. Drop the outputted file into your media directory, and include the css in one of your templates and you are good to go!</p>
+
+    </div>
+
+    <footer>
+      <span>&copy;2011 Mike Cooper, et al.</span>
+      <span>Last generated: Sat Nov 26 12:16:30 2011</p>
+    </footer>
+  </div>
+</body>
+
+</html>

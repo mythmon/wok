@@ -1,0 +1,76 @@
+title: Content
+category: docs
+---
+Content can be written in various markup languages (currently [Markdown][mkd] or [reStructuredText][rst]), with a
+[YAML][yaml] header, separated by 3 hyphens alone on a line. For example:
+
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+[yaml]: http://www.yaml.org/
+
+    title: Sample Post
+    author: Mike Cooper <mythmon@gmail.com>
+    ---
+    The content of the page.
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+    pellentesque, est non hendrerit mattis, arcu nibh venenatis sapien, quis
+    porta sem libero placerat magna. Suspendisse condimentum turpis fringilla
+    ligula porta vestibulum et ut sem. Cras hendrerit pulvinar metus at
+    imperdiet.
+
+Metadata
+--------
+These are the variables that affect the rending, layout, and categorization of pages in the YAML metadata.
+
+ -  `title` - The title of the page. If not specified, the filename (minus `.mkd`) will be used.
+ -  `type` - Used to determine the template to use. If unspecified, the template `default` is used.
+ -  `author` - In `My Name <my@email.com>` format.
+ -  `slug` - Name for URLs and filenames. If not specified, it will be generated from the title.
+ -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format
+     (ie: `2011-02-17 14:31:00`).
+
+     > Note: There is a bug in PyYAML currently that requires the seconds in datetimes and times, otherwise 
+     > they will not be properly parsed.
+ -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the
+     page is in the category `docs` which is a subcategory of `wok` which is a subcategory of
+     `projects`.
+ -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`. ([More about tagging][tagging])
+ -  `published` - To exclude some pages from the site, but not remove them entirely.
+ -  `url` - To manually specify the path for the generated page. If none is specified, the global pattern defined in `url_pattern` in the main configuration file will be used. ([More about managing URLs][URLs])
+-   `pagination` - An object who's presence will trigger paginating this page. See [[pagination]] for more details.
+
+[8601]: http://en.wikipedia.org/wiki/ISO_8601
+[URLs]: URLs
+[tagging]: Tagging
+
+Syntax Highlighting
+-------------------
+wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically enabled if you mark a block of text as code, and assign it a language. Marking a block of text is different in each mark up language.
+
+[pyg]: http://pygments.org
+
+### In reStructuredText
+
+    ..sourcecode:: python
+
+        class Foo(object):
+            pass
+
+That is, define a new block with the directive `sourcecode`. Give it a parameter of the language name. Then the code must be separated from the directive by a blank line, and be indented.
+
+### In Markdown
+
+        ::example
+        ::python
+        class Foo(object):
+            pass
+
+That is, make a code block whose first line is `::<language name>`. This will hide that first line, and highlight the code.
+
+### CSS
+Doing this will only wrap the code in CSS classes, it doesn't actually apply any styles. To do that you need to include a Pygments style CSS sheet. To get one of these style sheets, run this command 
+
+    pygmentize -S default -f html
+
+This will dump a style definition onto stdout. This command gives the default style, but there are others available. Drop the outputted file into your media directory, and include the css in one of your templates and you are good to go!
