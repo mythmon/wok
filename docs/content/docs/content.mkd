@@ -44,6 +44,10 @@ These are the variables that affect the rending, layout, and categorization of p
 [URLs]: URLs
 [tagging]: Tagging
 
+Categories
+----------
+Categories in wok can be treated as a tree, where every node is a page. There are no seperate categories and pages, there are just pages, and sub-pages, and sub-sub-pages, etc. For more infomation, see the [category docs](/docs/content/categories/).
+
 Syntax Highlighting
 -------------------
 wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically enabled if you mark a block of text as code, and assign it a language. Marking a block of text is different in each mark up language.
