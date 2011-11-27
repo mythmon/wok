@@ -298,6 +298,8 @@ class Page(object):
             logging.debug('sort_key: {0}, sort_reverse: {1}'.format(
                 sort_key, sort_reverse))
 
+            if not source:
+                return extra_pages
             if isinstance(source[0], Page):
                 source = [p.meta for p in source]
 
@@ -310,6 +312,8 @@ class Page(object):
                             reverse=sort_reverse)
 
             chunks = list(util.chunk(source, self.meta['pagination']['limit']))
+            if not chunks:
+                return extra_pages
 
             # Make a page for each chunk
             for idx, chunk in enumerate(chunks[1:]):
