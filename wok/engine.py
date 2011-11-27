@@ -144,8 +144,14 @@ class Engine(object):
         then copy over the media files, if they exist.
         """
         if os.path.isdir(self.options['output_dir']):
-            shutil.rmtree(self.options['output_dir'])
-        os.mkdir(self.options['output_dir'])
+            for name in os.listdir(self.options['output_dir']):
+                path = os.path.join(self.options['output_dir'], name)
+                if os.path.isfile(path):
+                    os.unlink(path)
+                else:
+                    shutil.rmtree(path)
+        else:
+            os.mkdir(self.options['output_dir'])
 
         # Copy the media directory to the output folder
         try:
