@@ -41,22 +41,22 @@ class Engine(object):
 
         # Add option to to run the development server after generating pages
         devserver_grp = OptionGroup(parser, "Development server",
-                "Runs a small development server after site generation. \
-                --address and --port will be ignored if --server is absent.")
+                "Runs a small development server after site generation. "
+                "--address and --port will be ignored if --server is absent.")
         devserver_grp.add_option('--server', action='store_true',
                 dest='runserver',
                 help="run a development server after generating the site")
         devserver_grp.add_option('--address', action='store', dest='address',
                 help="specify ADDRESS on which to run development server")
         devserver_grp.add_option('--port', action='store', dest='port',
-                type='int', 
+                type='int',
                 help="specify PORT on which to run development server")
         parser.add_option_group(devserver_grp)
 
         # Options for noisiness level and logging
         logging_grp = OptionGroup(parser, "Logging",
-                "By default, log messages will be sent to standard out, \
-                and report only errors and warnings.")
+                "By default, log messages will be sent to standard out, "
+                "and report only errors and warnings.")
         parser.set_defaults(loglevel=logging.WARNING)
         logging_grp.add_option('-q', '--quiet', action='store_const',
                 const=logging.ERROR, dest='loglevel',
@@ -148,7 +148,7 @@ class Engine(object):
         try:
             import __hooks__
             self.hooks = __hooks__.hooks
-            logging.info('Loaded hooks: {0}'.format(self.hooks))
+            logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
         except:
             self.hooks = {}
             logging.debug('No hooks found')
@@ -208,16 +208,17 @@ class Engine(object):
                             'for {0}. Using default renderer.'.format(f))
                     renderer = renderers.Renderer
 
-                p = page.Page(os.path.join(root, f), self.options, renderer)
-                if p.meta['published']:
+                p = page.Page.from_file(os.path.join(root, f), self.options,
+                        renderer)
+                if p and p.meta['published']:
                     self.all_pages.append(p)
 
     def make_tree(self):
         """
-        Make the category pseduo-tree.
+        Make the category pseudo-tree.
 
         In this structure, each node is a page. Pages with sub pages are
-        interior nodes, and leaf nodes have no sub pages. It is not truely a
+        interior nodes, and leaf nodes have no sub pages. It is not truly a
         tree, because the root node doesn't exist.
         """
         self.categories = {}

@@ -23,61 +23,89 @@ class Page(object):
 
     tmpl_env = None
 
-    def __init__(self, path, options, renderer=None, extra_meta=None):
+    def __init__(self, options):
+        self.options = options
+        self.filename = None
+        self.meta = {}
+
+    @classmethod
+    def from_meta(cls, meta, options, renderer=None):
+        """
+        Build a page object from a meta dictionary.
+
+        Note that you still need to call `render` and `write` to do anything
+        interesting.
+        """
+        page = cls(options)
+        page.meta = meta
+        page.options = options
+        page.renderer = renderer if renderer else renderers.Plain
+
+        # Make a template environment. Hopefully no one expects this to ever
+        # change.
+        if Page.tmpl_env is None:
+            Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
+                page.options.get('template_dir', 'templates')))
+
+        try:
+            page.build_meta()
+            return page
+        except:
+            return None
+
+    @classmethod
+    def from_file(cls, path, options, renderer=None):
         """
         Load a file from disk, and parse the metadata from it.
 
         Note that you still need to call `render` and `write` to do anything
         interesting.
         """
-        self.header = None
-        self.original = None
-        self.parsed = None
-        self.options = options
-        self.renderer = renderer if renderer else renderers.Plain
+        page = cls(options)
+        page.original = None
+        page.options = options
+        page.renderer = renderer if renderer else renderers.Plain
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
         if Page.tmpl_env is None:
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
-                self.options.get('template_dir', 'templates')))
+                page.options.get('template_dir', 'templates')))
 
-        self.path = path
-        _, self.filename = os.path.split(path)
+        page.path = path
+        page.filename = os.path.basename(path)
 
         with open(path) as f:
-            self.original = f.read()
-            splits = self.original.split('\n---\n')
+            page.original = f.read()
+            splits = page.original.split('\n---\n')
 
             if len(splits) > 3:
                 logging.warning('Found more --- delimited sections in {0} '
                                 'than expected. Squashing the extra together.'
-                                .format(self.path))
+                                .format(page.path))
 
             # Handle the case where no meta data was provided
             if len(splits) == 1:
-                self.original = splits[0]
-                self.meta = {}
+                page.original = splits[0]
+                page.meta = {}
 
             elif len(splits) == 2:
                 header = splits[0]
-                self.meta = yaml.load(header)
-                self.original = splits[1]
+                page.meta = yaml.load(header)
+                page.original = splits[1]
 
-            elif len(splits) == 3:
+            elif len(splits) >= 3:
                 header = splits[0]
-                self.meta = {}
-                self.original = '\n'.join(splits[1:])
-                self.meta['preview'] = splits[1]
-                self.meta.update(yaml.load(header))
+                page.meta = {}
+                page.original = '\n'.join(splits[1:])
+                page.meta['preview'] = splits[1]
+                page.meta.update(yaml.load(header))
                 logging.debug('Got preview')
 
-        if extra_meta:
-            logging.debug('Got extra_meta')
-            self.meta.update(extra_meta)
+        page.build_meta()
+        page.meta['content'] = page.renderer.render(page.original)
 
-        self.build_meta()
-        self.meta['content'] = self.renderer.render(self.original)
+        return page
 
     def build_meta(self):
         """
@@ -102,20 +130,42 @@ class Page(object):
 
         # title
         if not 'title' in self.meta:
-            self.meta['title'] = '.'.join(self.filename.split('.')[:-1])
-            if (self.meta['title'] == ''):
-                self.meta['title'] = self.filename
+            if self.filename:
+                # Take off the last file extension.
+                self.meta['title'] = '.'.join(self.filename.split('.')[:-1])
+                if (self.meta['title'] == ''):
+                    self.meta['title'] = self.filename
 
-            logging.info("You didn't specify a title in {0}. "
-                    "Using the file name as a title.".format(self.filename))
+                logging.warning("You didn't specify a title in {0}. Using the "
+                                "file name as a title.".format(self.path))
+            elif 'slug' in self.meta:
+                self.meta['title'] = self.meta['slug']
+                logging.warning("You didn't specify a title in {0}, which was "
+                        "not generated from a file. Using the slug as a title."
+                        .format(self.meta['slug']))
+            else:
+                logging.error("A page was generated that is not from a file, "
+                        "has no title, and no slug. I don't know what to do. "
+                        "Not using this page.")
+                logging.info("Bad Meta's keys: {0}".format(self.meta.keys()))
+                logging.debug("Bad Meta: {0}".format(self.meta))
+                raise BadMetaException()
 
         # slug
         if not 'slug' in self.meta:
-            self.meta['slug'] = util.slugify(self.meta['title'])
-            logging.debug("You didn't specify a slug, generating it from the title.")
+            if self.filename:
+                filename_no_ext = '.'.join(self.filename.split('.')[:-1])
+                self.meta['slug'] = util.slugify(filename_no_ext)
+                logging.info("You didn't specify a slug, generating it from the "
+                             "filename.")
+            else:
+                self.meta['slug'] = util.slugify(self.meta['title'])
+                logging.info("You didn't specify a slug, and no filename "
+                             "exists. Generating the slug from the title.")
+
         elif self.meta['slug'] != util.slugify(self.meta['slug']):
             logging.warning('Your slug should probably be all lower case, and '
-                'match "[a-z0-9-]*"')
+                            'match "[a-z0-9-]*"')
 
         # authors and author
         authors = self.meta.get('authors', self.meta.get('author', None))
@@ -130,15 +180,12 @@ class Page(object):
                         '{0}.'.format(self.path))
 
         elif authors is None:
-            if 'authors' in self.options:
-                self.meta['authors'] = self.options['authors']
-            else:
-                self.meta['authors'] = []
+            self.meta['authors'] = self.options.get('authors', [])
         else:
-            # wait, what?
+            # wait, what? Authors is of wrong type.
             self.meta['authors'] = []
             logging.error(('Authors in {0} is an unknown type. Valid types '
-                           'are string or list.').format(self.path))
+                           'are string or list.').format(self.meta['slug']))
 
         if self.meta['authors']:
             self.meta['author'] = self.meta['authors']
@@ -312,26 +359,28 @@ class Page(object):
             chunks = list(util.chunk(source, self.meta['pagination']['limit']))
 
             # Make a page for each chunk
-            for idx, chunk in enumerate(chunks[1:]):
-                extra_meta = {
+            for idx, chunk in enumerate(chunks[1:], 2):
+                new_meta = self.meta.copy()
+                new_meta.update({
                     'pagination': {
                         'page_items': chunk,
                         'num_pages': len(chunks),
-                        'cur_page': idx + 2,
+                        'cur_page': idx+1,
                     }
-                }
-                new_page = Page(self.path, self.options,
-                    renderer=self.renderer, extra_meta=extra_meta)
-                extra_pages.append(new_page)
+                })
+                new_page = Page.from_meta(new_meta, self.options,
+                    renderer=self.renderer)
+                if new_page:
+                    extra_pages.append(new_page)
 
             # Set up the next/previous page links
-            for idx, page in enumerate(extra_pages):
-                if idx == 0:
+            for idx, page in enumerate(extra_pages, 1):
+                if idx == 1:
                     page.meta['pagination']['prev_page'] = self.meta
                 else:
                     page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
 
-                if idx < len(extra_pages) - 1:
+                if idx < len(extra_pages):
                     page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
                 else:
                     page.meta['pagination']['next_page'] = None
@@ -407,3 +456,6 @@ class Author(object):
     def __unicode__(self):
         s = self.__str__()
         return s.replace('<', '&lt;').replace('>', '&gt;')
+
+class BadMetaException(Exception):
+    pass
