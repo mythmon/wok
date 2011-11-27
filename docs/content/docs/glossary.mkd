@@ -8,13 +8,14 @@ unique across the site, should be all lower case, and not contain punctuation
 (beyond what fits in a url), non-ascii characters, or spaces. For example, here
 are some titles and how wok will automatically slugify them.
 
-- "My trip to the zoo" -> "my-trip-to-the-zoo"
-- "This is a title. Or is it?" -> "this-is-a-title-or-is-it"
-- "Books!" -> "books"
+- "My trip to the zoo" &rarr; `my-trip-to-the-zoo`
+- "This is a title. Or is it?" &rarr; `this-is-a-title-or-is-it`
+- "Books!" &rarr; `books`
 
 You can also manually specify a slug on a content file, with the metadata
 attribute `slug`. For example
 
+    ::yaml
     title: My awesome trip to the zoo last Thursday.
     slug: zoo
 

@@ -8,6 +8,7 @@ Content can be written in various markup languages (currently [Markdown][mkd] or
 [rst]: http://docutils.sourceforge.net/rst.html
 [yaml]: http://www.yaml.org/
 
+    ::text
     title: Sample Post
     author: Mike Cooper <mythmon@gmail.com>
     ---
@@ -28,17 +29,23 @@ These are the variables that affect the rending, layout, and categorization of p
  -  `author` - In `My Name <my@email.com>` format.
  -  `slug` - Name for URLs and filenames. If not specified, it will be generated from the title.
  -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format
-     (ie: `2011-02-17 14:31:00`).
+    (ie: `2011-02-17 14:31:00`).
 
-     > Note: There is a bug in PyYAML currently that requires the seconds in datetimes and times, otherwise 
-     > they will not be properly parsed.
- -  `category` - Including sub categories as a slash-separated list. `projects/wok/docs` means the
-     page is in the category `docs` which is a subcategory of `wok` which is a subcategory of
+    > Note that due to the way the YAML standard works, seconds are required
+    > in date times and times, other wise they will not be parsed correctly.
+
+ -  `category` - Including sub categories as a slash-separated list.
+    `projects/wok/docs` means the page is in the category `docs` which is a
+    subcategory of `wok` which is a subcategory of
      `projects`.
- -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`. ([More about tagging][tagging])
+ -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`.
+    ([More about tagging][tagging])
  -  `published` - To exclude some pages from the site, but not remove them entirely.
- -  `url` - To manually specify the path for the generated page. If none is specified, the global pattern defined in `url_pattern` in the main configuration file will be used. ([More about managing URLs][URLs])
--   `pagination` - An object who's presence will trigger paginating this page. See [pagination][] for more details.
+ -  `url` - To manually specify the path for the generated page. If none is
+    specified, the global pattern defined in `url_pattern` in the main
+    configuration file will be used. ([More about managing URLs][URLs])
+-   `pagination` - An object who's presence will trigger paginating this page.
+    See [pagination][] for more details.
 
 [8601]: http://en.wikipedia.org/wiki/ISO_8601
 [URLs]: /docs/urls/
@@ -57,6 +64,7 @@ wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically 
 
 ### In reStructuredText
 
+    ::rst
     ..sourcecode:: python
 
         class Foo(object):
@@ -66,7 +74,7 @@ That is, define a new block with the directive `sourcecode`. Give it a parameter
 
 ### In Markdown
 
-        ::example
+        ::markdown
         ::python
         class Foo(object):
             pass
@@ -74,8 +82,9 @@ That is, define a new block with the directive `sourcecode`. Give it a parameter
 That is, make a code block whose first line is `::<language name>`. This will hide that first line, and highlight the code.
 
 ### CSS
-Doing this will only wrap the code in CSS classes, it doesn't actually apply any styles. To do that you need to include a Pygments style CSS sheet. To get one of these style sheets, run this command 
+Doing this will only wrap the code in CSS classes, it doesn't actually apply any styles. To do that you need to include a Pygments style CSS sheet. To get one of these style sheets, run this command
 
-    pygmentize -S default -f html
+    ::console
+    $ pygmentize -S default -f html
 
 This will dump a style definition onto stdout. This command gives the default style, but there are others available. Drop the outputted file into your media directory, and include the css in one of your templates and you are good to go!

@@ -4,7 +4,7 @@ category: docs/content
 Wok offers a [tagging][] system to help categorize your [content][]. You can
 tag content by including a YAML list in the `tags` field of the metadata, e.g.
 
-    ::wok
+    ::yaml
     title: My new eco-friendly pants
     tags: [recycling, bottomware]
     ---

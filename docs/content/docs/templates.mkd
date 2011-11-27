@@ -6,7 +6,7 @@ Content is then rendered using [Jinja2][] templates. Templates can have any exte
 Various variables relating to the site and the current page are provided to the
 template system. For example:
 
-
+    ::jinja2
     {% extends "base.html" %}
 
     {% block content %}

@@ -14,7 +14,7 @@ Add a pagination field to "turn on" the pagionator. This field is a YAML object
 with a few sub elements:
 
 - `pagination.list` - The list of things to paginate over. This must be a name
-  of a list, as accessible from a template. Commonly this is 'page.subpages'.
+  of a list, as accessible from a template. Commonly this is `page.subpages`.
 - `pagination.limit` - The number of items from the list to show on each page.
 - `pagination.sort_key` - Optional. What key to sort the list by before
   dividing it into page size chunks. Could be something like `title` or
@@ -24,6 +24,7 @@ with a few sub elements:
 
 Here is an example metadata fragment for a blog index page.
 
+    ::yaml
     title: Blog Index
     type: blog-index
     url: /blog/{page}/index.html
@@ -55,6 +56,7 @@ The `next_page` and `prev_page` are real page objects, so you can do things like
 
 Here is how you might use pagination in your templates.
 
+    ::jinja2
     {% if pagination %}
         <span class="pagination">
             {% if pagination.prev_page %}

@@ -36,6 +36,7 @@ url patterns. The files will still be named `index.*`, however.
 #### The default pattern.
 This will produce boring, old school URLs, like `/docs/urls.html` for this page, or `/news/cool5.html` for the fifth page of a cool news article.
 
+    ::yaml
     url_pattern: /{category}/{slug}{page}.{ext}
 
 #### The "Wordpress" pattern.
@@ -43,12 +44,14 @@ These are "clean" urls popularized by blogging tools like wordpress. This
 pattern would create the url `/docs/urls/` for this page, or
 `/news/cool/5/index.html` for the fifth page of a cool news article.
 
-    /{category}/{slug}/{page}/index.html
+    ::yaml
+    url_pattern: /{category}/{slug}/{page}/index.html
 
 Page-specific URL settings
 --------------------------
 In addition to the global URL pattern, every page can have its own custom URL, which is defined in the content's metadata with the `url` setting. For example:
 
+    ::yaml
     title: Foo page
     url: /foo/bar.html
     ---
@@ -56,4 +59,5 @@ In addition to the global URL pattern, every page can have its own custom URL, w
 
 If you want to support pagination for this page, you must include a {page} variable in the url definition here, like
 
+    ::yaml
     url: /foo/bar{page}.html

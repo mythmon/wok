@@ -5,7 +5,8 @@ category: docs
 Wok provides a simple HTTP server that can be used to test your site during
 development. You can run it like this
 
-    wok --server
+    ::console
+    $ wok --server
 
 This will generate your site, and run a simple server on localhost port 8000
 
