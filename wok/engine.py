@@ -20,12 +20,13 @@ class Engine(object):
     source files.
     """
     default_options = {
-        'content_dir' : 'content',
+        'content_dir': 'content',
         'template_dir': 'templates',
-        'output_dir'  : 'output',
-        'media_dir'   : 'media',
-        'site_title'  : 'Some random Wok site',
-        'url_pattern' : '/{category}/{slug}{page}.{type}',
+        'output_dir': 'output',
+        'media_dir': 'media',
+        'site_title': 'Some random Wok site',
+        'url_pattern': '/{category}/{slug}{page}.{ext}',
+        'url_include_index': True,
     }
 
     def __init__(self, output_lvl = 1):
@@ -118,11 +119,22 @@ class Engine(object):
             if yaml_config:
                 self.options.update(yaml_config)
 
+        # Make authors a list, even only a single author was specified.
         authors = self.options.get('authors', self.options.get('author', None))
         if isinstance(authors, list):
             self.options['authors'] = [page.Author.parse(a) for a in authors]
         elif isinstance(authors, str):
             self.options['authors'] = [page.Author.parse(a) for a in authors.split(',')]
+            if len(self.options['authors']) > 1:
+                logging.warn('Deprecation Warning: Use YAML lists instead of '
+                        'CSV for multiple authors. i.e. ["John Doe", "Jane '
+                        'Smith"] instead of "John Doe, Jane Smith". In config '
+                        'file.')
+
+        if '{type}' in self.options['url_pattern']:
+            logging.warn('Deprecation Warning: You should use {ext} instead '
+                    'of {type} in the url pattern specified in the config '
+                    'file.')
 
     def sanity_check(self):
         """Basic sanity checks."""
@@ -148,8 +160,14 @@ class Engine(object):
         then copy over the media files, if they exist.
         """
         if os.path.isdir(self.options['output_dir']):
-            shutil.rmtree(self.options['output_dir'])
-        os.mkdir(self.options['output_dir'])
+            for name in os.listdir(self.options['output_dir']):
+                path = os.path.join(self.options['output_dir'], name)
+                if os.path.isfile(path):
+                    os.unlink(path)
+                else:
+                    shutil.rmtree(path)
+        else:
+            os.mkdir(self.options['output_dir'])
 
         # Copy the media directory to the output folder
         try:
@@ -247,6 +265,7 @@ class Engine(object):
                     'tags': tag_dict,
                     'pages': self.all_pages[:],
                     'categories': self.categories,
+                    'slugs': dict((p.meta['slug'], p.meta) for p in self.all_pages),
                 },
             }
 
@@ -265,7 +284,9 @@ class Engine(object):
 
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
-            p.write()
+            if p.meta['make_file']:
+                p.write()
+
             if new_pages:
                 logging.debug('found new_pages')
                 self.all_pages += new_pages

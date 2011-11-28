@@ -1,0 +1,69 @@
+title: Categories
+category: docs/content
+---
+The category system of wok is unique. Instead of having categories that
+contain page and other (sub)categories, there are only pages. The site
+can be modeled as a [tree][], where every node is a page. The root is
+the template variable `site.categories`. The children of this node are
+any pages with no category.
+
+This site tree is built from the `page.slug` and `page.category` fields.
+The page that has a slug of `blog` is the top of the blog category, and
+it's children are any pages that define `category: blog`
+
+[tree]: http://en.wikipedia.org/wiki/Tree_(data_structure)
+
+An example
+==========
+Let's say I want to make a simple website with wok. I want to have a
+blog section, a section for my projects, and some static pages, like
+about and a homepage.
+
+About and home are easy - Simply make about.mkd and home.mkd, and give
+them appropriate titles and content. Since these won't be a major part
+of the site tree, we don't have to worry about them too much, except
+that they should not have any category defined (since they are at the
+top of the tree).
+
+The blog section is more interesting. First I need to make the blog
+category. To do this, I make a page, blog.mkd, that has a slug of `blog`
+(either defined with `slug: blog` or because the title of the page
+sluggifies to "blog"). This will likely use a template that knows to
+display the subpages in a blog-like way.
+
+To make an individual blog post, I'll make a new file, say
+`coolnews.mkd`. Give it some content, a title, a date, whatever.
+The important part is that it has `category: blog`. This tells wok
+that coolnews is a child of blog. As such, it will show up in blogs
+`page.subpages` and in the site tree in the right place.
+
+Next comes the projects. I have two projects: Foo and Bar. Foo is
+simple, it only needs one page. So I make a projects page/category and a
+projects/foo page, just like blog and blog/coolnews.
+
+Bar is more complicated. As well as have a general landing page for it,
+I want to have a few sub pages: source code and documentation. I'll make
+projects/bar just as projects/foo. The slug is `foo` and the category is
+`projects`. Easy.
+
+The subpages of of foo are no more complicated. For documentation I make
+`docs.mkd`, and give it a category of `projects/foo`. This says it is a
+subpage of foo, which is itself a subpage of projects. The source code
+page is the same. So now I have `projects/foo`, `projects/foo/docs` and
+`projects/foo/src`.
+
+Here is the entire site represented as the tree we know it to be.
+
+    |-- Main
+    |-- About
+    |-- Blog
+    |   |-- Cool News
+    |   `-- Neat happenings
+    |
+    `-- Projects
+        |-- Foo
+        `-- Bar
+            |-- Source
+            `-- Documentation
+
+So we have 10 content files, and 10 generated pages for the site.

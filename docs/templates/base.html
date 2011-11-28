@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <title>{{ site.title }} ~ {{ page.title }}</title>
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="/css/base.css" />
+  <link rel="stylesheet" type="text/css" href="/css/pygments.css" />
+  {% block head %}{% endblock %}
+  <script type="text/javascript">
+    // Google analytics.
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4316437-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="wrap">
+    <header>
+      <h1><a href="/">wok</a></h1>
+      <nav>
+        {%- for nav in site.tags['_nav']|sort(attribute='nav_sort') %}
+          {%- if nav.url == page.url %}
+            <a href="{{ nav.url }}" class="active">{{ nav.title }}</a>
+          {%- else %}
+            <a href="{{ nav.url }}">{{ nav.title }}</a>
+          {%- endif %}
+        {%- endfor %}
+      </nav>
+    </header>
+
+    <div id="content">
+      {%- block content %}
+      {%- endblock %}
+    </div>
+
+    <footer>
+      {{ site.slugs.footer.content|safe }}
+      <p>Last generated: {{ site.datetime.strftime('%c') }}.</p>
+    </footer> </div>
+</body>
+
+</html>

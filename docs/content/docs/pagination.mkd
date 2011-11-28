@@ -1,0 +1,92 @@
+title: Pagination
+category: docs
+---
+Pagination is useful for when you have a list of thing with unknown length, but
+you don't want the page to get too big. For example, a blog's index page
+shouldn't show every post since the site was started, but only the last few.
+Pagination can do that.
+
+Pagination requires team work from both the template and the content.
+
+Content
+-------
+Add a pagination field to "turn on" the pagionator. This field is a YAML object
+with a few sub elements:
+
+- `pagination.list` - The list of things to paginate over. This must be a name
+  of a list, as accessible from a template. Commonly this is `page.subpages`.
+- `pagination.limit` - The number of items from the list to show on each page.
+- `pagination.sort_key` - Optional. What key to sort the list by before
+  dividing it into page size chunks. Could be something like `title` or
+  `datetime`.
+- `pagination.sort_reverse` - Optional. Boolean value that does what is says on
+  the tin. True will make the list sort in reverse order.
+
+Here is an example metadata fragment for a blog index page.
+
+    ::yaml
+    title: Blog Index
+    type: blog-index
+    url: /blog/{page}/index.html
+    pagination:
+        list: page.subpages
+        limit: 10
+        sort_key: datetime
+        sort_reverse: True
+
+Template
+--------
+Now that the renderer knows that pagination should happen, it will provide some
+new data to the template. Note: the original list will not be modified. Here
+are the new variables accessible to the template:
+
+- `pagination.page_items` - The section of the list that should be shown on
+  this page.
+- `pagination.cur_page` - The current page in the pagination sequence. 1
+  indexed.
+- `pagination.num_pages` - The number of pages in the series.
+- `pagination.next_page` - The next page in the series. This is a page
+  dictionary, just like `page` or `page.subpages[0]`, so it has the usual
+  `title`, `url`, `content`, etc. variables. Won't exist if this is the last
+  page.
+- `pagination.prev_page` - Just like `next_page`. Won't exist if this is the
+  first page.
+
+The `next_page` and `prev_page` are real page objects, so you can do things like get their `author`, or `date` (these will be the same as the current page though), and most usefully, their `url` field, so you can make a link to them.
+
+Here is how you might use pagination in your templates.
+
+    ::jinja2
+    {% if pagination %}
+        <span class="pagination">
+            {% if pagination.prev_page %}
+                <a href="{{ pagination.prev_page.url }}">Previous Page</a>
+            {% endif %}
+            Page {{ pagination.cur_page }} of {{ pagination.num_pages }}
+            {% if pagination.next_page %}
+                <a href="{{ pagination.next_page.url }}">Next Page</a>
+            {% endif %}
+        </span>
+        {% for subpage in pagination.page_items %}
+            <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
+            {{subpage.content}}
+        {% endfor %}
+    {% endif %}
+
+This will show pagination controls, and then a list of links to subpages.
+
+URLs
+----
+To get this to work, each page is it's own file, which means each file has to
+have a new name. To provide for this, there is a variable available to url
+generation, `page`, which contains the the current page number, except on the
+first page. On page 1, the `page` variable is an empty string. This way you
+don't have to think about pagination when linking to the first page of a
+series.
+
+If you define a `url` in your content page (like we did with our blog example
+earlier) the page number will still be substituted in just like in a normal
+`url_pattern`. You *must* include the page variable, or else every page will
+simply overwrite the previous one.
+
+For more information, see the page about [URL Management](/docs/urls/).

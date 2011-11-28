@@ -1,8 +1,11 @@
 import glob
 import os
 
-from jinja2.loaders import FileSystemLoader
+from jinja2.loaders import FileSystemLoader, TemplateNotFound
 from jinja2.loaders import split_template_path
+
+class AmbiguousTemplate(Exception):
+    pass
 
 class GlobFileLoader(FileSystemLoader):
     """
@@ -25,7 +28,7 @@ class GlobFileLoader(FileSystemLoader):
             globbed_filename = os.path.join(searchpath, *pieces)
             filenames = glob.glob(globbed_filename)
             if len(filenames) > 1:
-                raise TemplateNotFound(template)
+                raise AmbiguousTemplate(template)
             elif len(filenames) < 1:
                 continue
             filename = filenames[0]

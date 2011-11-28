@@ -1,15 +1,19 @@
+# System
 import os
+import sys
 from collections import namedtuple
 from datetime import datetime, date, time
 import logging
 
+# Libraries
 import jinja2
 import yaml
 import re
 
+# Wok
 from wok import util
 from wok import renderers
-from wok.jinja import GlobFileLoader
+from wok.jinja import GlobFileLoader, AmbiguousTemplate
 
 class Page(object):
     """
@@ -34,9 +38,6 @@ class Page(object):
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
-        # TODO: It's not good to make a new environment every time, but we if
-        # we pass the options in each time, its possible it will change per
-        # instance. Fix this.
         if Page.tmpl_env is None:
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
                 self.options.get('template_dir', 'templates')))
@@ -46,17 +47,30 @@ class Page(object):
 
         with open(path) as f:
             self.original = f.read()
-            # Maximum of one split, so --- in the content doesn't get split.
-            splits = self.original.split('---', 1)
+            splits = self.original.split('\n---\n')
+
+            if len(splits) > 3:
+                logging.warning('Found more --- delimited sections in {0} '
+                                'than expected. Squashing the extra together.'
+                                .format(self.path))
 
             # Handle the case where no meta data was provided
             if len(splits) == 1:
                 self.original = splits[0]
                 self.meta = {}
-            else:
+
+            elif len(splits) == 2:
                 header = splits[0]
-                self.original = splits[1]
                 self.meta = yaml.load(header)
+                self.original = splits[1]
+
+            elif len(splits) == 3:
+                header = splits[0]
+                self.meta = {}
+                self.original = '\n'.join(splits[1:])
+                self.meta['preview'] = splits[1]
+                self.meta.update(yaml.load(header))
+                logging.debug('Got preview')
 
         if extra_meta:
             logging.debug('Got extra_meta')
@@ -76,8 +90,8 @@ class Page(object):
         `page.category` - Will be a list.
         `page.published` - Will exist.
         `page.datetime` - Will be a datetime, or None.
-        `page.date` - Will be a dat, or None.
-        `page.time` - Will be a tim, or None.
+        `page.date` - Will be a date, or None.
+        `page.time` - Will be a time, or None.
         `page.tags` - Will be a list.
         `page.url` - Will be the url of the page, relative to the web root.
         `page.subpages` - Will be a list containing every sub page of this page
@@ -109,6 +123,12 @@ class Page(object):
             self.meta['authors'] = [Author.parse(a) for a in authors]
         elif isinstance(authors, str):
             self.meta['authors'] = [Author.parse(a) for a in authors.split(',')]
+            if len(self.meta['authors']) > 1:
+                logging.warn('Deprecation Warning: Use YAML lists instead of '
+                        'CSV for multiple authors. i.e. ["John Doe", "Jane '
+                        'Smith"] instead of "John Doe, Jane Smith". In '
+                        '{0}.'.format(self.path))
+
         elif authors is None:
             if 'authors' in self.options:
                 self.meta['authors'] = self.options['authors']
@@ -137,6 +157,10 @@ class Page(object):
         if not 'published' in self.meta:
             self.meta['published'] = True
 
+        # make_file
+        if not 'make_file' in self.meta:
+            self.meta['make_file'] = True
+
         # datetime, date, time
         util.date_and_times(self.meta)
 
@@ -148,6 +172,11 @@ class Page(object):
             elif isinstance(self.meta['tags'], str):
                 self.meta['tags'] = [t.strip() for t in
                     self.meta['tags'].split(',')]
+                if len(self.meta['tags']) > 1:
+                    logging.warn('Deprecation Warning: Use YAML lists instead '
+                            'of CSV for multiple tags. i.e. tags: [guide, '
+                            'howto] instead of tags: guide, howto. In {0}.'
+                            .format(self.path))
         else:
             self.meta['tags'] = []
 
@@ -164,8 +193,17 @@ class Page(object):
             self.meta['pagination']['num_pages'] = 1
 
         # template
-        template_type = self.meta.get('type', 'default')
-        self.template = Page.tmpl_env.get_template(template_type + '.*')
+        try:
+            template_type = self.meta.get('type', 'default')
+            self.template = Page.tmpl_env.get_template(template_type + '.*')
+        except jinja2.loaders.TemplateNotFound:
+            logging.error('No template "{0}.*" found in template directory. Aborting.'
+                    .format(template_type))
+            sys.exit()
+        except AmbiguousTemplate:
+            logging.error(('Ambiguous template found. There are two files that '
+                          'match "{0}.*". Aborting.').format(template_type))
+            sys.exit()
 
         # url
         parts = {
@@ -178,9 +216,12 @@ class Page(object):
         # Pull extensions from the template's real file name.
         match = re.match('.*/[^\.]*\.(.*)$', self.template.filename)
         if match:
-            parts['type'] = match.groups()[0]
+            parts['ext'] = match.groups()[0]
         else:
-            parts['type'] = ''
+            parts['ext'] = ''
+        # Deprecated
+        parts['type'] = parts['ext']
+        self.meta['ext'] = parts['ext']
 
         if parts['page'] == 1:
             parts['page'] = ''
@@ -192,6 +233,9 @@ class Page(object):
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
         logging.debug(self.meta['url'])
+        # If we have been asked to, rip out any plain "index.html"s
+        if not self.options['url_include_index']:
+            self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
 
         # subpages
         self.meta['subpages'] = []
@@ -309,6 +353,8 @@ class Page(object):
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
         path += self.meta['url']
+        if path.endswith('/'):
+            path += 'index.' + self.meta['ext']
 
         try:
             os.makedirs(os.path.dirname(path))
@@ -358,3 +404,6 @@ class Author(object):
     def __repr__(self):
         return '<wok.page.Author "{0} <{1}>">'.format(self.name, self.email)
 
+    def __unicode__(self):
+        s = self.__str__()
+        return s.replace('<', '&lt;').replace('>', '&gt;')
