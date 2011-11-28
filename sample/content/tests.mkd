@@ -5,4 +5,4 @@ url: /index{page}.html
 ---
 These are the tests
 
-The pagination test is [here](/pagination.html).
+The pagination test is [here](/pagination/index.html).
