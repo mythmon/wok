@@ -1,0 +1,75 @@
+title: Hooks
+category: docs
+---
+Since version 0.9, wok provides a hook interface to add custom python code to
+the site generation pipeline.
+
+To use hooks, make a new site directory (next to content, templates, etc.)
+named `hooks`. In this folder make the file `__hooks__.py`. From this file, wok
+will import the variable `hooks`. This should be a dictionary; the keys are the
+hook names below, and the values are lists of functions (or other callables) to
+run for the hooks. They will be run in the order they appear here.
+
+Functions
+---------
+The available hooks, the arguments they will get, and when they run are
+
+<!-- I don't know why this <p> isn't applied automatically... -->
+`site.start()`
+:   <p>Called before anything else has started, except the loading of hooks. This would be a good time to modify the content, template, or media directories.</p>
+
+`site.output.pre(output_path)`
+:   `output_path`
+    :   The path to the output directory.
+:   This path will run before the output directory is populated by the media,
+    and after the old site has been deleted. You can add files that may be
+    overwritten by the media files, or the site content.
+
+`site.output.post(output_path)`
+:   `output_path`
+    :   The path to the output directory.
+:   This hook will run after the output directory is populated by the media,
+    and before the content pages have started to be processed. You can use this
+    to modify, overwrite, or otherwise fiddle with the media directory after it
+    has been copied to the output dir.
+
+`site.content.gather.pre()`
+:   Return value
+    :   List of `Page` objects to add to the list of pages.
+:   This hook will run before wok gathers content pages, and can be used to add
+    pages that don't exist on disk.
+
+`site.content.gather.post(pages)`
+:   `pages`
+    :   The list of pages that wok has gathered from the content directory, and
+        any other hooks that have run. Also includes the duplicated versions of
+        paginated pages.
+:   Return value
+    :   List of `Page` objects to add to the list of pages.
+:   This hook will run after wok gathers content pages, and can be used to add
+    pages that don't exist on disk, or to remove pages added by other means. If
+    you modify the list of pages received, those changes will take affect in
+    wok, and you can also return pages to add.
+
+`page.template.pre(page, templ_vars)`
+:   `page`
+    :   The current page object that is being processed.
+:   `templ_vars`
+    :   The variables that will be sent to the template engine.
+:   This hook will be called before the page is sent to the template engine. At
+    this point the content has been transformed from markup input to html
+    output (if applicable). If you modify the `templ_vars` parameter, those
+    changes will be visible to the template engine.
+
+`page.template.post(page)`
+:   `page`
+    :   The current page being processed.
+:   This hook will be called after the page has been processed by the template
+    engine. The next step will be write the file to disk, if applicable, so any
+    last minute changes should happen here.
+
+`site.done()`
+:   Called after wok has finished everything. This would be a good time to make
+    any general modifications to the output, or to do something like upload the
+    site for distribution. If the `--server` option has been specified, this
+    will happen before the server is run.
