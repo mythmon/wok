@@ -96,10 +96,15 @@ class Engine(object):
         self.read_options()
         self.sanity_check()
         self.load_hooks()
+
+        self.run_hook('site.start')
+
         self.prepare_output()
         self.load_pages()
         self.make_tree()
         self.render_site()
+
+        self.run_hook('site.stop')
 
         # Dev server
         # ----------
@@ -107,6 +112,7 @@ class Engine(object):
         if cli_options.runserver:
             devserver.run(cli_options.address, cli_options.port,
                     serv_dir=os.path.join(self.options['output_dir']))
+
 
     def read_options(self):
         """Load options from the config file."""
@@ -153,6 +159,9 @@ class Engine(object):
             self.hooks = {}
             logging.debug('No hooks found')
 
+    def run_hook(hook_name, *args):
+        for hook in self.hooks.get(hook_name, []):
+            yield hook(*args)
 
     def prepare_output(self):
         """
@@ -169,6 +178,8 @@ class Engine(object):
         else:
             os.mkdir(self.options['output_dir'])
 
+        self.run_hook('site.output.pre', self.options['output_dir'])
+
         # Copy the media directory to the output folder
         try:
             for name in os.listdir(self.options['media_dir']):
@@ -182,13 +193,21 @@ class Engine(object):
                 else:
                     shutil.copy(path, self.options['output_dir'])
 
+                self.run_hook('site.output.post', self.options['output_dir'])
+
         # Do nothing if the media directory doesn't exist
         except OSError:
             # XXX: We should verify that the problem was the media dir
-            pass
+            logging.info('There was a problem copying the media files to the '
+                         'output directory.')
 
     def load_pages(self):
         """Load all the content files."""
+        # Load pages from hooks (pre)
+        for pages in self.run_hook('site.content.gather.pre'):
+            self.all_pages.extend(pages)
+
+        # Load files
         for root, dirs, files in os.walk(self.options['content_dir']):
             # Grab all the parsable files
             for f in files:
@@ -212,6 +231,10 @@ class Engine(object):
                         renderer)
                 if p and p.meta['published']:
                     self.all_pages.append(p)
+
+        # Load pages from hooks (post)
+        for page in self.run_hook('site.content.gather.post'):
+            self.all_pages.extend(pages)
 
     def make_tree(self):
         """
@@ -279,12 +302,13 @@ class Engine(object):
             if 'author' in self.options:
                 templ_vars['site']['author'] = self.options['author']
 
-            for hook in self.hooks.get('page.template.pre', []):
-                logging.debug('running hook {0}'.format(hook))
-                hook(p.meta, templ_vars)
+            self.run_hook('page.template.pre', p, templ_vars)
 
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
+
+            self.run_hook('page.template.post', p)
+
             if p.meta['make_file']:
                 p.write()
 

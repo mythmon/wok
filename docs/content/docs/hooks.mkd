@@ -15,6 +15,7 @@ Functions
 The available hooks, the arguments they will get, and when they run are
 
 <!-- I don't know why this <p> isn't applied automatically... -->
+
 `site.start()`
 :   <p>Called before anything else has started, except the loading of hooks. This would be a good time to modify the content, template, or media directories.</p>
 
@@ -56,10 +57,10 @@ The available hooks, the arguments they will get, and when they run are
     :   The current page object that is being processed.
 :   `templ_vars`
     :   The variables that will be sent to the template engine.
-:   This hook will be called before the page is sent to the template engine. At
-    this point the content has been transformed from markup input to html
-    output (if applicable). If you modify the `templ_vars` parameter, those
-    changes will be visible to the template engine.
+:   This hook will be called for each page before the page is sent to the
+    template engine. At this point the content has been transformed from markup
+    input to html output (if applicable). If you modify the `templ_vars`
+    parameter, those changes will be visible to the template engine.
 
 `page.template.post(page)`
 :   `page`
