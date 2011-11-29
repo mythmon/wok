@@ -1,19 +1,22 @@
 import logging
 
+hook_count = 0
+def make_hook(name):
+    def logging_hook(*args):
+        global hook_count
+        logging.info('logging_hook: {0}: {1}'.format(name, hook_count))
+        hook_count += 1
+    return [logging_hook]
+
 hooks = {
-    'page.template.pre': []
+    'site.start': make_hook('site.start'),
+    'site.output.pre': make_hook('site.output.pre'),
+    'site.output.post': make_hook('site.output.post'),
+    'site.content.gather.pre': make_hook('site.content.gather.pre'),
+    'site.content.gather.post': make_hook('site.content.gather.post'),
+    'page.template.pre': make_hook('page.template.pre'),
+    'page.template.post': make_hook('page.template.post'),
+    'site.stop': make_hook('site.stop'),
 }
 
-import wok_sample_hooks
-hooks['page.template.pre'].append(wok_sample_hooks.import_hook)
-
-hook_count = 0
-def basic_hook(page, templ_vars):
-    global hook_count
-    logging.info('basic_hook got page {0[slug]}.'.format(page))
-    templ_vars['hooked'] = hook_count
-    hook_count += 1
-
-hooks['page.template.pre'].append(basic_hook)
-
-logging.info('Got hooks: {0}'.format(hooks))
+logging.info('loaded hooks.')

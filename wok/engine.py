@@ -9,7 +9,7 @@ import logging
 import yaml
 
 import wok
-from wok import page
+from wok.page import Page, Author
 from wok import renderers
 from wok import util
 from wok import devserver
@@ -128,9 +128,9 @@ class Engine(object):
         # Make authors a list, even only a single author was specified.
         authors = self.options.get('authors', self.options.get('author', None))
         if isinstance(authors, list):
-            self.options['authors'] = [page.Author.parse(a) for a in authors]
+            self.options['authors'] = [Author.parse(a) for a in authors]
         elif isinstance(authors, str):
-            self.options['authors'] = [page.Author.parse(a) for a in authors.split(',')]
+            self.options['authors'] = [Author.parse(a) for a in authors.split(',')]
             if len(self.options['authors']) > 1:
                 logging.warn('Deprecation Warning: Use YAML lists instead of '
                         'CSV for multiple authors. i.e. ["John Doe", "Jane '
@@ -151,17 +151,16 @@ class Engine(object):
 
     def load_hooks(self):
         sys.path.append('hooks')
-        try:
-            import __hooks__
-            self.hooks = __hooks__.hooks
-            logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
-        except:
-            self.hooks = {}
-            logging.debug('No hooks found')
+        import __hooks__
+        self.hooks = __hooks__.hooks
+        logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
 
-    def run_hook(hook_name, *args):
+    def run_hook(self, hook_name, *args):
+        logging.debug('Running hook {0}'.format(hook_name))
+        returns = []
         for hook in self.hooks.get(hook_name, []):
-            yield hook(*args)
+            returns.append(hook(*args))
+        return returns
 
     def prepare_output(self):
         """
@@ -205,7 +204,8 @@ class Engine(object):
         """Load all the content files."""
         # Load pages from hooks (pre)
         for pages in self.run_hook('site.content.gather.pre'):
-            self.all_pages.extend(pages)
+            if pages:
+                self.all_pages.extend(pages)
 
         # Load files
         for root, dirs, files in os.walk(self.options['content_dir']):
@@ -227,14 +227,15 @@ class Engine(object):
                             'for {0}. Using default renderer.'.format(f))
                     renderer = renderers.Renderer
 
-                p = page.Page.from_file(os.path.join(root, f), self.options,
+                p = Page.from_file(os.path.join(root, f), self.options,
                         renderer)
                 if p and p.meta['published']:
                     self.all_pages.append(p)
 
         # Load pages from hooks (post)
-        for page in self.run_hook('site.content.gather.post'):
-            self.all_pages.extend(pages)
+        for pages in self.run_hook('site.content.gather.post'):
+            if pages:
+                self.all_pages.extend(pages)
 
     def make_tree(self):
         """
