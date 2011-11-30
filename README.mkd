@@ -16,8 +16,8 @@ I wanted to do with my website. So I am writing my own. Funnily, the
 mythical website that inspired wok still hasn't been written.
 
 [jekyll]: https://github.com/mojombo/jekyll
-[hyde]: https://github.com/lakshmivyas/hyde 
-[static]: http://static.newqdev.com/ 
+[hyde]: https://github.com/lakshmivyas/hyde
+[static]: http://static.newqdev.com/
 
 Sample Sites
 ------------
@@ -38,6 +38,12 @@ For some real world examples check out these sites.
 -    [uberj.com](http://www.uberj.com)
      ([source](https://github.com/uberj/wbsite)) - Personal website of Jacques
      Uber
+-    [ngokevin.com](http://ngokevin.com)
+     ([source](https://github.com/ngokevin/ngokevin)) - Personal website of
+     Kevin Ngo
+-    [corbinsimpson.com](http://corbinsimpson.com)
+     ([source](https://github.com/mostawesomedude/website)) - Personal website
+     of Corbin Simpson
 -    Your site here! If you are using wok to generate sites, and don't mind
      serving as an example, let me know and I will add a link to your site
      here.
