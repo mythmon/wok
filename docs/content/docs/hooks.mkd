@@ -17,7 +17,9 @@ The available hooks, the arguments they will get, and when they run are
 <!-- I don't know why this <p> isn't applied automatically... -->
 
 `site.start()`
-:   <p>Called before anything else has started, except the loading of hooks. This would be a good time to modify the content, template, or media directories.</p>
+:   Called before anything else has started, except the loading of hooks.
+    This would be a good time to modify the content, templates, or the files in
+    the media directory.
 
 `site.output.pre(output_path)`
 :   `output_path`
@@ -56,11 +58,15 @@ The available hooks, the arguments they will get, and when they run are
 :   `page`
     :   The current page object that is being processed.
 :   `templ_vars`
-    :   The variables that will be sent to the template engine.
+    :   A dictionart of the variables that will be sent to the template engine.
+        See the documentation on [templates][] for it's normal contents.
 :   This hook will be called for each page before the page is sent to the
     template engine. At this point the content has been transformed from markup
-    input to html output (if applicable). If you modify the `templ_vars`
+    input (such as markdown) to html output if applicable. The transformed
+    version is in `templ_Vars['content']`. If you modify the `templ_vars`
     parameter, those changes will be visible to the template engine.
+
+[templates]: /docs/templates/
 
 `page.template.post(page)`
 :   `page`
