@@ -8,7 +8,9 @@ To use hooks, make a new site directory (next to content, templates, etc.)
 named `hooks`. In this folder make the file `__hooks__.py`. From this file, wok
 will import the variable `hooks`. This should be a dictionary; the keys are the
 hook names below, and the values are lists of functions (or other callables) to
-run for the hooks. They will be run in the order they appear here.
+run for the hooks. Simply give the names of the functions and do not invoke
+them. If the hooks below have parameters, the listed functions should accept
+those parameters. They will be run in the order they appear here.
 
 Functions
 ---------
@@ -60,11 +62,13 @@ The available hooks, the arguments they will get, and when they run are
 :   `templ_vars`
     :   A dictionart of the variables that will be sent to the template engine.
         See the documentation on [templates][] for it's normal contents.
-:   This hook will be called for each page before the page is sent to the
-    template engine. At this point the content has been transformed from markup
-    input (such as markdown) to html output if applicable. The transformed
-    version is in `templ_Vars['content']`. If you modify the `templ_vars`
-    parameter, those changes will be visible to the template engine.
+:   This hook will be called for each page before the page is sent to
+    the template engine. At this point the content has been transformed
+    from markup input (such as markdown) to html output, if applicable.
+    The transformed version is in `templ_Vars['content']`. If you
+    modify the `templ_vars` parameter, those changes will be visible to
+    the template engine. The given functions should take in these two
+    variables.
 
 [templates]: /docs/templates/
 
