@@ -150,16 +150,23 @@ class Engine(object):
             sys.exit(1)
 
     def load_hooks(self):
-        sys.path.append('hooks')
-        import __hooks__
-        self.hooks = __hooks__.hooks
-        logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
+        try:
+            sys.path.append('hooks')
+            import __hooks__
+            self.hooks = __hooks__.hooks
+            logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
+        except ImportError:
+            logging.info('No hooks module found.')
 
     def run_hook(self, hook_name, *args):
+        """ Run specified hooks if they exist """
         logging.debug('Running hook {0}'.format(hook_name))
         returns = []
-        for hook in self.hooks.get(hook_name, []):
-            returns.append(hook(*args))
+        try:
+            for hook in self.hooks.get(hook_name, []):
+                returns.append(hook(*args))
+        except AttributeError:
+            logging.info('Hook {0} not defined'.format(hook_name))
         return returns
 
     def prepare_output(self):
