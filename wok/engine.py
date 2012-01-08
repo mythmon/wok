@@ -9,7 +9,7 @@ import logging
 import yaml
 
 import wok
-from wok import page
+from wok.page import Page, Author
 from wok import renderers
 from wok import util
 from wok import devserver
@@ -30,6 +30,10 @@ class Engine(object):
     }
 
     def __init__(self, output_lvl = 1):
+        """
+        Set up CLI options, logging levels, and start everything off.
+        Afterwards, run a dev server if asked to.
+        """
 
         # CLI options
         # -----------
@@ -37,22 +41,22 @@ class Engine(object):
 
         # Add option to to run the development server after generating pages
         devserver_grp = OptionGroup(parser, "Development server",
-                "Runs a small development server after site generation. \
-                --address and --port will be ignored if --server is absent.")
+                "Runs a small development server after site generation. "
+                "--address and --port will be ignored if --server is absent.")
         devserver_grp.add_option('--server', action='store_true',
                 dest='runserver',
                 help="run a development server after generating the site")
         devserver_grp.add_option('--address', action='store', dest='address',
                 help="specify ADDRESS on which to run development server")
         devserver_grp.add_option('--port', action='store', dest='port',
-                type='int', 
+                type='int',
                 help="specify PORT on which to run development server")
         parser.add_option_group(devserver_grp)
 
         # Options for noisiness level and logging
         logging_grp = OptionGroup(parser, "Logging",
-                "By default, log messages will be sent to standard out, \
-                and report only errors and warnings.")
+                "By default, log messages will be sent to standard out, "
+                "and report only errors and warnings.")
         parser.set_defaults(loglevel=logging.WARNING)
         logging_grp.add_option('-q', '--quiet', action='store_const',
                 const=logging.ERROR, dest='loglevel',
@@ -91,10 +95,16 @@ class Engine(object):
 
         self.read_options()
         self.sanity_check()
+        self.load_hooks()
+
+        self.run_hook('site.start')
+
         self.prepare_output()
         self.load_pages()
         self.make_tree()
         self.render_site()
+
+        self.run_hook('site.stop')
 
         # Dev server
         # ----------
@@ -102,6 +112,7 @@ class Engine(object):
         if cli_options.runserver:
             devserver.run(cli_options.address, cli_options.port,
                     serv_dir=os.path.join(self.options['output_dir']))
+
 
     def read_options(self):
         """Load options from the config file."""
@@ -117,9 +128,9 @@ class Engine(object):
         # Make authors a list, even only a single author was specified.
         authors = self.options.get('authors', self.options.get('author', None))
         if isinstance(authors, list):
-            self.options['authors'] = [page.Author.parse(a) for a in authors]
+            self.options['authors'] = [Author.parse(a) for a in authors]
         elif isinstance(authors, str):
-            self.options['authors'] = [page.Author.parse(a) for a in authors.split(',')]
+            self.options['authors'] = [Author.parse(a) for a in authors.split(',')]
             if len(self.options['authors']) > 1:
                 logging.warn('Deprecation Warning: Use YAML lists instead of '
                         'CSV for multiple authors. i.e. ["John Doe", "Jane '
@@ -138,6 +149,26 @@ class Engine(object):
             logging.critical("This doesn't look like a wok site. Aborting.")
             sys.exit(1)
 
+    def load_hooks(self):
+        try:
+            sys.path.append('hooks')
+            import __hooks__
+            self.hooks = __hooks__.hooks
+            logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
+        except ImportError:
+            logging.info('No hooks module found.')
+
+    def run_hook(self, hook_name, *args):
+        """ Run specified hooks if they exist """
+        logging.debug('Running hook {0}'.format(hook_name))
+        returns = []
+        try:
+            for hook in self.hooks.get(hook_name, []):
+                returns.append(hook(*args))
+        except AttributeError:
+            logging.info('Hook {0} not defined'.format(hook_name))
+        return returns
+
     def prepare_output(self):
         """
         Prepare the output directory. Remove any contents there already, and
@@ -153,6 +184,8 @@ class Engine(object):
         else:
             os.mkdir(self.options['output_dir'])
 
+        self.run_hook('site.output.pre', self.options['output_dir'])
+
         # Copy the media directory to the output folder
         try:
             for name in os.listdir(self.options['media_dir']):
@@ -166,13 +199,22 @@ class Engine(object):
                 else:
                     shutil.copy(path, self.options['output_dir'])
 
+                self.run_hook('site.output.post', self.options['output_dir'])
+
         # Do nothing if the media directory doesn't exist
         except OSError:
             # XXX: We should verify that the problem was the media dir
-            pass
+            logging.info('There was a problem copying the media files to the '
+                         'output directory.')
 
     def load_pages(self):
         """Load all the content files."""
+        # Load pages from hooks (pre)
+        for pages in self.run_hook('site.content.gather.pre'):
+            if pages:
+                self.all_pages.extend(pages)
+
+        # Load files
         for root, dirs, files in os.walk(self.options['content_dir']):
             # Grab all the parsable files
             for f in files:
@@ -192,16 +234,22 @@ class Engine(object):
                             'for {0}. Using default renderer.'.format(f))
                     renderer = renderers.Renderer
 
-                p = page.Page(os.path.join(root, f), self.options, renderer)
-                if p.meta['published']:
+                p = Page.from_file(os.path.join(root, f), self.options,
+                        renderer)
+                if p and p.meta['published']:
                     self.all_pages.append(p)
+
+        # Load pages from hooks (post)
+        for pages in self.run_hook('site.content.gather.post'):
+            if pages:
+                self.all_pages.extend(pages)
 
     def make_tree(self):
         """
-        Make the category pseduo-tree.
+        Make the category pseudo-tree.
 
         In this structure, each node is a page. Pages with sub pages are
-        interior nodes, and leaf nodes have no sub pages. It is not truely a
+        interior nodes, and leaf nodes have no sub pages. It is not truly a
         tree, because the root node doesn't exist.
         """
         self.categories = {}
@@ -239,7 +287,6 @@ class Engine(object):
         for tag in tag_set:
             tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
 
-
         for p in self.all_pages:
             # Construct this every time, to avoid sharing one instance
             # between page objects.
@@ -265,6 +312,7 @@ class Engine(object):
 
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
+
             if p.meta['make_file']:
                 p.write()
 

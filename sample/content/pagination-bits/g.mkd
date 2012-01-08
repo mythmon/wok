@@ -1,3 +1,4 @@
+title: G
 category: pagination
 tags: tiny
 ---
