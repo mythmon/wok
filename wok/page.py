@@ -294,26 +294,32 @@ class Page(object):
         if not templ_vars:
             templ_vars = {}
 
+        # Handle pagination if we needed.
         if 'pagination' in self.meta and 'list' in self.meta['pagination']:
             extra_pages = self.paginate()
         else:
             extra_pages = []
 
+        # Don't clobber possible values in the template variables.
         if 'page' in templ_vars:
             logging.debug('Found defaulted page data.')
             templ_vars['page'].update(self.meta)
         else:
             templ_vars['page'] = self.meta
 
+        # Don't clobber pagination either.
         if 'pagination' in templ_vars:
             templ_vars['pagination'].update(self.meta['pagination'])
         else:
             templ_vars['pagination'] = self.meta['pagination']
 
+        # ... and actions! (and logging, and hooking)
+        self.run_hook('page.template.pre', p, templ_vars)
         logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
         self.rendered = self.template.render(templ_vars)
-
         logging.debug('extra pages is: ' + repr(extra_pages))
+        self.run_hook('page.template.post', p)
+
         return extra_pages
 
     def paginate(self):

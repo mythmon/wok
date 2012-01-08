@@ -310,12 +310,8 @@ class Engine(object):
             if 'author' in self.options:
                 templ_vars['site']['author'] = self.options['author']
 
-            self.run_hook('page.template.pre', p, templ_vars)
-
             # Rendering the page might give us back more pages to render.
             new_pages = p.render(templ_vars)
-
-            self.run_hook('page.template.post', p)
 
             if p.meta['make_file']:
                 p.write()
