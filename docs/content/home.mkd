@@ -35,10 +35,7 @@ Features
 -   Tagging and a hierarchical category system.
 -   Simple development server, for testing.
 -   Support for pagination.
-
-And more to come. Some features that are cooking in the devs' heads are
-custom python plugins, once per page hooks, and support for more markup
-languages.
+-   Custom Python hooks that run during site generation.
 
 [jinja2]: http://jinja.pocoo.org
 [mkd]: http://daringfireball.net/projects/markdown/
