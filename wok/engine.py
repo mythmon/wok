@@ -234,8 +234,7 @@ class Engine(object):
                             'for {0}. Using default renderer.'.format(f))
                     renderer = renderers.Renderer
 
-                p = Page.from_file(os.path.join(root, f), self.options,
-                        renderer)
+                p = Page.from_file(os.path.join(root, f), self.options, self, renderer)
                 if p and p.meta['published']:
                     self.all_pages.append(p)
 

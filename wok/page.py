@@ -23,20 +23,21 @@ class Page(object):
 
     tmpl_env = None
 
-    def __init__(self, options):
+    def __init__(self, options, engine):
         self.options = options
         self.filename = None
         self.meta = {}
+        self.engine = engine
 
     @classmethod
-    def from_meta(cls, meta, options, renderer=None):
+    def from_meta(cls, meta, options, engine, renderer=None):
         """
         Build a page object from a meta dictionary.
 
         Note that you still need to call `render` and `write` to do anything
         interesting.
         """
-        page = cls(options)
+        page = cls(options, engine)
         page.meta = meta
         page.options = options
         page.renderer = renderer if renderer else renderers.Plain
@@ -54,14 +55,14 @@ class Page(object):
             return None
 
     @classmethod
-    def from_file(cls, path, options, renderer=None):
+    def from_file(cls, path, options, engine, renderer=None):
         """
         Load a file from disk, and parse the metadata from it.
 
         Note that you still need to call `render` and `write` to do anything
         interesting.
         """
-        page = cls(options)
+        page = cls(options, engine)
         page.original = None
         page.options = options
         page.renderer = renderer if renderer else renderers.Plain
@@ -314,11 +315,11 @@ class Page(object):
             templ_vars['pagination'] = self.meta['pagination']
 
         # ... and actions! (and logging, and hooking)
-        self.run_hook('page.template.pre', p, templ_vars)
+        self.engine.run_hook('page.template.pre', self, templ_vars)
         logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
         self.rendered = self.template.render(templ_vars)
         logging.debug('extra pages is: ' + repr(extra_pages))
-        self.run_hook('page.template.post', p)
+        self.engine.run_hook('page.template.post', self)
 
         return extra_pages
 
@@ -378,7 +379,7 @@ class Page(object):
                         'cur_page': idx+1,
                     }
                 })
-                new_page = Page.from_meta(new_meta, self.options,
+                new_page = Page.from_meta(new_meta, self.options, self.engine,
                     renderer=self.renderer)
                 if new_page:
                     extra_pages.append(new_page)
