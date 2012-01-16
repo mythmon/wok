@@ -8,7 +8,7 @@ Wok powers an ever-growing list of sites. If you want to see the power
 of what wok can do, or how to do something, these websites are a good
 resource:
 
--   This site ([source](https://github.com/mythmon/tree/master/docs))
+-   This site ([source](https://github.com/mythmon/wok/tree/master/docs))
 -   [Oregon State University LUG](http://lug.oregonstate.edu)
     ([source](https://github.com/OSULUG/OSULUG-Website))
 -   [Bravo Server](http://bravoserver.org)
