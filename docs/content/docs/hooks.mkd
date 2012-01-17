@@ -85,7 +85,7 @@ will pass to the hooked functions (if any.)
     :   List of `Page` objects to add to the list of pages.
 :   This hook will run after wok gathers content pages, and can be used to add
     pages that don't exist on disk, or to remove pages added by other means. If
-    you modify the list of pages received, those changes will take affect in
+    you modify the list of pages received, those changes will take effect in
     wok. You may also return pages to add.
 
 `page.template.pre(page, templ_vars)`
@@ -97,7 +97,7 @@ will pass to the hooked functions (if any.)
 :   This hook will be called for each page before the page is sent to
     the template engine. At this point, the content has been transformed
     from markup input (such as markdown) to html output, if applicable.
-    The transformed version is in `templ_Vars['content']`. If you
+    The transformed version is in `templ_vars['content']`. If you
     modify the `templ_vars` parameter, those changes will be visible to
     the template engine. The given functions should take in these two
     variables.
