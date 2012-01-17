@@ -105,7 +105,7 @@ class Engine(object):
         self.make_tree()
         self.render_site()
 
-        self.run_hook('site.stop')
+        self.run_hook('site.done')
 
         # Dev server
         # ----------
@@ -240,7 +240,7 @@ class Engine(object):
                     self.all_pages.append(p)
 
         # Load pages from hooks (post)
-        for pages in self.run_hook('site.content.gather.post'):
+        for pages in self.run_hook('site.content.gather.post', self.all_pages):
             if pages:
                 self.all_pages.extend(pages)
 
