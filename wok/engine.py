@@ -14,6 +14,7 @@ from wok import renderers
 from wok import util
 from wok import devserver
 
+
 class Engine(object):
     """
     The main engine of wok. Upon initialization, it generates a site from the
@@ -29,7 +30,7 @@ class Engine(object):
         'url_include_index': True,
     }
 
-    def __init__(self, output_lvl = 1):
+    def __init__(self, output_lvl=1):
         """
         Set up CLI options, logging levels, and start everything off.
         Afterwards, run a dev server if asked to.
@@ -113,7 +114,6 @@ class Engine(object):
             devserver.run(cli_options.address, cli_options.port,
                     serv_dir=os.path.join(self.options['output_dir']))
 
-
     def read_options(self):
         """Load options from the config file."""
         self.options = Engine.default_options.copy()
@@ -130,7 +130,8 @@ class Engine(object):
         if isinstance(authors, list):
             self.options['authors'] = [Author.parse(a) for a in authors]
         elif isinstance(authors, str):
-            self.options['authors'] = [Author.parse(a) for a in authors.split(',')]
+            csv = authors.split(',')
+            self.options['authors'] = [Author.parse(a) for a in csv]
             if len(self.options['authors']) > 1:
                 logging.warn('Deprecation Warning: Use YAML lists instead of '
                         'CSV for multiple authors. i.e. ["John Doe", "Jane '
@@ -193,7 +194,7 @@ class Engine(object):
                 if os.path.isdir(path):
                     shutil.copytree(
                             path,
-                            os.path.join(self.options['output_dir'], name), 
+                            os.path.join(self.options['output_dir'], name),
                             symlinks=True
                     )
                 else:
@@ -269,7 +270,7 @@ class Engine(object):
                 for cat in p.meta['category']:
                     # This line will fail if the page is an orphan
                     parent = [subpage for subpage in siblings
-                                 if subpage['slug']== cat][0]
+                                 if subpage['slug'] == cat][0]
                     siblings = parent['subpages']
                 siblings.append(p.meta)
             except IndexError:
@@ -284,7 +285,12 @@ class Engine(object):
             tag_set = tag_set.union(p.meta['tags'])
         tag_dict = dict()
         for tag in tag_set:
-            tag_dict[tag] = [p.meta for p in self.all_pages if tag in p.meta['tags']]
+            # Add all pages with the current tag to the tag dict
+            tag_dict[tag] = [p.meta for p in self.all_pages
+                                if tag in p.meta['tags']]
+
+        # Gather slugs
+        slug_dict = dict((p.meta['slug'], p.meta) for p in self.all_pages)
 
         for p in self.all_pages:
             # Construct this every time, to avoid sharing one instance
@@ -296,7 +302,7 @@ class Engine(object):
                     'tags': tag_dict,
                     'pages': self.all_pages[:],
                     'categories': self.categories,
-                    'slugs': dict((p.meta['slug'], p.meta) for p in self.all_pages),
+                    'slugs': slug_dict,
                 },
             }
 
