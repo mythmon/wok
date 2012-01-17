@@ -7,6 +7,7 @@ the site generation pipeline.
 To use hooks, make a new directory in your site root named `hooks`. In this 
 directory, make the file `__hooks__.py`. For example:
 
+    ::text
     site-root/
         |-- config
         |-- content/
