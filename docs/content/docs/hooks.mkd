@@ -4,13 +4,45 @@ category: docs
 Since version 0.9, wok provides a hook interface to add custom python code to
 the site generation pipeline.
 
-To use hooks, make a new site directory (next to content, templates, etc.)
-named `hooks`. In this folder make the file `__hooks__.py`. From this file, wok
-will import the variable `hooks`. This should be a dictionary; the keys are the
-hook names below, and the values are lists of functions (or other callables) to
-run for the hooks. Simply give the names of the functions and do not invoke
-them. If the hooks below have parameters, the listed functions should accept
-those parameters. They will be run in the order they appear here.
+To use hooks, make a new directory in your site root named `hooks`. In this 
+directory, make the file `__hooks__.py`. For example:
+
+    site-root/
+        |-- config
+        |-- content/
+        |-- hooks/
+        |   |-- __hooks__.py
+        |   |-- hook_foo.py
+        |   `-- hook_bar.py
+        |
+        |-- media/
+        |-- output/
+        `-- templates/
+
+
+From the `__hooks__.py` file, wok will import the variable `hooks`. 
+This should be a dictionary; The keys are the hook names below, and the values 
+are lists of functions (or other callables) to run for the hooks. Simply give 
+the names of the functions and (but do not invoke them.) For example:
+
+    ::python
+    ''' __hooks__.py
+
+    Attach Python functions to wok hooks.
+    '''
+
+    import hook_foo
+    import hook_bar
+
+    # The `hooks` dictionary that wok will import
+    hooks = {
+        'site.start': [hook_foo.download_images],
+        'site.content.gather.post': [hook_bar.process_pages]
+    }
+
+If the hooks below have parameters, the listed functions should accept
+those parameters. Similarly, if the hooks below have return values, the listed
+functions should return them. Hooks will be run in the order they appear below.
 
 Functions
 ---------
