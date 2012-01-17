@@ -4,22 +4,55 @@ category: docs
 Since version 0.9, wok provides a hook interface to add custom python code to
 the site generation pipeline.
 
-To use hooks, make a new site directory (next to content, templates, etc.)
-named `hooks`. In this folder make the file `__hooks__.py`. From this file, wok
-will import the variable `hooks`. This should be a dictionary; the keys are the
-hook names below, and the values are lists of functions (or other callables) to
-run for the hooks. Simply give the names of the functions and do not invoke
-them. If the hooks below have parameters, the listed functions should accept
-those parameters. They will be run in the order they appear here.
+To use hooks, make a new directory in your site root named `hooks`. In this 
+directory, make the file `__hooks__.py`. For example:
 
-Functions
----------
-The available hooks, the arguments they will get, and when they run are
+    ::text
+    site-root/
+        |-- config
+        |-- content/
+        |-- hooks/
+        |   |-- __hooks__.py
+        |   |-- hook_foo.py
+        |   `-- hook_bar.py
+        |
+        |-- media/
+        |-- output/
+        `-- templates/
+
+
+From the `__hooks__.py` file, wok will import the variable `hooks`. 
+This should be a dictionary; The keys are the hook names below, and the values 
+are lists of functions (or other callables) to run for the hooks. Simply give 
+the names of the functions and (but do not invoke them.) For example:
+
+    ::python
+    ''' __hooks__.py
+
+    Attach Python functions to wok hooks.
+    '''
+
+    import hook_foo
+    import hook_bar
+
+    # The `hooks` dictionary that wok will import
+    hooks = {
+        'site.start': [hook_foo.download_images],
+        'site.content.gather.post': [hook_bar.process_pages]
+    }
+
+If the hooks below have parameters, the listed functions should accept
+those parameters. Hooks will be run in the order they appear below.
+
+Available hooks
+---------------
+Below are the available hooks, when they will be run, and the arguments they
+will pass to the hooked functions (if any.)
 
 <!-- I don't know why this <p> isn't applied automatically... -->
 
 `site.start()`
-:   Called before anything else has started, except the loading of hooks.
+:   Called before anything else has started, except for the loading of hooks.
     This would be a good time to modify the content, templates, or the files in
     the media directory.
 
@@ -27,8 +60,8 @@ The available hooks, the arguments they will get, and when they run are
 :   `output_path`
     :   The path to the output directory.
 :   This path will run before the output directory is populated by the media,
-    and after the old site has been deleted. You can add files that may be
-    overwritten by the media files, or the site content.
+    and after any existing output files have been deleted. You can add files
+    that may be overwritten by the media files or the site content.
 
 `site.output.post(output_path)`
 :   `output_path`
@@ -36,7 +69,7 @@ The available hooks, the arguments they will get, and when they run are
 :   This hook will run after the output directory is populated by the media,
     and before the content pages have started to be processed. You can use this
     to modify, overwrite, or otherwise fiddle with the media directory after it
-    has been copied to the output dir.
+    has been copied to the output directory.
 
 `site.content.gather.pre()`
 :   Return value
@@ -53,19 +86,19 @@ The available hooks, the arguments they will get, and when they run are
     :   List of `Page` objects to add to the list of pages.
 :   This hook will run after wok gathers content pages, and can be used to add
     pages that don't exist on disk, or to remove pages added by other means. If
-    you modify the list of pages received, those changes will take affect in
-    wok, and you can also return pages to add.
+    you modify the list of pages received, those changes will take effect in
+    wok. You may also return pages to add.
 
 `page.template.pre(page, templ_vars)`
 :   `page`
     :   The current page object that is being processed.
 :   `templ_vars`
-    :   A dictionart of the variables that will be sent to the template engine.
-        See the documentation on [templates][] for it's normal contents.
+    :   A dictionary of the variables that will be sent to the template engine.
+        See the documentation on [templates][] for its normal contents.
 :   This hook will be called for each page before the page is sent to
-    the template engine. At this point the content has been transformed
+    the template engine. At this point, the content has been transformed
     from markup input (such as markdown) to html output, if applicable.
-    The transformed version is in `templ_Vars['content']`. If you
+    The transformed version is in `templ_vars['content']`. If you
     modify the `templ_vars` parameter, those changes will be visible to
     the template engine. The given functions should take in these two
     variables.
