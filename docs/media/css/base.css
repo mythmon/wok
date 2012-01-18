@@ -75,6 +75,26 @@ a:hover {
     color: #322;
     margin: 5px 0 10px;
 }
+h1 a.heading_anchor, h2 a.heading_anchor, h3 a.heading_anchor
+h4 a.heading_anchor, h5 a.heading_anchor, h6 a.heading_anchor {
+    display: none;
+    color: #A60000;
+}
+h1:hover a.heading_anchor, h2:hover a.heading_anchor,
+h3:hover a.heading_anchor, h4:hover a.heading_anchor,
+h5:hover a.heading_anchor, h6:hover a.heading_anchor {
+    padding: 2px;
+    border: 3px;
+    display: inline;
+    font-weight: normal;
+}
+h1 a.heading_anchor:hover, h2 a.heading_anchor:hover,
+h3 a.heading_anchor:hover, h4 a.heading_anchor:hover,
+h5 a.heading_anchor:hover, h6 a.heading_anchor:hover {
+    color: #FFF;
+    background-color: #A60000;
+}
+
 p {
     margin: 0 0 20px 0;
 }
