@@ -259,6 +259,8 @@ class Page(object):
             'category': '/'.join(self.meta['category']),
             'page': self.meta['pagination']['cur_page'],
             'date': self.meta['date'],
+            'datetime': self.meta['datetime'],
+            'time': self.meta['time'],
         }
         logging.debug('current page: ' + repr(parts['page']))
 
