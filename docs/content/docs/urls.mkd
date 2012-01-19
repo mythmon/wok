@@ -21,6 +21,10 @@ arrange to your liking:
   page, this will always be an empty string.
 - `{ext}` - The file extension of the template that was used to generate this
   file.
+- `{date}`, `{datetime}`, `{time}` - The date/time that were specified in the
+  metadata of a page. These are Python date, datetime, and time objects, so
+  they have year, month, day, hour, minute, etc fields. If you don't specify a
+  date in the file, the default is midnight on January 1st, 1970.
 
 If you don't include `{page}` in your `url_pattern`, then pagination won't
 work. Instead it will overwrite each page with it's sequel, resulting in only
