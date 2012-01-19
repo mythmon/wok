@@ -104,7 +104,10 @@ class Page(object):
                 logging.debug('Got preview')
 
         page.build_meta()
+
+        page.engine.run_hook('page.render.pre', page)
         page.meta['content'] = page.renderer.render(page.original)
+        page.engine.run_hook('page.render.post', page)
 
         return page
 
@@ -125,6 +128,8 @@ class Page(object):
         `page.url` - Will be the url of the page, relative to the web root.
         `page.subpages` - Will be a list containing every sub page of this page
         """
+
+        self.engine.run_hook('page.meta.pre', self)
 
         if not self.meta:
             self.meta = {}
@@ -290,6 +295,8 @@ class Page(object):
 
         # subpages
         self.meta['subpages'] = []
+
+        self.engine.run_hook('page.meta.post', self)
 
     def render(self, templ_vars=None):
         """
