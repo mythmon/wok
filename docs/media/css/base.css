@@ -50,15 +50,23 @@ header nav a:hover {
 header nav a.active {
     border-top: 1px solid #A60000;
 }
-
 /* Body */
 #content {
+    position: relative; 
     padding: 10px;
     color: #4E3434;
     line-height: 1.5;
     font-size: 16px;
     font-family: serif;
 }
+
+#content span.version_note {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    font-size: 10px;
+}
+
 
 a {
     color: #BF3030;
