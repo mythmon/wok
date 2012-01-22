@@ -10,19 +10,19 @@ If you just want to use wok, then you should install it from the
 [Python Package Index][pypi]. A good way to do that is with `pip`:
 
     ::console
-    sudo pip install wok
+    $ sudo pip install wok
 
 This will install wok and the required dependencies. You should also install at
 least one of [Markdown][mkd], or [reStructuredText][rst], for content markup:
 
     ::console
-    sudo pip install Markdown
-    sudo pip install docutils
+    $ sudo pip install Markdown
+    $ sudo pip install docutils
 
 If you want syntax highlighting, you will also need [Pygments][pgmnts].
 
     ::console
-    sudo pip install Pygments
+    $ sudo pip install Pygments
 
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html

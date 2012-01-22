@@ -48,11 +48,8 @@ class Page(object):
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
                 page.options.get('template_dir', 'templates')))
 
-        try:
-            page.build_meta()
-            return page
-        except:
-            return None
+        page.build_meta()
+        return page
 
     @classmethod
     def from_file(cls, path, options, engine, renderer=None):
@@ -191,7 +188,8 @@ class Page(object):
             # wait, what? Authors is of wrong type.
             self.meta['authors'] = []
             logging.error(('Authors in {0} is an unknown type. Valid types '
-                           'are string or list.').format(self.meta['slug']))
+                           'are string or list. Instead it is a {1}')
+                           .format(self.meta['slug']), authors.type)
 
         if self.meta['authors']:
             self.meta['author'] = self.meta['authors']
@@ -200,7 +198,16 @@ class Page(object):
 
         # category
         if 'category' in self.meta:
-            self.meta['category'] = self.meta['category'].split('/')
+            if isinstance(self.meta['category'], str):
+                self.meta['category'] = self.meta['category'].split('/')
+            elif isinstance(self.meta['category'], list):
+                pass
+            else:
+                # category is of wrong type.
+                logging.error('Category in {0} is an unknown type. Valid '
+                              'types are string or list. Instead it is a {1}'
+                              .format(self.meta['slug'], type(self.meta['category'])))
+                self.meta['category'] = []
         else:
             self.meta['category'] = []
         if self.meta['category'] == None:
@@ -302,6 +309,7 @@ class Page(object):
         """
         Renders the page with the template engine.
         """
+        logging.debug('Rendering ' + self.meta['slug'])
         if not templ_vars:
             templ_vars = {}
 
@@ -335,7 +343,9 @@ class Page(object):
 
     def paginate(self):
         extra_pages = []
+        logging.debug('called pagination for {0}'.format(self.meta['slug']))
         if 'page_items' not in self.meta['pagination']:
+            logging.debug('doing pagination for {0}'.format(self.meta['slug']))
             # This is the first page of a set of pages. Set up the rest. Other
             # wise don't do anything.
 
@@ -353,7 +363,6 @@ class Page(object):
                 return
 
             for k in source_spec:
-                logging.debug(k)
                 source = source[k]
 
             sort_key = self.meta['pagination'].get('sort_key', None)
@@ -386,11 +395,12 @@ class Page(object):
                     'pagination': {
                         'page_items': chunk,
                         'num_pages': len(chunks),
-                        'cur_page': idx+1,
+                        'cur_page': idx,
                     }
                 })
                 new_page = Page.from_meta(new_meta, self.options, self.engine,
                     renderer=self.renderer)
+                logging.debug('page {0} is {1}'.format(idx, new_page))
                 if new_page:
                     extra_pages.append(new_page)
 
@@ -401,7 +411,7 @@ class Page(object):
                 else:
                     page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
 
-                if idx < len(extra_pages):
+                if idx < len(extra_pages) - 1:
                     page.meta['pagination']['next_page'] = extra_pages[idx+1].meta
                 else:
                     page.meta['pagination']['next_page'] = None
@@ -455,6 +465,9 @@ class Author(object):
 
     @classmethod
     def parse(cls, raw):
+        if isinstance(raw, cls):
+            return raw
+
         a = cls(raw)
         a.name, _, a.email = cls.parse_author_regex.match(raw).groups()
         if a.name:

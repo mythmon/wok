@@ -257,7 +257,9 @@ class Engine(object):
         # We want to parse these in a approximately breadth first order
         self.all_pages.sort(key=lambda p: len(p.meta['category']))
 
-        for p in [p for p in self.all_pages]:
+        # For every page
+        for p in self.all_pages:
+            # If it has a category (ie: is not at top level)
             if len(p.meta['category']) > 0:
                 top_cat = p.meta['category'][0]
                 if not top_cat in self.categories:
@@ -266,6 +268,7 @@ class Engine(object):
                 self.categories[top_cat].append(p.meta)
 
             try:
+                # Put this page's meta in the right place in site_tree.
                 siblings = site_tree
                 for cat in p.meta['category']:
                     # This line will fail if the page is an orphan
