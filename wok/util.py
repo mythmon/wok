@@ -14,7 +14,14 @@ def slugify(text, delim=u'-'):
         word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
         if word:
             result.append(word)
-    return unicode(delim.join(result))
+
+    result = delim.join(result)
+    if result[0] == '-':
+        result = result[1:]
+    if result[-1] == '-':
+        result = result[:-1]
+
+    return unicode(result)
 
 
 def chunk(li, n):
