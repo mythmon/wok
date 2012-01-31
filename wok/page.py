@@ -4,6 +4,7 @@ import sys
 from collections import namedtuple
 from datetime import datetime, date, time
 import logging
+import copy
 
 # Libraries
 import jinja2
@@ -286,19 +287,19 @@ class Page(object):
         parts['type'] = parts['ext']
         self.meta['ext'] = parts['ext']
 
-        if parts['page'] == 1:
-            parts['page'] = ''
+        #if parts['page'] == 1:
+        #    parts['page'] = ''
 
         if not 'url' in self.meta:
-            self.meta['url'] = self.options['url_pattern'].format(**parts);
-        else:
-            self.meta['url'] = self.meta['url'].format(**parts);
+            self.meta['url'] = self.options['url_pattern']
+
+        self.meta['url'] = self.meta['url'].format(**parts)
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
-        logging.debug(self.meta['url'])
         # If we have been asked to, rip out any plain "index.html"s
         if not self.options['url_include_index']:
             self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
+        logging.debug('url is: ' + self.meta['url'])
 
         # subpages
         self.meta['subpages'] = []
@@ -390,7 +391,7 @@ class Page(object):
 
             # Make a page for each chunk
             for idx, chunk in enumerate(chunks[1:], 2):
-                new_meta = self.meta.copy()
+                new_meta = copy.deepcopy(self.meta)
                 new_meta.update({
                     'pagination': {
                         'page_items': chunk,
