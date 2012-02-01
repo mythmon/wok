@@ -302,6 +302,8 @@ class Engine(object):
                 'site': {
                     'title': self.options.get('site_title', 'Untitled'),
                     'datetime': datetime.now(),
+                    'date': datetime.now().date(),
+                    'time': datetime.now().time(),
                     'tags': tag_dict,
                     'pages': self.all_pages[:],
                     'categories': self.categories,
