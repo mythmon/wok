@@ -287,8 +287,8 @@ class Page(object):
         parts['type'] = parts['ext']
         self.meta['ext'] = parts['ext']
 
-        #if parts['page'] == 1:
-        #    parts['page'] = ''
+        if parts['page'] == 1:
+            parts['page'] = ''
 
         if not 'url' in self.meta:
             self.meta['url'] = self.options['url_pattern']
