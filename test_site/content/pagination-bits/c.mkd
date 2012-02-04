@@ -1,0 +1,5 @@
+title: C
+category: pagination
+tags: tiny
+---
+Page C

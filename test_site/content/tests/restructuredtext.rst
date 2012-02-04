@@ -1,7 +1,7 @@
 title: reStructuredText Test Page
 slug: rst
 category: tests
-tags: rest, sample
+tags: [rest, sample]
 ---
 This is the reStructuredText test page
 ======================================

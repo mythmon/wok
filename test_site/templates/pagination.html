@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block body %}
+
+<h1>{{page.title}}</h1>
+{{ page.content }}
+
+<hr>
+
+{% if pagination %}
+    <span>
+        {% if pagination.prev_page %}
+            <a href="{{ pagination.prev_page.url }}">Previous Page</a>
+        {% endif %}
+        Page {{ pagination.cur_page }} of {{ pagination.num_pages }}
+        {% if pagination.next_page %}
+            <a href="{{ pagination.next_page.url }}">Next Page</a>
+        {% endif %}
+    </span>
+    {% for subpage in pagination.page_items %}
+        <a href="{{subpage.url}}"><h2>{{subpage.title}}</h2></a>
+        {{subpage.content}}
+    {% endfor %}
+{% endif %}
+
+<hr>
+
+<h2>Tags</h2>
+{% for tag in site.tags %}
+    <h3>{{tag}}</h3>
+    <ul>
+        {% for page in site.tags[tag] %}
+        <li>{{page.title}}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
+<hr>
+
+<pre>{{ site.pages }}</pre>
+
+<hr>
+
+<h2>Top Level Categories</h2>
+<ul>
+{% for cat in site.categories %}
+    <li>{{ cat }}</li>
+{% endfor %}
+</ul>
+
+{% endblock body %}

@@ -1,0 +1,9 @@
+{%- extends "base.html" %}
+{%- block content %}
+  {{ super() }}
+  <ul>
+  {%- for subpage in page.subpages %}
+      <li><a href="{{ subpage.url }}">{{ subpage.title }}</a></li>
+  {%- endfor %}
+  </ul>
+{%- endblock %}

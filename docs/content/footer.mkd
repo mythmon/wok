@@ -1,0 +1,11 @@
+title: Footer
+make_file: no
+---
+&copy;2011 Mike Cooper, et al.
+
+This site is powered by [wok][].
+
+Fork me on [Github][fork].
+
+[wok]: https://github.com/mythmon/wok
+[fork]: https://github.com/mythmon/wok/tree/master/docs

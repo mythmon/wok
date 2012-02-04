@@ -1,0 +1,51 @@
+title: Community
+tags: [_nav]
+nav_sort: 3
+---
+In the wild
+-----------
+Wok powers an ever-growing list of sites. If you want to see the power
+of what wok can do, or how to do something, these websites are a good
+resource:
+
+-   This site ([source](https://github.com/mythmon/wok/tree/master/docs))
+-   [Oregon State University LUG](http://lug.oregonstate.edu)
+    ([source](https://github.com/OSULUG/OSULUG-Website))
+-   [Bravo Server](http://bravoserver.org)
+    ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) -
+    A custom Minecraft server written in Python.
+-   [robmd.net](http://robmd.net)
+    ([source](https://github.com/robatron/robmd.net)) - Personal web site of 
+    Rob McGuire-Dale.
+-   [uberj.com](http://uberj.com) ([source](https://github.com/uberj/wbsite)) -
+    Personal web site of Jacques Uber.
+-   [ngokevin.com](http://ngokevin.com)
+    ([source](https://github.com/ngokevin/ngokevin)) - Personal web site of
+    Kevin Ngo.
+-   [corbinsimpson.com](http://corbinsimpson.com)
+    ([source](https://github.com/MostAwesomeDude/website)) - Personal web site
+    of Corbin Simpson.
+
+Contributors
+------------
+Wok is written by Mike Cooper.
+
+### Thanks To
+Without these early adopters, wok would have lacked direction, definition, and
+a purpose. Each of them helped me work through figuring out what wok could do,
+needed do to, where it was broken, and what it should become.
+
+-   Rob McGuire-Dale (robatron)
+-   Kevin Ngo (ngoke)
+-   Corbin Simpson (MostAwesomeDude)
+-   Jacque Uber (uberj)
+
+Support
+-------
+If there are bugs or feature requests for wok, please send them to [the issue
+tracker][gh-issues].
+
+For real-time support, you can check out the irc channel `#wok` on
+irc.freenode.net.
+
+[gh-issues]: https://github.com/mythmon/wok/issues

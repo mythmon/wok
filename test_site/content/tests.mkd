@@ -1,0 +1,8 @@
+title: Tests Main
+slug: tests
+type: index
+url: /index{page}.html
+---
+These are the tests
+
+The pagination test is [here](/pagination/index.html).

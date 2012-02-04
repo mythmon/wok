@@ -1,0 +1,23 @@
+title: Development Server
+slug: devserver
+category: docs
+---
+Wok provides a simple HTTP server that can be used to test your site during
+development. You can run it like this
+
+    ::console
+    $ wok --server
+
+This will generate your site, and run a simple server on localhost port 8000
+
+You can also specify the port and address to listen on.
+
+-   `--port N` - Specify the port to listen on. The default is 8000.
+-   `--address A` - Specify the address to bind to. The default is 0.0.0.0.
+
+You will have to restart the server any time something changes, even media like
+CSS or images. Wok currently won't notice if you change something.
+
+> **Warning:** Don't even *think* about running this in anything resembling a
+> production environment. It's slow, single-threaded, and very probably
+> insecure. It should only be used for testing purposes.

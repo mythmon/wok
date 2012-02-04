@@ -1,0 +1,134 @@
+@import url(http://fonts.googleapis.com/css?family=Carter+One);
+
+/* Layout */
+#wrap {
+    width: 800px;
+    margin: 10px auto 20px;
+}
+
+/* Header */
+header {
+    border-bottom: 1px solid #A60000;
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+    height: 40px;
+}
+header h1 {
+    display: inline-block;
+    margin: 0px;
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+    font-size: 3em;
+    font-family: 'Carter One', sans-serif;
+}
+header h1 a {
+    text-decoration: none;
+    color: #A60000;
+}
+header h1 a:hover {
+    text-decoration: none;
+}
+header nav {
+    display: inline-block;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    font-family: 'Carter One', sans-serif;
+}
+header nav a {
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 0 10px;
+    margin-right: 5px;
+    color: #A60000;
+}
+header nav a:hover {
+    text-decoration: none;
+}
+header nav a.active {
+    border-top: 1px solid #A60000;
+}
+/* Body */
+#content {
+    position: relative; 
+    padding: 10px;
+    color: #4E3434;
+    line-height: 1.5;
+    font-size: 16px;
+    font-family: serif;
+}
+
+#content span.version_note {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    font-size: 10px;
+}
+
+
+a {
+    color: #BF3030;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover {
+    color: #EF4030;
+    text-decoration: underline;
+}
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+    font-family: 'Carter One', sans-serif;
+    font-weight: 100;
+    color: #322;
+    margin: 5px 0 10px;
+}
+h1 a.heading_anchor, h2 a.heading_anchor, h3 a.heading_anchor
+h4 a.heading_anchor, h5 a.heading_anchor, h6 a.heading_anchor {
+    display: none;
+    color: #A60000;
+}
+h1:hover a.heading_anchor, h2:hover a.heading_anchor,
+h3:hover a.heading_anchor, h4:hover a.heading_anchor,
+h5:hover a.heading_anchor, h6:hover a.heading_anchor {
+    padding: 2px;
+    border: 3px;
+    display: inline;
+    font-weight: normal;
+}
+h1 a.heading_anchor:hover, h2 a.heading_anchor:hover,
+h3 a.heading_anchor:hover, h4 a.heading_anchor:hover,
+h5 a.heading_anchor:hover, h6 a.heading_anchor:hover {
+    color: #FFF;
+    background-color: #A60000;
+}
+
+p {
+    margin: 0 0 20px 0;
+}
+pre {
+    padding: 5px 0 5px 10px;
+    border-left: 3px solid #DDD;
+    font-family: Monospace;
+    font-size: 14px;
+    color: #555;
+    background-color: #F0F0F0;
+}
+code {
+    background-color: #F0F0F0;
+    padding: 1px 2px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #A60000;
+    padding: 10px;
+    font-size: 0.7em;
+    color: #999;
+}
+footer p {
+    margin: 0 10px 0 0;
+    display: inline;
+}

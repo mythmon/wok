@@ -1,0 +1,32 @@
+title: Configuration
+slug: config
+category: docs
+---
+Settings can be changed in the file `config` in the site's root directory.
+Possible configuration options (and their defaults) are:
+
+- `output_dir` ('output') - The directory in which to place the generated
+  files, e.g., `output_dir: output`.
+- `content_dir` ('content') - The directory where content files are stored,
+  e.g., `content_dir: content`.
+- `templates_dir` ('templates') - The directory where templates are stored,
+  e.g., `templates_dir: templates`.
+- `media_dir` ('media') - Where the media files are copied from, e.g.,
+  `media_dir: media`.
+- `site_title` ('Some Random wok Site') - Context variable for the title of the
+  site. Available to templates as `{{ site.title }}`.
+- `author` (No default) - Context variable for the main author of the site.
+  Always available to the templates as `{{ site.author }}`, and provides a
+  default for the `{{ page.author }}` variable if it is not defined in the
+  [page's metadata][content].
+- `url_pattern` (`/{category}/{slug}.html`) - The pattern used to name and
+  place the output files. The default produces URLs
+  like`/category/subcategory/foo.html`. To get "wordpress style" urls, you
+  could use `/{category}/{slug}/index.html`. For more information, please see
+  the [URL management page][URLs].
+- `url_include_index` (yes) - If this option is turned off, then `index.*` on
+  the end of urls will be removed in templates. This will turn the url
+  `/docs/config/index.html` into `/docs/config/`.
+
+[content]: /docs/content/
+[URLs]: /docs/urls/

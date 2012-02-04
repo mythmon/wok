@@ -1,0 +1,4 @@
+site_title: Wok Scratch Site
+author: Default
+url_pattern: "/{category}/{slug}{page}/index.{ext}"
+url_include_index: no

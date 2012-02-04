@@ -1,0 +1,7 @@
+title: Time overwriding datetime.
+datetime: 2011-10-12 12:20:00
+time: 15:00:00
+category: tests/dates
+url: "/{category}/{slug}{page}/{date.year}/{date.month}/{date.day}/index.{ext}"
+---
+In this a datetime is overwritten by at time.

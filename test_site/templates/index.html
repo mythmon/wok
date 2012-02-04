@@ -15,20 +15,25 @@
 
 <h2>Tags</h2>
 {% for tag in site.tags %}
-<h3>{{tag}}</h3>
-<ul>
-    {% for page in site.tags[tag] %}
-    <li>{{page.title}}</li>
-    {% endfor %}
-</ul>
+    <h3>{{tag}}</h3>
+    <ul>
+        {% for page in site.tags[tag] %}
+        <li>{{page.title}}</li>
+        {% endfor %}
+    </ul>
 {% endfor %}
 
 <hr>
 
-{{ site.pages }}
+<pre>{{ site.pages }}</pre>
 
 <hr>
 
-{{ site.categories }}
+<h2>Top Level Categories</h2>
+<ul>
+{% for cat in site.categories %}
+    <li>{{ cat }}</li>
+{% endfor %}
+</ul>
 
 {% endblock body %}

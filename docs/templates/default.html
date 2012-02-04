@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{%- block content %}
+  <hgroup class="pagehead">
+    <h1>{{ page.title }}</h1>
+    {%- if page.subtitle %}
+      <h2>{{ page.subtitle }}</h2>
+    {%- endif %}
+  </hgroup>
+  {{ page.content }}
+{%- endblock %}

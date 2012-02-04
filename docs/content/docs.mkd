@@ -1,0 +1,43 @@
+title: Docs
+tags: [_nav]
+nav_sort: 2
+type: index-links-recurse
+---
+
+Install
+-------
+If you just want to use wok, then you should install it from the 
+[Python Package Index][pypi]. A good way to do that is with `pip`:
+
+    ::console
+    $ sudo pip install wok
+
+This will install wok and the required dependencies. You should also install at
+least one of [Markdown][mkd], or [reStructuredText][rst], for content markup:
+
+    ::console
+    $ sudo pip install Markdown
+    $ sudo pip install docutils
+
+If you want syntax highlighting, you will also need [Pygments][pgmnts].
+
+    ::console
+    $ sudo pip install Pygments
+
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+[pgmnts]: http://pygments.org/
+[pypi]: http://pypi.python.org/pypi
+
+Contribute
+----------
+You can find wok's source code on [Github][gh]. If you find any issues,
+please post them to [the issue tracker][gh-issues]. If you want to help
+code, feel free. Patches and pull requests are welcome.
+
+[gh]: https://github.com/mythmon/wok
+[gh-issues]: https://github.com/mythmon/wok/issues
+
+Specific Topics
+---------------
+<!-- Links to the other doc pages will be put here. -->

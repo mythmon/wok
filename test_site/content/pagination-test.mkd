@@ -1,0 +1,12 @@
+title: Pagination Test
+slug: pagination
+type: pagination
+pagination:
+    list: page.subpages
+    limit: 3
+    sort_key: slug
+    sort_reverse: True
+---
+Let's test pagination.
+
+You should see links to the pages A-K, reverse sorted by name, chunked into groups of 3.

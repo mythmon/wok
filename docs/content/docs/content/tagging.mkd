@@ -1,0 +1,38 @@
+title: Tagging
+category: docs/content
+---
+Wok offers a [tagging][] system to help categorize your [content][]. You can
+tag content by including a YAML list in the `tags` field of the metadata, e.g.
+
+    ::yaml
+    title: My new eco-friendly pants
+    tags: [recycling, bottomware]
+    ---
+    TIL pants made from recycled tires are *hot*.
+
+[tagging]: http://en.wikipedia.org/wiki/Tag_(metadata)
+[content]: /docs/content/
+
+You can use tags like so:
+
+* In a content file's metadata, you can specify tags as a list, e.g.,
+  `tags: [foo, bar, herp, derp]`
+* In a template, you can access the current page's tags with `{{ page.tags }}`.
+  This is a simple list of strings.
+* In a template, you can also access all the tags on the site with `{{
+  site.tags }}`, which is a dictionary with the tags as keys, and lists of
+  pages tagged with the specified tag as values. E.g., `{{ site.tags['foo'] }}`
+  would return every page tagged with 'foo'.
+
+Example template
+----------------
+This template fragment will load all content pages on the entire site with the
+tag "frontpage" and display links to them in a list.
+
+    ::jinja2
+    <ul>
+    {% for tagged_page in site.tags['frontpage'] %}
+       <li><a href="{{ tagged_page.url }}">{{ tagged_page.title }}</a></li>
+    {% endfor %}
+    </ul>
+

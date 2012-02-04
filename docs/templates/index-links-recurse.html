@@ -1,0 +1,12 @@
+{%- extends "default.html" %}
+{%- block content %}
+  {{ super() }}
+  <ul>
+  {%- for subpage in page.subpages recursive %}
+      <li><a href="{{ subpage.url }}">{{ subpage.title }}</a></li>
+      {%- if subpage.subpages %}
+        <ul>{{ loop(subpage.subpages) }}</ul>
+      {%- endif %}
+  {%- endfor %}
+  </ul>
+{%- endblock %}

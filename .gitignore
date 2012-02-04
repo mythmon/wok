@@ -2,4 +2,6 @@
 *.pyc
 build
 MANIFEST
-sample/output
+*/output
+_trial_temp
+dist
