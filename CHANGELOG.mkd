@@ -1,3 +1,11 @@
+Version 0.8.2
+-------------
+### Fixes
+-   Fix Github issue 62, in which the next page object was not set on the first
+    page of a two page group.
+-   Dates, datetimes, and times now have a default value of `None` instead of
+    the epoch time.
+
 Version 0.8.1
 -------------
 ### Features
