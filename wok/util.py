@@ -61,10 +61,3 @@ def date_and_times(meta):
         meta['datetime'] = datetime(date_part.year, date_part.month, date_part.day)
     else:
         meta['datetime'] = None
-
-    if meta['date'] is None:
-        meta['date'] = date(1970, 1, 1)
-    if meta['time'] is None:
-        meta['time'] = time()
-    if meta['datetime'] is None:
-        meta['datetime'] = datetime(1970, 1, 1)
