@@ -290,12 +290,23 @@ class Page(object):
         if parts['page'] == 1:
             parts['page'] = ''
 
-        if not 'url' in self.meta:
-            self.meta['url'] = self.options['url_pattern']
+        if 'url' in self.meta:
+            logging.debug('Using page url pattern')
+            self.url_pattern = self.meta['url']
+        else:
+            logging.debug('Using global url pattern')
+            self.url_pattern = self.options['url_pattern']
 
-        self.meta['url'] = self.meta['url'].format(**parts)
+        self.meta['url'] = self.url_pattern.format(**parts)
+
+        logging.info('URL pattern is: {0}'.format(self.url_pattern))
+        logging.info('URL parts are: {0}'.format(parts))
+
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
+        logging.debug('{0} will be written to {1}'
+                .format(self.meta['slug'], self.meta['url']))
+
         # If we have been asked to, rip out any plain "index.html"s
         if not self.options['url_include_index']:
             self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
@@ -393,6 +404,7 @@ class Page(object):
             for idx, chunk in enumerate(chunks[1:], 2):
                 new_meta = copy.deepcopy(self.meta)
                 new_meta.update({
+                    'url': self.url_pattern,
                     'pagination': {
                         'page_items': chunk,
                         'num_pages': len(chunks),
