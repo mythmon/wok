@@ -31,7 +31,7 @@ class Page(object):
         self.engine = engine
 
     @classmethod
-    def from_meta(cls, meta, options, engine, renderer=None):
+    def from_meta(cls, meta, options, engine, renderer=renderers.Plain):
         """
         Build a page object from a meta dictionary.
 
@@ -41,10 +41,14 @@ class Page(object):
         page = cls(options, engine)
         page.meta = meta
         page.options = options
-        page.renderer = renderer if renderer else renderers.Plain
+        page.renderer = renderer
+
+        if 'pagination' in meta:
+            logging.debug('from_meta: current page %d' %
+                    meta['pagination']['cur_page'])
 
         # Make a template environment. Hopefully no one expects this to ever
-        # change.
+        # change after it is instantiated.
         if Page.tmpl_env is None:
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
                 page.options.get('template_dir', 'templates')))
@@ -53,7 +57,7 @@ class Page(object):
         return page
 
     @classmethod
-    def from_file(cls, path, options, engine, renderer=None):
+    def from_file(cls, path, options, engine, renderer=renderers.Plain):
         """
         Load a file from disk, and parse the metadata from it.
 
@@ -63,7 +67,7 @@ class Page(object):
         page = cls(options, engine)
         page.original = None
         page.options = options
-        page.renderer = renderer if renderer else renderers.Plain
+        page.renderer = renderer
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
@@ -418,8 +422,8 @@ class Page(object):
                     extra_pages.append(new_page)
 
             # Set up the next/previous page links
-            for idx, page in enumerate(extra_pages, 1):
-                if idx == 1:
+            for idx, page in enumerate(extra_pages):
+                if idx == 0:
                     page.meta['pagination']['prev_page'] = self.meta
                 else:
                     page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
