@@ -39,12 +39,16 @@ class HeadingAnchors(object):
                 if not heading.text:
                     continue
                 logging.debug('[HeadingAnchors] {0} {1}'.format(heading, heading.text))
+
+                name = 'heading-{0}'.format(slugify(heading.text))
                 anchor = etree.Element('a')
                 anchor.set('class', 'heading_anchor')
-                anchor.set('href', '#heading-{0}'.format(slugify(heading.text)))
-                anchor.set('name', 'heading-{0}'.format(slugify(heading.text)))
+                anchor.set('href', '#' + name)
+                anchor.set('title', 'Permalink to this section.')
                 anchor.text = u'¶'
                 heading.append(anchor)
+
+                heading.set('id', name)
 
         sio_destination = StringIO()
         tree.write(sio_destination)
