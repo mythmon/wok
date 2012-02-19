@@ -1,3 +1,21 @@
+Version 0.8.2
+-------------
+### Fixes
+-   Fix Github issue 62, in which the next page object was not set on the first
+    page of a two page group.
+-   Dates, datetimes, and times now have a default value of `None` instead of
+    the epoch time.
+
+Version 0.8.1
+-------------
+### Features
+-   New template variable, `site.slugs`, which is a dictionary from slugs to
+    pages.
+-   New variables for url generation: date, time, and datetime, which can be
+    used to make urls like "/blog/2012/01/26/new-wok-version"
+-   There is now a doc site, which is a simple wok site that explains how to
+    use wok, and serves as a simple example.
+
 Version 0.8
 -----------
 ### Features

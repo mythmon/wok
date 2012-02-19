@@ -439,7 +439,9 @@ class Page(object):
                 'num_pages': len(chunks),
                 'cur_page': 1,
             })
-            if len(extra_pages) > 1:
+            # Extra pages doesn't include the first page, so if there is at
+            # least one, then make a link to the next page.
+            if len(extra_pages) > 0:
                 self.meta['pagination']['next_page'] = extra_pages[0].meta
 
         return extra_pages

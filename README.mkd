@@ -21,7 +21,7 @@ mythical website that inspired wok still hasn't been written.
 
 Sample Sites
 ------------
-A bare bones site is included in the wok git repo, in the `sample` directory.
+A bare bones site is included in the wok git repo, in the `test` directory.
 It is really just a playground for devs to test new features, and not a good
 learning tool.
 
@@ -48,8 +48,10 @@ For some real world examples check out these sites.
      serving as an example, let me know and I will add a link to your site
      here.
 
-For some tutorials, the [wok github wiki][wiki] has some good pointers.
+For some more documentation, checkout [the doc site][docs].  To learn and share
+with other users, you can check out [the wiki][wiki].
 
+[docs]: http://wok.mythmon.com
 [wiki]: https://github.com/mythmon/wok/wiki
 
 Installation
@@ -72,7 +74,9 @@ dependencies by hand in this case.
 
 ###Dependencies
 All dependencies are available from pip. Although optional, you really should
-install either markdown or docutils.
+install either markdown or docutils, and if you install from pip, they will be
+installed for you. Pygments is used for syntax highlighting, and will also be
+installed from pip.
 
 ####Required
 
@@ -81,17 +85,16 @@ install either markdown or docutils.
 
 ####Optional
 
--   `markdown` - for rendering markdown documents.
+-   `Markdown` - for rendering markdown documents.
 -   `docutils` - for rendering reStructuredText documents.
--   `pygments` - for syntax highlighting.
+-   `Pygments` - for syntax highlighting.
 
 Usage
 -----
-To use wok, go to the directory where your site files are located, and
-run the command `wok`. For now, no output will be given unless something
-goes wrong. If it returns without error, you should have a shiny new
-output folder containing some HTML, and your media that represents your
-shiny new site.
+To use wok, go to the directory where your site files are located, and run the
+command `wok`. No output will be given unless something goes wrong. If it
+returns without error, you should have a shiny new output folder containing
+some HTML, and your media that represents your shiny new site.
 
 To aid in testing links on the site, wok includes a development server.
 You can run it with the command `wok --server`, which will generate the
@@ -123,9 +126,7 @@ syntax highlighting and media copying make things even easier.
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html
 
-[More info][more_content]
-
-[more_content]: https://github.com/mythmon/wok/wiki/Content
+[More info](http://wok.mythmon.com/docs/content/)
 
 ### Templates ###
 Pulled from `templates` by default. Wok uses [Jinja2][jinja] templates,
@@ -133,39 +134,9 @@ with various variables exposed to build pages. This is a very flexible
 templating environment with control flow, filters, and other ways to
 slice and dice the data that wok gives you.
 
-[More info][more_templates]
-
-[more_templates]: https://github.com/mythmon/wok/wiki/Templates
 [jinja]: http://jinja.pocoo.org/
 
-### Pagination ###
-Pagination requires teamwork from both the templates and the content of a page.
-In the content, place a new item, `pagination`, with sub-items `limit` and
-`list`. Optionally you can also include `sort_key` and `sort_reverse`.
-
-Example
-
-    title: Pagination Test
-    pagination:
-        list: page.subpages
-        limit: 3
-        sort_key: slug
-        sort_reverse: True
-    ---
-    Let's test pagination.
-
-Then the template for this page will get a new variable `pagination` with
-useful things like `pagination.page_items` and `pagination.next_page`.
-
-[More info][more_pagination]
-
-[more_pagination]: https://github.com/mythmon/wok/wiki/Pagination
-
-### Media ###
-Media is pretty simple. It is intended to be used for things like site wide
-images, style sheets and JavaScript. Wok will copy everything from the media
-directory straight to the output directory before generating anything. This
-means that generated content can overwrite media.
+[More info](http://wok.mythmon.com/docs/templates/)
 
 Configuration
 -------------
@@ -185,9 +156,18 @@ Possible configuration options (and their defaults) are
   place the output files. The default produces URLs like
   `/category/subcategory/foo.html`. To get "wordpress style" urls, you could
   use `/{category}/{slug}/index.html`.
-- `url_use_index` (Yes) - If true, keep `index.*` in urls.
 
     Available variables:
 
     -   `{category}` - The category of the site, slash seperated.
     -   `{slug}` - The slug of the page.
+    -   `{page}` - The current page.
+    -   `{ext}` - The extension that the page should used.
+    -   `{date}`, `{datetime}`, and `{time}` - The date/time from the metadata
+        of the page
+
+- `url_use_index` (Yes) - If true, keep `index.*` in urls.
+
+More info:
+[config](http://wok.mythmon.com/docs/config/),
+[urls](http://wok.mythmon.com/docs/urls/).
