@@ -197,7 +197,7 @@ class Page(object):
                            .format(self.meta['slug']), authors.type)
 
         if self.meta['authors']:
-            self.meta['author'] = self.meta['authors']
+            self.meta['author'] = self.meta['authors'][0]
         else:
             self.meta['author'] = Author()
 
