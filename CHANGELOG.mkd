@@ -1,3 +1,11 @@
+Version 0.9
+-----------
+### Features
+-   Site hooks, for arbitrary inserting python code into the rendering process.
+-   Add a documentation wok site.
+-   New template variable, `site.slugs`, to access pages in a url-agnostic way.
+-   Date, datetime, and time url variables.
+
 Version 0.8.2
 -------------
 ### Fixes
