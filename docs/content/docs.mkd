@@ -12,22 +12,12 @@ If you just want to use wok, then you should install it from the
     ::console
     $ sudo pip install wok
 
-This will install wok and the required dependencies. You should also install at
-least one of [Markdown][mkd], or [reStructuredText][rst], for content markup:
+This will install wok and the required dependencies. It will also install some optional dependencies: the two rendering libraries, [Markdown][mkd], and [reStructuredTest][rst]. It will also install a syntax highlighting library, [Pygments][pymnts].
 
-    ::console
-    $ sudo pip install Markdown
-    $ sudo pip install docutils
-
-If you want syntax highlighting, you will also need [Pygments][pgmnts].
-
-    ::console
-    $ sudo pip install Pygments
-
+[pypi]: http://pypi.python.org/pypi
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html
 [pgmnts]: http://pygments.org/
-[pypi]: http://pypi.python.org/pypi
 
 Contribute
 ----------
