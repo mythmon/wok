@@ -1,0 +1,168 @@
+title: Hooks
+category: docs
+---
+Since version 0.9, wok provides a hook interface to add custom python code to
+the site generation pipeline.
+
+To use hooks, make a new directory in your site root named `hooks`. In this 
+directory, make the file `__hooks__.py`. For example:
+
+    ::text
+    site-root/
+        |-- config
+        |-- content/
+        |-- hooks/
+        |   |-- __hooks__.py
+        |   |-- hook_foo.py
+        |   `-- hook_bar.py
+        |
+        |-- media/
+        |-- output/
+        `-- templates/
+
+
+From the `__hooks__.py` file, wok will import the variable `hooks`. 
+This should be a dictionary; The keys are the hook names below, and the values 
+are lists of functions (or other callables) to run for the hooks. Simply give 
+the names of the functions and (but do not invoke them.) For example:
+
+    ::python
+    ''' __hooks__.py
+
+    Attach Python functions to wok hooks.
+    '''
+
+    import hook_foo
+    import hook_bar
+
+    # The `hooks` dictionary that wok will import
+    hooks = {
+        'site.start': [hook_foo.download_images],
+        'site.content.gather.post': [hook_bar.process_pages]
+    }
+
+If the hooks below have parameters, the listed functions should accept
+those parameters. Hooks will be run in the order they appear below.
+
+Available hooks
+---------------
+Below are the available hooks, when they will be run, and the arguments they
+will pass to the hooked functions (if any.)
+
+###List of hooks
+
+- [site.start](#site.start)
+- [site.output.pre](#site.output.pre)
+- [site.output.post](#site.output.post)
+- [site.content.gather.pre](#site.content.gather.pre)
+- [site.content.gather.post](#site.content.gather.post)
+- [page.render.pre](#page.render.pre)
+- [page.render.post](#page.render.post)
+- [page.meta.pre](#page.meta.pre)
+- [page.meta.post](#page.meta.post)
+- [page.template.pre](#page.template.pre)
+- [page.template.post](#page.template.post)
+- [site.done](#site.done)
+
+### Details
+
+<!-- This first one needs to be wrapped in a p tag, because it doesn't happen automatically for some reason...? -->
+
+`site.start()` <a name="site.start"> </a>
+:   <p>Called before anything else has started, except for the loading of hooks.
+    This would be a good time to modify the content, templates, or the files in
+    the media directory.</p>
+
+`site.output.pre(output_path)` <a name="site.output.pre"> </a>
+:   `output_path`
+    :   The path to the output directory.
+:   This path will run before the output directory is populated by the media,
+    and after any existing output files have been deleted. You can add files
+    that may be overwritten by the media files or the site content.
+
+`site.output.post(output_path)` <a name="site.output.post"> </a>
+:   `output_path`
+    :   The path to the output directory.
+:   This hook will run after the output directory is populated by the media,
+    and before the content pages have started to be processed. You can use this
+    to modify, overwrite, or otherwise fiddle with the media directory after it
+    has been copied to the output directory.
+
+`site.content.gather.pre()` <a name="site.content.gather.pre"> </a>
+:   Return value
+    :   List of `Page` objects to add to the list of pages.
+:   This hook will run before wok gathers content pages, and can be used to add
+    pages that don't exist on disk.
+
+`site.content.gather.post(pages)` <a name="site.content.gather.post"> </a>
+:   `pages`
+    :   The list of pages that wok has gathered from the content directory, and
+        any other hooks that have run. Also includes the duplicated versions of
+        paginated pages.
+:   Return value
+    :   List of `Page` objects to add to the list of pages.
+:   This hook will run after wok gathers content pages, and can be used to add
+    pages that don't exist on disk, or to remove pages added by other means. If
+    you modify the list of pages received, those changes will take effect in
+    wok. You may also return pages to add.
+
+`page.render.pre(page)` <a name="page.render.pre"> </a>
+:   `page`
+    :   The current page object that is being processed.
+:   This hook will be called for each page before the page is rendered by
+    Markdown, reStructuredText, etc. The unrendered text will be in the
+    variable `page.original`, if there is an original text. Keep in mind that
+    some pages won't be run through this hook because they come from other
+    sources, such as hooks, or pagination.
+
+`page.render.post(page)` <a name="page.render.post"> </a>
+:   `page`
+    :   The current page object that is being processed.
+:   This hook will be called for each page right after the page is rendered by
+    Markdown, reStructuredText, etc. The unrendered text will be in the
+    variable `page.original`, and the rendered text will be in the meta
+    variable `page.meta['content']. Keep in mind that some pages won't be run
+    through this hook because they come from other sources, such as hooks, or
+    pagination.
+
+`page.meta.pre(page)` <a name="page.render.pre"> </a>
+:   `page`
+    :   The current page object that is being processed.
+:   This hook will be called for each page before the page has it's meta data
+    filled in. Some metadata will exist, but it will be in an unnormalized
+    state.
+
+`page.meta.post(page)` <a name="page.render.post"> </a>
+:   `page`
+    :   The current page object that is being processed.
+:   This hook will be called for each page right after the page has it's meta
+    data filled in and normalized.
+
+`page.template.pre(page, templ_vars)` <a name="page.template.pre"> </a>
+:   `page`
+    :   The current page object that is being processed.
+:   `templ_vars`
+    :   A dictionary of the variables that will be sent to the template engine.
+        See the documentation on [templates][] for its normal contents.
+:   This hook will be called for each page before the page is sent to
+    the template engine. At this point, the content has been transformed
+    from markup input (such as markdown) to html output, if applicable.
+    The transformed version is in `templ_vars['content']`. If you
+    modify the `templ_vars` parameter, those changes will be visible to
+    the template engine. The given functions should take in these two
+    variables.
+
+[templates]: /docs/templates/
+
+`page.template.post(page)` <a name="page.template.postpage"> </a>
+:   `page`
+    :   The current page being processed.
+:   This hook will be called after the page has been processed by the template
+    engine. The next step will be write the file to disk, if applicable, so any
+    last minute changes should happen here.
+
+`site.done()` <a name="site.done"> </a>
+:   Called after wok has finished everything. This would be a good time to make
+    any general modifications to the output, or to do something like upload the
+    site for distribution. If the `--server` option has been specified, this
+    will happen before the server is run.

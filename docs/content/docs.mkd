@@ -6,30 +6,24 @@ type: index-links-recurse
 
 Install
 -------
-If you just want to use wok, then you should install it from the [Python Package
-Index][pypi]. A good way to do that is with `pip`:
+If you just want to use wok, then you should install it from the 
+[Python Package Index][pypi]. A good way to do that is with `pip`:
 
     ::console
-    sudo pip install wok
+    $ sudo pip install wok
 
-Which will install wok and the required dependencies. You should also install at least one of Markdown, or reStructuredText, for content markup.
-
-    ::console
-    sudo pip install Markdown
-    sudo pip install docutils
-
-If you want Pygments syntax highlighting, you also need Pygments.
-
-    ::console
-    sudo pip install Pygments
+This will install wok and the required dependencies. It will also install some optional dependencies: the two rendering libraries, [Markdown][mkd], and [reStructuredTest][rst]. It will also install a syntax highlighting library, [Pygments][pymnts].
 
 [pypi]: http://pypi.python.org/pypi
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+[pgmnts]: http://pygments.org/
 
 Contribute
 ----------
 You can find wok's source code on [Github][gh]. If you find any issues,
 please post them to [the issue tracker][gh-issues]. If you want to help
-code, feel free, patches and pull requests are welcome.
+code, feel free. Patches and pull requests are welcome.
 
 [gh]: https://github.com/mythmon/wok
 [gh-issues]: https://github.com/mythmon/wok/issues

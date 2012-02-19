@@ -23,17 +23,27 @@ arrange to your liking:
   file.
 - `{date}`, `{datetime}`, `{time}` - The date/time that were specified in the
   metadata of a page. These are Python date, datetime, and time objects, so
-  they have year, month, day, hour, minute, etc fields. If you don't specify a
-  date in the file, the default is midnight on January 1st, 1970.
+  they have year, month, day, hour, minute, etc fields. If you don't specify
+  these, they will default to `None`.
 
 If you don't include `{page}` in your `url_pattern`, then pagination won't
 work. Instead it will overwrite each page with it's sequel, resulting in only
-the last page remaining.
+the last page remaining. If you aren't using any pagination, then you don't
+need the variable.
 
 Any time two or more forward slashes are generated, they will be replaced by a
-single forward slash. If you set the option `url_include_index` to `false`,
-then any time the url ends with `index.*`, that will also be removed from the
-url patterns. The files will still be named `index.*`, however.
+single forward slash. This lets you do things like
+`/{category}/{page}/{slug}.html` without worrying about an empty page or empty
+category causing bad paths.
+
+If you set the option `url_include_index` to `false` in the config file, then
+any time the url ends with `index.*`, that will also be removed from the url
+patterns. The files will still be named `index.*`, however. So for example if
+your url pattern is `/{category}/{slug}/index.html`, the a blog post about
+balloons would create a file named `/blog/balloons/index.html`, but anytime you
+reference it in a template it's `url` field will be `/blog/balloons/`. This
+makes URLs look a lot cleaner. This option off set to `true` by default (ie:
+keep index in urls).
 
 ### Examples:
 

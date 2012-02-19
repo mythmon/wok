@@ -43,7 +43,7 @@ class TestSlugs(TestCase):
         slug = u'dont-use-bobs-stuff'
         self.assertEqual(slug, util.slugify(orig))
 
-    test_apostrophes.todo = "Apostrophes are treated like normal words right now"
+    test_apostrophes.todo = "Apostrophes are treated like normal words."
 
 class TestDatetimes(TestCase):
 
@@ -53,7 +53,7 @@ class TestDatetimes(TestCase):
 
         The datetime is the first commit of wok.
         The date is the day this test was first written.
-        The time is pi second, in GMT-8.
+        The time is pi second.
         """
         self.datetime = datetime(2011, 2, 3, 0, 23, 0, 0)
         self.date = date(2011, 10, 12)
@@ -61,7 +61,11 @@ class TestDatetimes(TestCase):
 
     def test_blanks(self):
         inp = {}
-        out = {'datetime': None, 'date': None, 'time': None, }
+        out = {
+            'datetime': datetime(1970, 1, 1),
+            'date': date(1970, 1, 1),
+            'time': time(),
+        }
 
         util.date_and_times(inp)
         self.assertEquals(inp, out)
@@ -71,7 +75,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 10, 12, 0, 0, 0, 0),
             'date': self.date,
-            'time': None,
+            'time': time(),
         }
 
         util.date_and_times(inp)
@@ -79,7 +83,11 @@ class TestDatetimes(TestCase):
 
     def test_just_time(self):
         inp = {'time': self.time}
-        out = {'datetime': None, 'date': None, 'time': self.time, }
+        out = {
+            'datetime': datetime(1970, 1, 1),
+            'date': date(1970, 1, 1),
+            'time': self.time,
+        }
 
         util.date_and_times(inp)
         self.assertEquals(inp, out)
@@ -148,7 +156,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 12, 25),
             'date': date(2011, 12, 25),
-            'time': None,
+            'time': time(),
         }
 
         util.date_and_times(inp)
