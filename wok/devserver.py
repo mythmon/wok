@@ -1,4 +1,4 @@
-''' Really simple HTTP server for development.
+''' Really simple HTTP *development* server
 
 Do *NOT* attempt to use this as anything resembling a production server. It is
 meant to be used as a development test server only.
@@ -33,14 +33,15 @@ def run(address=None, port=None, serv_dir=None):
         port = int(port)
     if serv_dir:
         os.chdir(serv_dir)
-    server_class = HTTPServer
-    handler_class = SimpleHTTPRequestHandler
-    httpd = server_class((address, port), handler_class)
-    socketInfo = httpd.socket.getsockname()
+    server = HTTPServer
+    handler = SimpleHTTPRequestHandler
+    httpd = server((address, port), handler)
+    socket_info = httpd.socket.getsockname()
     print "Development HTTP server running on http://%s:%s (Ctrl-c to stop)"\
-            %(socketInfo[0], socketInfo[1])
+            %(socket_info[0], socket_info[1])
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         print "\nbye!"
         exit(0)
+
