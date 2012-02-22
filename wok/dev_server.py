@@ -22,18 +22,22 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 class dev_server:
 
-    def __init__(self, serv_dir=None, host='', port=8000, watch_dirs=None, 
-            change_handler=None):
+    def __init__(self, serv_dir=None, host='', port=8000, dir_mon=False,
+            watch_dirs=[], change_handler=None):
         ''' Initialize a new development server on `host`:`port`, and serve the
         files in `serv_dir`. If `serv_dir` is not provided, it will use the 
         current working directory.
+
+        If `dir_mon` is set, monitor the directories in `watch_dirs` for
+        changes after every request, and run `change_handler` if a change is
+        detected.
         '''
-        self.serv_dir = serv_dir
+        self.serv_dir = os.path.abspath(serv_dir)
         self.host = host
         self.port = port
-        self.watch_dirs = watch_dirs
+        self.dir_mon = dir_mon
+        self.watch_dirs = [os.path.abspath(d) for d in watch_dirs]
         self.change_handler = change_handler
-        self.file_state = None
 
     def run(self):
         if self.serv_dir:
@@ -46,20 +50,34 @@ class dev_server:
 
         print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
                 %(socket_info[0], socket_info[1])
+        print "Serving files from ", self.serv_dir
+        if self.dir_mon:
+            print "Monitoring the following directories for changes: "
+            print "\t", self.watch_dirs
+        else:
+            print "Directory monitoring is OFF"
+
         try:
             while True:
-                if self.watch_dirs:
-                    self.file_state = self.take_snapshot()
+                if self.dir_mon:
+                    # take snapshot before request
+                    dir_state = self.take_snapshot()
 
                 httpd.handle_request()
 
-                if self.watch_dirs and self.take_snapshot() != self.file_state:
+                if self.dir_mon and self.take_snapshot() != dir_state:
+                    # compare directory state now to state before request, run
+                    # change handler if state has changed
+                    print "Directories have changed! Running change handler..."
                     self.change_handler()
                     
         except KeyboardInterrupt:
             print "\nStopping development server..."
 
     def take_snapshot(self):
+        ''' Take a 'snapshot' of the watched directories by returning a simple 
+        sum of the residing files' modification times.
+        '''
         modtime_sum = 0
         for d in self.watch_dirs:
             for root, dirs, files in os.walk(d):
