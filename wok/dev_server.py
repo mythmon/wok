@@ -76,9 +76,9 @@ class RebuildHandlerWrapper(object):
         """
         wrap_self.rebuild = rebuild
         wrap_self.watch_dirs = watch_dirs
-        wrap_self.modtime_sum = None
-        wrap_self.changed = False
-        wrap_self.take_snapshot()
+
+        wrap_self._modtime_sum = None
+        wrap_self.changed()
 
         class RebuildHandler(SimpleHTTPRequestHandler):
             """Rebuild if something has changed."""
@@ -88,26 +88,31 @@ class RebuildHandlerWrapper(object):
                 Handle a request and, if anything has changed, rebuild the
                 site before responding.
                 """
-                wrap_self.take_snapshot()
-                if wrap_self.changed:
+                if wrap_self.changed():
                     wrap_self.rebuild()
 
                 SimpleHTTPRequestHandler.handle(self)
 
         wrap_self.request_handler = RebuildHandler
 
-    def take_snapshot(self):
-        '''
-        Take a 'snapshot' of the watched directories by returning a simple
-        sum of the residing files' modification times.
-        '''
-        last_modtime_sum = self.modtime_sum
-        self.modtime_sum = 0
+    def changed(self):
+        """
+        Returns if the contents of the monitored directories have changed since
+        the last call. It will return always return false on first run. 
+        """
+        last_modtime_sum = self._modtime_sum
+
+        # calculate simple sum of file modification times
+        self._modtime_sum = 0
         for d in self.watch_dirs:
             for root, dirs, files in os.walk(d):
                 for f in files:
                     abspath = os.path.join(root, f)
-                    self.modtime_sum += os.stat(abspath).st_mtime
+                    self._modtime_sum += os.stat(abspath).st_mtime
 
-        if last_modtime_sum is not None:
-            self.changed = (last_modtime_sum != self.modtime_sum)
+        if last_modtime_sum is None:
+            # always return false on first run
+            return False
+        else:
+            # otherwise return if file modification sums changed since last run
+            return (last_modtime_sum != self._modtime_sum)
