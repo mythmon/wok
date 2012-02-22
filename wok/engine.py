@@ -111,8 +111,8 @@ class Engine(object):
         # ----------
         # Run the dev server after generating pages if the user said to
         if cli_options.runserver:
-            devserver.run(cli_options.address, cli_options.port,
-                    serv_dir=os.path.join(self.options['output_dir']))
+            output_dir = os.path.join(self.options['output_dir'])
+            devserver.run(output_dir, cli_options.address, cli_options.port)
 
     def read_options(self):
         """Load options from the config file."""
@@ -332,3 +332,4 @@ class Engine(object):
 
 if __name__ == '__main__':
     Engine()
+    exit(0)
