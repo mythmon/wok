@@ -1,0 +1,48 @@
+title: Download
+tags: [_nav]
+nav_sort: 4
+---
+
+The recommended way to get wok is from the [Python Package Index][pypi]. You
+can do that with `pip`:
+
+    ::console
+    $ sudo pip install wok
+
+This will install wok and the required dependencies. It will also install some optional dependencies: the two rendering libraries, [Markdown][mkd], and [reStructuredTest][rst]. It will also install a syntax highlighting library, [Pygments][].
+
+[pypi]: http://pypi.python.org/pypi
+[mkd]: http://daringfireball.net/projects/markdown/
+[rst]: http://docutils.sourceforge.net/rst.html
+[pygments]: http://pygments.org/
+
+Other Methods
+=============
+
+You can also checkout out the code [from Github][gh], or download a tarball:
+
+Latest Stable
+-------------
+
+- [Version 0.9](https://github.com/mythmon/wok/tarball/v0.9)
+
+Older Versions
+--------------
+
+- [Version 0.8.2](https://github.com/mythmon/wok/tarball/v0.8.2)
+- [Version 0.8.1](https://github.com/mythmon/wok/tarball/v0.8.1)
+- [Version 0.8](https://github.com/mythmon/wok/tarball/v0.8)
+- [Version 0.7](https://github.com/mythmon/wok/tarball/v0.7)
+- [Version 0.6.3](https://github.com/mythmon/wok/tarball/v0.6.3)
+- [Version 0.6.2](https://github.com/mythmon/wok/tarball/v0.6.2)
+- [Version 0.6.1](https://github.com/mythmon/wok/tarball/v0.6.1)
+- [Version 0.6](https://github.com/mythmon/wok/tarball/v0.6)
+- [Version 0.5.1](https://github.com/mythmon/wok/tarball/v0.5.1)
+- [Version 0.5](https://github.com/mythmon/wok/tarball/v0.5)
+- [Version 0.4](https://github.com/mythmon/wok/tarball/v0.4)
+- [Version 0.3](https://github.com/mythmon/wok/tarball/v0.3)
+- [Version 0.2.1](https://github.com/mythmon/wok/tarball/v0.2.1)
+- [Version 0.2](https://github.com/mythmon/wok/tarball/v0.2)
+- [Version 0.1](https://github.com/mythmon/wok/tarball/v0.1)
+
+[gh]: https://github.com/mythmon/wok
