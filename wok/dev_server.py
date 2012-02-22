@@ -53,7 +53,7 @@ class dev_server:
         httpd = HTTPServer((self.host, self.port), req_handler)
         socket_info = httpd.socket.getsockname()
 
-        print("Starting dev server on http://%s:%s... (Ctrl-c to stop)"
+        print("Starting dev server on http://%s:%s... (Ctrl-C to stop)"
                 %(socket_info[0], socket_info[1]))
         print "Serving files from", self.serv_dir
 
@@ -64,7 +64,10 @@ class dev_server:
         else:
             print "Directory monitoring is OFF"
 
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print "\nStopping development server..."
 
 
 class RebuildHandlerWrapper(object):
