@@ -92,6 +92,29 @@ class Engine(object):
 
         # Action!
         # -------
+        generate_site()
+
+        # Dev server
+        # ----------
+        if cli_options.runserver:
+            ''' Run the dev server if the user said to, and watch the specified
+            directories for changes. The server will regenerate the entire wok
+            site if changes are found after every request.
+            '''
+            output_dir = os.path.join(self.options['output_dir'])
+            host = '' if cli_options.address is None else cli_options.address
+            port = 8000 if cli_options.port is None else cli_options.port
+            server = dev_server(serv_dir=output_dir, host=host, port=port,
+                watch_dirs=[
+                    self.options['media_dir'],
+                    self.options['templates_dir'],
+                    self.optoins['content_dir']
+                ], 
+                change_handler=generate_site)
+            server.run()
+
+    def generate_site(self):
+        ''' Generate the wok site '''
         self.all_pages = []
 
         self.read_options()
@@ -106,16 +129,6 @@ class Engine(object):
         self.render_site()
 
         self.run_hook('site.done')
-
-        # Dev server
-        # ----------
-        # Run the dev server after generating pages if the user said to
-        if cli_options.runserver:
-            output_dir = os.path.join(self.options['output_dir'])
-            host = '' if cli_options.address is None else cli_options.address
-            port = 8000 if cli_options.port is None else cli_options.port
-            server = dev_server(serv_dir=output_dir, host=host, port=port)
-            server.run()
 
     def read_options(self):
         """Load options from the config file."""
