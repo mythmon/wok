@@ -33,6 +33,7 @@ class dev_server:
         self.port = port
         self.watch_dirs = watch_dirs
         self.change_handler = change_handler
+        self.file_state = None
 
     def run(self):
         if self.serv_dir:
@@ -46,12 +47,23 @@ class dev_server:
         print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
                 %(socket_info[0], socket_info[1])
         try:
-            httpd.serve_forever()
+            while True:
+                if self.watch_dirs:
+                    self.file_state = self.take_snapshot()
+
+                httpd.handle_request()
+
+                if self.watch_dirs and self.take_snapshot() != self.file_state:
+                    self.change_handler()
+                    
         except KeyboardInterrupt:
             print "\nStopping development server..."
 
-    def dirs_changed(watch_dirs):
-        ''' Check if directories listed in `watch_dirs` have changed since the
-        last time this was called
-        '''
-        pass
+    def take_snapshot(self):
+        modtime_sum = 0
+        for d in self.watch_dirs:
+            for root, dirs, files in os.walk(d):
+                for f in files:
+                    abspath = os.path.join(root, f)
+                    modtime_sum += os.stat(abspath).st_mtime
+        return modtime_sum
