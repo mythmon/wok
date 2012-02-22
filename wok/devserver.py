@@ -20,28 +20,24 @@ import os
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
-def run(address=None, port=None, serv_dir=None):
-    ''' Run the development server on `address`:`port` and server the
-    directory `serv_dir`. (If `serv_dir` is not provided, it will use
-    the current working directory.)
+def run(serv_dir=None, host='', port=8000):
+    ''' Run the development server on `host`:`port`, and serve the files in
+    `serv_dir`. If `serv_dir` is not provided, it will use the current working 
+    directory.
     '''
-    if not address:
-        address = ''
-    if not port:
-        port = 8000
-    else:
-        port = int(port)
+
     if serv_dir:
         os.chdir(serv_dir)
+
     server = HTTPServer
     handler = SimpleHTTPRequestHandler
-    httpd = server((address, port), handler)
+    httpd = server((host, port), handler)
     socket_info = httpd.socket.getsockname()
-    print "Development HTTP server running on http://%s:%s (Ctrl-c to stop)"\
+
+    print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
             %(socket_info[0], socket_info[1])
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print "\nbye!"
-        exit(0)
+        print "\nStopping development server..."
 
