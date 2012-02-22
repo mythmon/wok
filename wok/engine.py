@@ -12,7 +12,7 @@ import wok
 from wok.page import Page, Author
 from wok import renderers
 from wok import util
-from wok import devserver
+from wok.dev_server import dev_server
 
 
 class Engine(object):
@@ -112,7 +112,10 @@ class Engine(object):
         # Run the dev server after generating pages if the user said to
         if cli_options.runserver:
             output_dir = os.path.join(self.options['output_dir'])
-            devserver.run(output_dir, cli_options.address, cli_options.port)
+            host = '' if cli_options.address is None else cli_options.address
+            port = 8000 if cli_options.port is None else cli_options.port
+            server = dev_server(serv_dir=output_dir, host=host, port=port)
+            server.run()
 
     def read_options(self):
         """Load options from the config file."""

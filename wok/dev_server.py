@@ -20,24 +20,38 @@ import os
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
-def run(serv_dir=None, host='', port=8000):
-    ''' Run the development server on `host`:`port`, and serve the files in
-    `serv_dir`. If `serv_dir` is not provided, it will use the current working 
-    directory.
-    '''
+class dev_server:
 
-    if serv_dir:
-        os.chdir(serv_dir)
+    def __init__(self, serv_dir=None, host='', port=8000, watch_dirs=None, 
+            change_handler=None):
+        ''' Initialize a new development server on `host`:`port`, and serve the
+        files in `serv_dir`. If `serv_dir` is not provided, it will use the 
+        current working directory.
+        '''
+        self.serv_dir = serv_dir
+        self.host = host
+        self.port = port
+        self.watch_dirs = watch_dirs
+        self.change_handler = change_handler
 
-    server = HTTPServer
-    handler = SimpleHTTPRequestHandler
-    httpd = server((host, port), handler)
-    socket_info = httpd.socket.getsockname()
+    def run(self):
+        if self.serv_dir:
+            os.chdir(self.serv_dir)
 
-    print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
-            %(socket_info[0], socket_info[1])
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print "\nStopping development server..."
+        server = HTTPServer
+        req_handler = SimpleHTTPRequestHandler
+        httpd = server((self.host, self.port), req_handler)
+        socket_info = httpd.socket.getsockname()
 
+        print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
+                %(socket_info[0], socket_info[1])
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print "\nStopping development server..."
+
+    def dirs_changed(watch_dirs):
+        ''' Check if directories listed in `watch_dirs` have changed since the
+        last time this was called
+        '''
+        pass
