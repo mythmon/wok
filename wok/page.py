@@ -31,7 +31,7 @@ class Page(object):
         self.engine = engine
 
     @classmethod
-    def from_meta(cls, meta, options, engine, renderer=None):
+    def from_meta(cls, meta, options, engine, renderer=renderers.Plain):
         """
         Build a page object from a meta dictionary.
 
@@ -41,10 +41,14 @@ class Page(object):
         page = cls(options, engine)
         page.meta = meta
         page.options = options
-        page.renderer = renderer if renderer else renderers.Plain
+        page.renderer = renderer
+
+        if 'pagination' in meta:
+            logging.debug('from_meta: current page %d' %
+                    meta['pagination']['cur_page'])
 
         # Make a template environment. Hopefully no one expects this to ever
-        # change.
+        # change after it is instantiated.
         if Page.tmpl_env is None:
             Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
                 page.options.get('template_dir', 'templates')))
@@ -53,7 +57,7 @@ class Page(object):
         return page
 
     @classmethod
-    def from_file(cls, path, options, engine, renderer=None):
+    def from_file(cls, path, options, engine, renderer=renderers.Plain):
         """
         Load a file from disk, and parse the metadata from it.
 
@@ -63,7 +67,7 @@ class Page(object):
         page = cls(options, engine)
         page.original = None
         page.options = options
-        page.renderer = renderer if renderer else renderers.Plain
+        page.renderer = renderer
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
@@ -193,7 +197,7 @@ class Page(object):
                            .format(self.meta['slug']), authors.type)
 
         if self.meta['authors']:
-            self.meta['author'] = self.meta['authors']
+            self.meta['author'] = self.meta['authors'][0]
         else:
             self.meta['author'] = Author()
 
@@ -290,12 +294,23 @@ class Page(object):
         if parts['page'] == 1:
             parts['page'] = ''
 
-        if not 'url' in self.meta:
-            self.meta['url'] = self.options['url_pattern']
+        if 'url' in self.meta:
+            logging.debug('Using page url pattern')
+            self.url_pattern = self.meta['url']
+        else:
+            logging.debug('Using global url pattern')
+            self.url_pattern = self.options['url_pattern']
 
-        self.meta['url'] = self.meta['url'].format(**parts)
+        self.meta['url'] = self.url_pattern.format(**parts)
+
+        logging.info('URL pattern is: {0}'.format(self.url_pattern))
+        logging.info('URL parts are: {0}'.format(parts))
+
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
+        logging.debug('{0} will be written to {1}'
+                .format(self.meta['slug'], self.meta['url']))
+
         # If we have been asked to, rip out any plain "index.html"s
         if not self.options['url_include_index']:
             self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
@@ -393,6 +408,7 @@ class Page(object):
             for idx, chunk in enumerate(chunks[1:], 2):
                 new_meta = copy.deepcopy(self.meta)
                 new_meta.update({
+                    'url': self.url_pattern,
                     'pagination': {
                         'page_items': chunk,
                         'num_pages': len(chunks),
@@ -406,8 +422,8 @@ class Page(object):
                     extra_pages.append(new_page)
 
             # Set up the next/previous page links
-            for idx, page in enumerate(extra_pages, 1):
-                if idx == 1:
+            for idx, page in enumerate(extra_pages):
+                if idx == 0:
                     page.meta['pagination']['prev_page'] = self.meta
                 else:
                     page.meta['pagination']['prev_page'] = extra_pages[idx-1].meta
@@ -423,7 +439,9 @@ class Page(object):
                 'num_pages': len(chunks),
                 'cur_page': 1,
             })
-            if len(extra_pages) > 1:
+            # Extra pages doesn't include the first page, so if there is at
+            # least one, then make a link to the next page.
+            if len(extra_pages) > 0:
                 self.meta['pagination']['next_page'] = extra_pages[0].meta
 
         return extra_pages

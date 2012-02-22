@@ -1,0 +1,5 @@
+title: Dates
+type: index
+category: tests
+url: "/{category}/{slug}{page}/{date.year}/{date.month}/{date.day}/index.{ext}"
+---
