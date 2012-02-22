@@ -84,7 +84,10 @@ class RebuildHandlerWrapper(object):
             """Rebuild if something has changed."""
 
             def handle(self):
-                "Handle a request and, if anything has changed, rebuild the site."
+                """
+                Handle a request and, if anything has changed, rebuild the
+                site before responding.
+                """
                 wrap_self.take_snapshot()
                 if wrap_self.changed:
                     wrap_self.rebuild()
