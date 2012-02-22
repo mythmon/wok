@@ -24,13 +24,14 @@ class dev_server:
 
     def __init__(self, serv_dir=None, host='', port=8000, dir_mon=False,
             watch_dirs=[], change_handler=None):
-        ''' Initialize a new development server on `host`:`port`, and serve the
-        files in `serv_dir`. If `serv_dir` is not provided, it will use the 
+        '''
+        Initialize a new development server on `host`:`port`, and serve the
+        files in `serv_dir`. If `serv_dir` is not provided, it will use the
         current working directory.
 
-        If `dir_mon` is set, monitor the directories in `watch_dirs` for
-        changes after every request, and run `change_handler` if a change is
-        detected.
+        If `dir_mon` is set, the server will check for changes before handling
+        every request. If a change is detected, then wok will regenerate the
+        site.
         '''
         self.serv_dir = os.path.abspath(serv_dir)
         self.host = host
@@ -43,45 +44,67 @@ class dev_server:
         if self.serv_dir:
             os.chdir(self.serv_dir)
 
-        server = HTTPServer
-        req_handler = SimpleHTTPRequestHandler
-        httpd = server((self.host, self.port), req_handler)
+        if self.dir_mon:
+            wrap = RebuildHandlerWrapper(self.change_handler, self.watch_dirs)
+            req_handler = wrap.request_handler
+        else:
+            req_handler = SimpleHTTPRequestHandler
+
+        httpd = HTTPServer((self.host, self.port), req_handler)
         socket_info = httpd.socket.getsockname()
 
-        print "Starting dev server on http://%s:%s... (Ctrl-c to stop)"\
-                %(socket_info[0], socket_info[1])
-        print "Serving files from ", self.serv_dir
+        print("Starting dev server on http://%s:%s... (Ctrl-c to stop)"
+                %(socket_info[0], socket_info[1]))
+        print "Serving files from", self.serv_dir
+
         if self.dir_mon:
             print "Monitoring the following directories for changes: "
-            print "\t", self.watch_dirs
+            for d in self.watch_dirs:
+                print "\t", d
         else:
             print "Directory monitoring is OFF"
 
-        try:
-            while True:
-                if self.dir_mon:
-                    # take snapshot before request
-                    dir_state = self.take_snapshot()
+        httpd.serve_forever()
 
-                httpd.handle_request()
 
-                if self.dir_mon and self.take_snapshot() != dir_state:
-                    # compare directory state now to state before request, run
-                    # change handler if state has changed
-                    print "Directories have changed! Running change handler..."
-                    self.change_handler()
-                    
-        except KeyboardInterrupt:
-            print "\nStopping development server..."
+class RebuildHandlerWrapper(object):
+
+    def __init__(wrap_self, rebuild, watch_dirs):
+        """
+        We can't pass arugments to HTTPRequestHandlers, because HTTPServer
+        calls __init__. So make a closure.
+        """
+        wrap_self.rebuild = rebuild
+        wrap_self.watch_dirs = watch_dirs
+        wrap_self.modtime_sum = None
+        wrap_self.changed = False
+        wrap_self.take_snapshot()
+
+        class RebuildHandler(SimpleHTTPRequestHandler):
+            """Rebuild if something has changed."""
+
+            def handle(self):
+                "Handle a request and, if anything has changed, rebuild the site."
+                wrap_self.take_snapshot()
+                if wrap_self.changed:
+                    wrap_self.rebuild()
+
+                SimpleHTTPRequestHandler.handle(self)
+
+        wrap_self.request_handler = RebuildHandler
 
     def take_snapshot(self):
-        ''' Take a 'snapshot' of the watched directories by returning a simple 
+        '''
+        Take a 'snapshot' of the watched directories by returning a simple
         sum of the residing files' modification times.
         '''
-        modtime_sum = 0
+        last_modtime_sum = self.modtime_sum
+        self.modtime_sum = 0
         for d in self.watch_dirs:
             for root, dirs, files in os.walk(d):
                 for f in files:
                     abspath = os.path.join(root, f)
-                    modtime_sum += os.stat(abspath).st_mtime
-        return modtime_sum
+                    self.modtime_sum += os.stat(abspath).st_mtime
+
+        if last_modtime_sum is not None:
+            self.changed = (last_modtime_sum != self.modtime_sum)
