@@ -1,3 +1,15 @@
+Version 1.0 (In development)
+----------------------------
+Woohoo, wok is no longer in beta!
+### Features
+-   The built in development server now auto reloads when files changes.
+    [robatron].
+-   A new contributed hook, `wok.contrib.hooks.compile_sass`, that does exactly
+    what it says on the tin [robatron].
+
+### Fixes
+-   The hook `site.output.post` is now only run once, not once per file.
+
 Version 0.9
 -----------
 ### Features
