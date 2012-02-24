@@ -66,6 +66,10 @@ def compile_sass(output_dir):
     same directory as the Sass file with the same name and an extension of 
     .css. For example, foo.scss -> foo.css.
 
+    Hook:
+
+        site.output.post
+
     Dependencies:
 
         - Ruby
