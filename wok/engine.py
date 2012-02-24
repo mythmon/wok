@@ -12,7 +12,7 @@ import wok
 from wok.page import Page, Author
 from wok import renderers
 from wok import util
-from wok import devserver
+from wok.dev_server import dev_server
 
 
 class Engine(object):
@@ -29,6 +29,7 @@ class Engine(object):
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
     }
+    SITE_ROOT = os.getcwd()
 
     def __init__(self, output_lvl=1):
         """
@@ -92,6 +93,33 @@ class Engine(object):
 
         # Action!
         # -------
+        self.generate_site()
+
+        # Dev server
+        # ----------
+        if cli_options.runserver:
+            ''' Run the dev server if the user said to, and watch the specified
+            directories for changes. The server will regenerate the entire wok
+            site if changes are found after every request.
+            '''
+            output_dir = os.path.join(self.options['output_dir'])
+            host = '' if cli_options.address is None else cli_options.address
+            port = 8000 if cli_options.port is None else cli_options.port
+            server = dev_server(serv_dir=output_dir, host=host, port=port,
+                dir_mon=True,
+                watch_dirs=[
+                    self.options['media_dir'],
+                    self.options['template_dir'],
+                    self.options['content_dir']
+                ], 
+                change_handler=self.generate_site)
+            server.run()
+
+    def generate_site(self):
+        ''' Generate the wok site '''
+        orig_dir = os.getcwd()
+        os.chdir(self.SITE_ROOT)
+
         self.all_pages = []
 
         self.read_options()
@@ -107,12 +135,7 @@ class Engine(object):
 
         self.run_hook('site.done')
 
-        # Dev server
-        # ----------
-        # Run the dev server after generating pages if the user said to
-        if cli_options.runserver:
-            devserver.run(cli_options.address, cli_options.port,
-                    serv_dir=os.path.join(self.options['output_dir']))
+        os.chdir(orig_dir)
 
     def read_options(self):
         """Load options from the config file."""
@@ -333,3 +356,4 @@ class Engine(object):
 
 if __name__ == '__main__':
     Engine()
+    exit(0)
