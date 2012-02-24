@@ -188,25 +188,26 @@ class Engine(object):
         self.run_hook('site.output.pre', self.options['output_dir'])
 
         # Copy the media directory to the output folder
-        try:
-            for name in os.listdir(self.options['media_dir']):
-                path = os.path.join(self.options['media_dir'], name)
-                if os.path.isdir(path):
-                    shutil.copytree(
-                            path,
-                            os.path.join(self.options['output_dir'], name),
-                            symlinks=True
-                    )
-                else:
-                    shutil.copy(path, self.options['output_dir'])
+        if os.path.isdir(self.options['media_dir']):
+            try:
+                for name in os.listdir(self.options['media_dir']):
+                    path = os.path.join(self.options['media_dir'], name)
+                    if os.path.isdir(path):
+                        shutil.copytree(
+                                path,
+                                os.path.join(self.options['output_dir'], name),
+                                symlinks=True
+                        )
+                    else:
+                        shutil.copy(path, self.options['output_dir'])
 
-                self.run_hook('site.output.post', self.options['output_dir'])
 
-        # Do nothing if the media directory doesn't exist
-        except OSError:
-            # XXX: We should verify that the problem was the media dir
-            logging.info('There was a problem copying the media files to the '
-                         'output directory.')
+            # Do nothing if the media directory doesn't exist
+            except OSError:
+                logging.warning('There was a problem copying the media files '
+                                'to the output directory.')
+
+            self.run_hook('site.output.post', self.options['output_dir'])
 
     def load_pages(self):
         """Load all the content files."""

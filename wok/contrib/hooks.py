@@ -25,7 +25,7 @@ class HeadingAnchors(object):
             raise DependencyException('To use the HeadingAnchors hook, you must '
                                       'install the library lxml.')
         self.max_heading = max_heading
-        logging.debug('Loaded hook HeadingAnchors')
+        logging.info('Loaded hook HeadingAnchors')
 
     def __call__(self, page):
         logging.debug('Called hook HeadingAnchors on {0}'.format(page))
@@ -38,7 +38,7 @@ class HeadingAnchors(object):
             for heading in headings:
                 if not heading.text:
                     continue
-                logging.debug('[HeadingAnchors] {0} {1}'.format(heading, heading.text))
+                logging.debug('[hook/HeadingAnchors] {0} {1}'.format(heading, heading.text))
 
                 name = 'heading-{0}'.format(slugify(heading.text))
                 anchor = etree.Element('a')
