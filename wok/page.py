@@ -16,6 +16,7 @@ from wok import util
 from wok import renderers
 from wok.jinja import GlobFileLoader, AmbiguousTemplate
 
+
 class Page(object):
     """
     A single page on the website in all it's form (raw, rendered, templated) ,
@@ -274,7 +275,7 @@ class Page(object):
             sys.exit()
 
         # url
-        parts = {
+        self.url_parts = {
             'slug': self.meta['slug'],
             'category': '/'.join(self.meta['category']),
             'page': self.meta['pagination']['cur_page'],
@@ -282,20 +283,20 @@ class Page(object):
             'datetime': self.meta['datetime'],
             'time': self.meta['time'],
         }
-        logging.debug('current page: ' + repr(parts['page']))
+        logging.debug('current page: ' + repr(self.url_parts['page']))
 
         # Pull extensions from the template's real file name.
         match = re.match('.*/[^\.]*\.(.*)$', self.template.filename)
         if match:
-            parts['ext'] = match.groups()[0]
+            self.url_parts['ext'] = match.groups()[0]
         else:
-            parts['ext'] = ''
+            self.url_parts['ext'] = ''
         # Deprecated
-        parts['type'] = parts['ext']
-        self.meta['ext'] = parts['ext']
+        self.url_parts['type'] = self.url_parts['ext']
+        self.meta['ext'] = self.url_parts['ext']
 
-        if parts['page'] == 1:
-            parts['page'] = ''
+        if self.url_parts['page'] == 1:
+            self.url_parts['page'] = ''
 
         if 'url' in self.meta:
             logging.debug('Using page url pattern')
@@ -303,21 +304,6 @@ class Page(object):
         else:
             logging.debug('Using global url pattern')
             self.url_pattern = self.options['url_pattern']
-
-        self.meta['url'] = self.url_pattern.format(**parts)
-
-        logging.info('URL pattern is: {0}'.format(self.url_pattern))
-        logging.info('URL parts are: {0}'.format(parts))
-
-        # Get rid of extra slashes
-        self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
-        logging.debug('{0} will be written to {1}'
-                .format(self.meta['slug'], self.meta['url']))
-
-        # If we have been asked to, rip out any plain "index.html"s
-        if not self.options['url_include_index']:
-            self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
-        logging.debug('url is: ' + self.meta['url'])
 
         # subpages
         self.meta['subpages'] = []
@@ -332,11 +318,16 @@ class Page(object):
         if not templ_vars:
             templ_vars = {}
 
+        extra_pages = []
         # Handle pagination if we needed.
         if 'pagination' in self.meta and 'list' in self.meta['pagination']:
-            extra_pages = self.paginate()
-        else:
-            extra_pages = []
+            extra_pages.extend(self.paginate(templ_vars))
+
+        # Handle variation
+        if 'vary' in self.meta:
+            extra = self.vary(templ_vars)
+            logging.debug('vary gave back ' + repr(extra))
+            extra_pages.extend(extra)
 
         # Don't clobber possible values in the template variables.
         if 'page' in templ_vars:
@@ -351,6 +342,12 @@ class Page(object):
         else:
             templ_vars['pagination'] = self.meta['pagination']
 
+        if 'vary' in self.meta:
+            if 'vary' in templ_vars:
+                templ_vars['vary'].update(self.meta['vary'])
+            else:
+                templ_vars['vary'] = self.meta['vary']
+
         # ... and actions! (and logging, and hooking)
         self.engine.run_hook('page.template.pre', self, templ_vars)
         logging.debug('templ_vars.keys(): ' + repr(templ_vars.keys()))
@@ -360,7 +357,30 @@ class Page(object):
 
         return extra_pages
 
-    def paginate(self):
+    def source_spec(self, spec, templ_vars):
+        """
+        From a string like 'page.subpages' or 'site.tags', actually go out and
+        grab the right object.
+        """
+        if isinstance(spec, str):
+            spec = spec.split('.')
+
+        if spec[0] == 'page':
+            source = self.meta
+        elif spec[0] in templ_vars:
+            source = templ_vars[spec[0]]
+        else:
+            raise Exception('Unknown source specification')
+
+        spec.pop(0)
+
+        for k in spec:
+            source = source[k]
+
+        return source
+
+
+    def paginate(self, templ_vars):
         extra_pages = []
         logging.debug('called pagination for {0}'.format(self.meta['slug']))
         if 'page_items' not in self.meta['pagination']:
@@ -368,21 +388,9 @@ class Page(object):
             # This is the first page of a set of pages. Set up the rest. Other
             # wise don't do anything.
 
-            source_spec = self.meta['pagination']['list'].split('.')
-            logging.debug('pagination source is: ' + repr(source_spec))
-
-            if source_spec[0] == 'page':
-                source = self.meta
-                source_spec.pop(0)
-            elif source_spec[0] == 'site':
-                source = templ_vars['site']
-                source_spec.pop(0)
-            else:
-                logging.error('Unknown pagination source! Not paginating')
-                return
-
-            for k in source_spec:
-                source = source[k]
+            spec = self.meta['pagination']['list']
+            logging.debug('pagination source is: ' + spec)
+            source = self.source_spec(spec, templ_vars)
 
             sort_key = self.meta['pagination'].get('sort_key', None)
             sort_reverse = self.meta['pagination'].get('sort_reverse', False)
@@ -449,8 +457,81 @@ class Page(object):
 
         return extra_pages
 
+    def vary(self, templ_vars):
+        """
+        Parse a vary tag and provide multiple copies of a page based on it.
+        """
+        logging.debug("Doing vary")
+        if isinstance(self.meta.get('vary', {}), dict):
+            # This is a pre-varied page, all done.
+            logging.debug('already varied by {0}.'.format(self.meta['vary']['item']))
+            return []
+        spec = self.meta['vary']
+        logging.debug('vary source is: ' + spec)
+        source = self.source_spec(spec, templ_vars)
+
+        extra_pages = []
+
+        if not source:
+            return extra_pages
+
+        is_dict = isinstance(source, dict)
+        self.meta['vary'] = {}
+
+        # Give the templates Page.metas, not Pages.
+        if not is_dict and isinstance(source[0], Page):
+            source = [p.meta for p in source]
+        elif is_dict and isinstance(source.values()[0], Page):
+            source = dict((k, p.meta) for k, p in source.items())
+
+        first = True
+        vary_items = []
+        for item in source:
+            vary_items.append(item)
+            if first:
+                self.meta.update({
+                    'vary': {
+                        'item': item,
+                        'value': source[item] if is_dict else None,
+                    },
+                })
+                self.url_parts['vary'] = str(item)
+                first = False
+            else:
+                new_meta = copy.deepcopy(self.meta)
+                new_meta.update({
+                    'url': self.url_pattern,
+                    'vary': {
+                        'item': item,
+                        'value': source[item] if is_dict else None,
+                    },
+                })
+                new_page = Page.from_meta(new_meta, self.options, self.engine,
+                        renderer=self.renderer)
+                new_page.url_parts['vary'] = str(item)
+                if new_page:
+                    extra_pages.append(new_page)
+
+        logging.debug('Varying by {0}'.format(vary_items))
+
+        return extra_pages
+
     def write(self):
         """Write the page to a rendered file on disk."""
+        self.meta['url'] = self.url_pattern.format(**self.url_parts)
+
+        logging.info('URL pattern is: {0}'.format(self.url_pattern))
+        logging.info('URL parts are: {0}'.format(self.url_parts))
+
+        # Get rid of extra slashes
+        self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
+        logging.debug('{0} will be written to {1}'
+                .format(self.meta['slug'], self.meta['url']))
+
+        # If we have been asked to, rip out any plain "index.html"s
+        if not self.options['url_include_index']:
+            self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
+        logging.debug('url is: ' + self.meta['url'])
 
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
