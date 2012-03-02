@@ -24,12 +24,15 @@ class HeadingAnchors(object):
 
     def __init__(self, max_heading=3):
         if not etree:
-            raise DependencyException('To use the HeadingAnchors hook, you must '
-                                      'install the library lxml.')
+            logging.warning('To use the HeadingAnchors hook, you must install '
+                'the library lxml.')
+            return
         self.max_heading = max_heading
         logging.info('Loaded hook HeadingAnchors')
 
     def __call__(self, page):
+        if not etree:
+            return
         logging.debug('Called hook HeadingAnchors on {0}'.format(page))
         parser = etree.HTMLParser()
         sio_source = StringIO(page.rendered)
@@ -40,7 +43,8 @@ class HeadingAnchors(object):
             for heading in headings:
                 if not heading.text:
                     continue
-                logging.debug('[hook/HeadingAnchors] {0} {1}'.format(heading, heading.text))
+                logging.debug('[HeadingAnchors] {0} {1}'
+                        .format(heading, heading.text))
 
                 name = 'heading-{0}'.format(slugify(heading.text))
                 anchor = etree.Element('a')
