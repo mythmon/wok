@@ -1,0 +1,5 @@
+'pyyaml'
+'jinja2'
+'Markdown'
+'docutils'
+'Pygments'
