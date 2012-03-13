@@ -111,7 +111,7 @@ class Engine(object):
                     self.options['media_dir'],
                     self.options['template_dir'],
                     self.options['content_dir']
-                ], 
+                ],
                 change_handler=self.generate_site)
             server.run()
 
@@ -179,8 +179,13 @@ class Engine(object):
             import __hooks__
             self.hooks = __hooks__.hooks
             logging.info('Loaded {0} hooks: {0}'.format(self.hooks))
-        except ImportError:
-            logging.info('No hooks module found.')
+        except ImportError as e:
+            if "__hooks__" in str(e):
+                logging.info('No hooks module found.')
+            else:
+                # don't catch import errors raised within a hook
+                logging.info('Import error within hooks.')
+                raise ImportError(e)
 
     def run_hook(self, hook_name, *args):
         """ Run specified hooks if they exist """
