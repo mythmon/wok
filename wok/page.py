@@ -91,17 +91,19 @@ class Page(object):
             if len(splits) == 1:
                 page.original = splits[0]
                 page.meta = {}
+                page.original_preview = ''
 
             elif len(splits) == 2:
                 header = splits[0]
                 page.meta = yaml.load(header)
                 page.original = splits[1]
+                page.original_preview = page.meta.get('preview', '')
 
             elif len(splits) >= 3:
                 header = splits[0]
                 page.meta = {}
                 page.original = '\n'.join(splits[1:])
-                page.meta['preview'] = splits[1]
+                page.original_preview = splits[1]
                 page.meta.update(yaml.load(header))
                 logging.debug('Got preview')
 
@@ -109,6 +111,7 @@ class Page(object):
 
         page.engine.run_hook('page.render.pre', page)
         page.meta['content'] = page.renderer.render(page.original)
+        page.meta['preview'] = page.renderer.render(page.original_preview)
         page.engine.run_hook('page.render.post', page)
 
         return page
