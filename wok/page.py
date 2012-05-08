@@ -262,7 +262,7 @@ class Page(object):
 
         # template
         try:
-            template_type = self.meta.get('type', 'default')
+            template_type = str(self.meta.get('type', 'default'))
             self.template = Page.tmpl_env.get_template(template_type + '.*')
         except jinja2.loaders.TemplateNotFound:
             logging.error('No template "{0}.*" found in template directory. Aborting.'
