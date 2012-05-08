@@ -1,6 +1,0 @@
-title: Datetime only
-datetime: 2011-10-12 12:20:00
-category: tests/dates
-url: "/{category}/{slug}{page}/{date.year}-{date.month}-{date.day}-{time.hour}-{datetime.minute}/index.{ext}"
----
-This only has a datetime
