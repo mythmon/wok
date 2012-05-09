@@ -32,10 +32,15 @@ all.append(Plain)
 
 # Include markdown, if it is available.
 try:
-    from markdown import markdown
+    # Try to get the faster cMarkdown
+    try:
+        from cMarkdown import markdown
+    except ImportError:
+        from markdown import markdown
+
     class Markdown(Renderer):
         """Markdown renderer."""
-        extensions = ['markdown', 'mkd']
+        extensions = ['markdown', 'mkd', 'md']
 
         plugins = ['def_list', 'footnotes']
         if have_pygments:
@@ -48,7 +53,29 @@ try:
     all.append(Markdown)
 
 except ImportError:
-    logging.info('Markdown not enabled.')
+    logging.debug("markdown isn't available, trying markdown2")
+    markdown = None
+
+# Try Markdown2
+if markdown is None:
+    try:
+        import markdown2
+        class Markdown(Renderer):
+            """Markdown2 renderer."""
+            extensions = ['markdown', 'mkd', 'md']
+
+            extras = ['def_list', 'footnotes']
+            if have_pygments:
+                extras.append('fenced-code-blocks')
+
+            @classmethod
+            def render(cls, plain):
+                return markdown2.markdown(plain, extras=extras)
+
+        all.append(Markdown2)
+    except:
+        logging.info('Markdown not enabled.')
+
 
 # Include ReStructuredText Parser, if we have docutils
 try:
@@ -74,7 +101,26 @@ try:
 except:
     logging.info('reStructuredText not enabled.')
 
+
+# Try Textile
+try:
+    import textile
+    class Textile(Renderer):
+        """Textile renderer."""
+        extensions = ['textile']
+
+        @classmethod
+        def render(cls, plain):
+            return textile.textile(plain)
+
+    all.append(Markdown2)
+except:
+    logging.info('Markdown not enabled.')
+
+
+
 if len(all) <= 2:
-    print('You probably want to install either Markdown or docutils '
-        '(reStructuredText). Otherwise only plain text input will be '
-        'supported.')
+    print("You probably want to install either a Markdown library (one of "
+          "'Markdown', or 'markdown2'), 'docutils' (for reStructuredText), or "
+          "'textile'. Otherwise only plain text input will be supported.  You "
+          "can install any of these like 'sudo pip install PACKAGE'.")
