@@ -48,7 +48,7 @@ try:
 
         @classmethod
         def render(cls, plain):
-            return markdown(plain, Markdown.plugins)
+            return markdown(plain, cls.plugins)
 
     all.append(Markdown)
 
@@ -60,7 +60,7 @@ except ImportError:
 if markdown is None:
     try:
         import markdown2
-        class Markdown(Renderer):
+        class Markdown2(Renderer):
             """Markdown2 renderer."""
             extensions = ['markdown', 'mkd', 'md']
 
@@ -70,7 +70,7 @@ if markdown is None:
 
             @classmethod
             def render(cls, plain):
-                return markdown2.markdown(plain, extras=extras)
+                return markdown2.markdown(plain, extras=cls.extras)
 
         all.append(Markdown2)
     except:
