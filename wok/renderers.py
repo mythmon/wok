@@ -32,11 +32,7 @@ all.append(Plain)
 
 # Include markdown, if it is available.
 try:
-    # Try to get the faster cMarkdown
-    try:
-        from cMarkdown import markdown
-    except ImportError:
-        from markdown import markdown
+    from markdown import markdown
 
     class Markdown(Renderer):
         """Markdown renderer."""
@@ -79,7 +75,6 @@ if markdown is None:
 
 # Include ReStructuredText Parser, if we have docutils
 try:
-
     import docutils.core
     from docutils.writers.html4css1 import Writer as rst_html_writer
     from docutils.parsers.rst import directives
@@ -113,9 +108,9 @@ try:
         def render(cls, plain):
             return textile.textile(plain)
 
-    all.append(Markdown2)
+    all.append(Textile)
 except:
-    logging.info('Markdown not enabled.')
+    logging.info('Textile not enabled.')
 
 
 
@@ -123,4 +118,4 @@ if len(all) <= 2:
     print("You probably want to install either a Markdown library (one of "
           "'Markdown', or 'markdown2'), 'docutils' (for reStructuredText), or "
           "'textile'. Otherwise only plain text input will be supported.  You "
-          "can install any of these like 'sudo pip install PACKAGE'.")
+          "can install any of these with 'sudo pip install PACKAGE'.")
