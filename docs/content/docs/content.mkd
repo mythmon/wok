@@ -2,8 +2,8 @@ title: Content
 category: docs
 ---
 Content can be written in various markup languages (currently [Markdown][mkd],
-[reStructuredText][rst], and [Textile][]), with a [YAML][yaml] header, separated by 3 hyphens
-alone on a line. For example:
+[reStructuredText][rst], and [Textile][]), with a [YAML][yaml] header,
+separated by 3 hyphens alone on a line. For example:
 
     ::text
     title: Sample Post
@@ -17,6 +17,9 @@ alone on a line. For example:
     ligula porta vestibulum et ut sem. Cras hendrerit pulvinar metus at
     imperdiet.
 
+For more details on how to work with renders, see [the docs about
+renderers](/docs/renders/).
+
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html
 [textile]: http://textile.sitemonks.com/
@@ -25,12 +28,16 @@ alone on a line. For example:
 
 Metadata
 --------
-These are the variables that affect the rending, layout, and categorization of pages in the YAML metadata.
+These are the variables that affect the rending, layout, and categorization of
+pages in the YAML metadata.
 
- -  `title` - The title of the page. If not specified, the filename (minus `.mkd`) will be used.
- -  `type` - Used to determine the template to use. If unspecified, the template `default` is used.
+ -  `title` - The title of the page. If not specified, the filename (minus
+    `.mkd`) will be used.
+ -  `type` - Used to determine the template to use. If unspecified, the
+    template `default` is used.
  -  `author` - In `My Name <my@email.com>` format.
- -  `slug` - Name for URLs and filenames. If not specified, it will be generated from the title.
+ -  `slug` - Name for URLs and filenames. If not specified, it will be
+    generated from the title.
  -  `date`, `time`, or `datetime` - Published date in [ISO8601][8601] format
     (ie: `2011-02-17 14:31:00`).
 
@@ -43,7 +50,8 @@ These are the variables that affect the rending, layout, and categorization of p
      `projects`.
  -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`.
     ([More about tagging][tagging])
- -  `published` - To exclude some pages from the site, but not remove them entirely.
+ -  `published` - To exclude some pages from the site, but not remove them
+    entirely.
  -  `url` - To manually specify the path for the generated page. If none is
     specified, the global pattern defined in `url_pattern` in the main
     configuration file will be used. ([More about managing URLs][URLs])
@@ -57,37 +65,18 @@ These are the variables that affect the rending, layout, and categorization of p
 
 Categories
 ----------
-Categories in wok can be treated as a tree, where every node is a page. There are no seperate categories and pages, there are just pages, and sub-pages, and sub-sub-pages, etc. For more infomation, see the [category docs](/docs/content/categories/).
+Categories in wok can be treated as a tree, where every node is a page. There
+are no seperate categories and pages, there are just pages, and sub-pages, and
+sub-sub-pages, etc. For more infomation, see the [category
+docs](/docs/content/categories/).
 
 Syntax Highlighting
 -------------------
-wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically enabled if you mark a block of text as code, and assign it a language. Marking a block of text is different in each mark up language.
+wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically
+enabled if you mark a block of text as code, and assign it a language. Marking
+a block of text is different in each mark up language.
+
+For more details, see how to do it in each renderer
+[here](/docs/renderers/#heading-syntax-highlighting).
 
 [pyg]: http://pygments.org
-
-### In reStructuredText
-
-    ::rst
-    ..sourcecode:: python
-
-        class Foo(object):
-            pass
-
-That is, define a new block with the directive `sourcecode`. Give it a parameter of the language name. Then the code must be separated from the directive by a blank line, and be indented.
-
-### In Markdown
-
-        ::markdown
-        ::python
-        class Foo(object):
-            pass
-
-That is, make a code block whose first line is `::<language name>`. This will hide that first line, and highlight the code.
-
-### CSS
-Doing this will only wrap the code in CSS classes, it doesn't actually apply any styles. To do that you need to include a Pygments style CSS sheet. To get one of these style sheets, run this command
-
-    ::console
-    $ pygmentize -S default -f html
-
-This will dump a style definition onto stdout. This command gives the default style, but there are others available. Drop the outputted file into your media directory, and include the css in one of your templates and you are good to go!

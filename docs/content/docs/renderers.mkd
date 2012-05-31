@@ -1,0 +1,137 @@
+title: Renders
+category: docs
+---
+Wok supports several different _renderers_, which take the content of the site
+and transform it into HTML that is ready to be processed by the rest of wok.
+The currently supports renders are
+
+- Markdown
+- reStructuredText
+- Textile
+- Plain
+- Raw
+
+When wok initializes, it builds a list of renderers based on what systems you
+have installed on your system; if Markdown is available, but Textile is not,
+then Textile will not be loaded, but Markdown will be.
+
+When processing a content, wok examines the _file extension_ to determine what
+renderer to use.For example, the markdown renderer will render files names with
+`.markdown`, `.mkd`, and `.md` file extensions.
+
+Details
+-------
+### Markdown
+Extensions: `.markdown`, `.mkd`, `.md`
+
+The ability to render markdown is actually provided by two independent
+libraries. Wok will use either the [`Markdown`][mkd], or the
+[`markdown2`][mkd2] libraries to render files. If Markdown is found, it will be
+used, and if it is not found, wok will search for Markdown2. For the most part,
+they should handle content equivalently, but they way they handle syntax
+highlighting differs. See below for more details
+
+> Note: `Markdown` and `markdown2` are not related, except that they both
+> render markdown content. `markdown2` is not the new version of `Markdown`
+
+[mkd]: http://pypi.python.org/pypi/Markdown
+[mkd2]: http://pypi.python.org/pypi/markdown2
+
+### reStructuredText
+Extensions: `.rst`
+
+reStructuredText documents are rendered by the [`docutils`][] library. For
+information about writing content in reStructuredText, check out the [Quick
+_re_Structured_Text_][quickrst] guide.
+
+[docutils]: http://pypi.python.org/pypi/docutils
+[quickrst]: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+
+### Textile
+Extensions: `.textile`
+
+Textile documents are processed by the [`textile`][] library. For a reference
+on how to write Textile documents, you can read the [Hobix Textile
+Reference][txtguide]
+
+[textile]: http://pypi.python.org/pypi/textile
+[txtguide]: http://redcloth.org/hobix.com/textile/
+
+### Plain
+Extensions: `.txt`
+
+The plain renderer handles text documents. It will include text files without
+any processing, except to convert all new lines to HTML `<br>` elements. This
+way the text in the HTML document has the same line breaks as the file in a
+text editor. This renderer does not depend on any libraries, so is always
+enabled.
+
+### Raw
+The raw renderer uses the content of files without any processing at all. It is
+also the default fall back render: if no other renderer has a matching
+extension, it will be used. This means that you can use any content that
+already has stylign applied, or that you do not want to style, such as directly
+writing HTML or including CSV files.
+
+Syntax Highlighting
+-------------------
+Wok can use [Pygments][pyg] to do syntax highlighting. It will be automatically
+enabled if you mark a block of text as code, and assign it a language. Marking
+a block of text is different with each renderer.
+
+[pyg]: http://pygments.org
+
+### Renders
+
+#### In reStructuredText
+
+    ::rst
+    ..sourcecode:: python
+
+        class Foo(object):
+            pass
+
+That is, define a new block with the directive `sourcecode`. Give it a
+parameter of the language name. Then the code must be separated from the
+directive by a blank line, and be indented.
+
+#### In Markdown (with Markdown)
+
+        ::markdown
+        ::python
+        class Foo(object):
+            pass
+
+That is, make a code block whose first line is `::<language name>`. This will
+hide that first line, and highlight the code.
+
+#### In Markdown (with markdown2)
+
+        ::markdown
+        ```python
+        class Foo(object):
+            pass
+        ```
+
+The markdown2 library uses fenced code blocks instead of the `::<language
+name>` method. Surround the code blocks with lines containing only \`\`\`
+(which don't need to be indented like normal code blocks, by the way). To force
+syntax highlighting for a language, add the language name to the end of the
+first line, like in the example.
+
+### CSS
+Doing this will only wrap the code in CSS classes, it doesn't actually apply
+any styles. To do that you need to include a Pygments style CSS sheet. To get
+one of these style sheets, run this command
+
+    ::console
+    $ pygmentize -S default -f html
+
+This will dump a style definition onto stdout. This command gives the default
+style, but there are others available. Drop the outputted file into your media
+directory, and include the css in one of your templates and you are good to go!
+
+Alternatively, you could download a pre-genered pygments CSS file from [this
+repository][pygcss].
+
+[pygcss]: https://github.com/Anomareh/pygments-styles-dump
