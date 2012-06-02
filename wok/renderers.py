@@ -1,5 +1,3 @@
-import logging
-
 from wok import util
 
 # Check for pygments
@@ -7,7 +5,9 @@ try:
     import pygments
     have_pygments = True
 except ImportError:
-    logging.info('Pygments not enabled.')
+    #XXX
+    #logging.info('Pygments not enabled.')
+    print 'Pygments not enabled.'
     have_pygments = False
 
 # List of available renderers
@@ -49,7 +49,9 @@ try:
     all.append(Markdown)
 
 except ImportError:
-    logging.debug("markdown isn't available, trying markdown2")
+    #XXX
+    #logging.debug("markdown isn't available, trying markdown2")
+    print "markdown isn't available, trying markdown2"
     markdown = None
 
 # Try Markdown2
@@ -69,8 +71,10 @@ if markdown is None:
                 return markdown2.markdown(plain, extras=cls.extras)
 
         all.append(Markdown2)
-    except:
-        logging.info('Markdown not enabled.')
+    except ImportError:
+        #XXX
+        #logging.info('Markdown not enabled.')
+        print 'Markdown not enabled.'
 
 
 # Include ReStructuredText Parser, if we have docutils
@@ -93,8 +97,10 @@ try:
             return docutils.core.publish_parts(plain, writer=w)['body']
 
     all.append(ReStructuredText)
-except:
-    logging.info('reStructuredText not enabled.')
+except ImportError:
+    #XXX
+    #logging.info('reStructuredText not enabled.')
+    print 'reStructuredText not enabled.'
 
 
 # Try Textile
@@ -109,9 +115,10 @@ try:
             return textile.textile(plain)
 
     all.append(Textile)
-except:
-    logging.info('Textile not enabled.')
-
+except ImportError:
+    #XXX
+    #logging.info('Textile not enabled.')
+    print 'Textile not enabled.'
 
 
 if len(all) <= 2:
