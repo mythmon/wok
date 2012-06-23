@@ -19,6 +19,12 @@ This will install wok and the required dependencies. It will also install some o
 [rst]: http://docutils.sourceforge.net/rst.html
 [pgmnts]: http://pygments.org/
 
+Tutorial
+--------
+For a quick start guide to wok, check out [the tutorial](/tutorial/), which
+goes over some basics about content and templates. Nothing too fancy, but it
+should get you started.
+
 Contribute
 ----------
 You can find wok's source code on [Github][gh]. If you find any issues,
