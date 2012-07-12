@@ -1,9 +1,9 @@
-title: Renders
+title: Renderers
 category: docs
 ---
 Wok supports several different _renderers_, which take the content of the site
 and transform it into HTML that is ready to be processed by the rest of wok.
-The currently supports renders are
+The currently supported renderers are
 
 - Markdown
 - reStructuredText

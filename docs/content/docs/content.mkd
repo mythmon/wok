@@ -17,8 +17,8 @@ separated by 3 hyphens alone on a line. For example:
     ligula porta vestibulum et ut sem. Cras hendrerit pulvinar metus at
     imperdiet.
 
-For more details on how to work with renders, see [the docs about
-renderers](/docs/renders/).
+For more details on how to work with renderers, see [the docs about
+renderers](/docs/renderers/).
 
 [mkd]: http://daringfireball.net/projects/markdown/
 [rst]: http://docutils.sourceforge.net/rst.html

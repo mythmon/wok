@@ -24,7 +24,7 @@ directory, make the file `__hooks__.py`. For example:
 From the `__hooks__.py` file, wok will import the variable `hooks`. 
 This should be a dictionary; The keys are the hook names below, and the values 
 are lists of functions (or other callables) to run for the hooks. Simply give 
-the names of the functions and (but do not invoke them.) For example:
+the names of the functions, but do not invoke them. For example:
 
     ::python
     ''' __hooks__.py

@@ -3,7 +3,8 @@ slug: config
 category: docs
 ---
 Settings can be changed in the file `config` in the site's root directory.
-Possible configuration options (and their defaults) are:
+The file is a YAML file. Possible configuration options (and their defaults)
+are:
 
 - `output_dir` ('output') - The directory in which to place the generated
   files, e.g., `output_dir: output`.
