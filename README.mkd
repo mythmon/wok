@@ -44,6 +44,9 @@ For some real world examples check out these sites.
 -    [corbinsimpson.com](http://corbinsimpson.com)
      ([source](https://github.com/mostawesomedude/website)) - Personal website
      of Corbin Simpson
+-    [philipbjorge.com](http://www.philipbjorge.com)
+     ([source](https://github.com/philipbjorge/philipbjorge.com)) - Personal 
+     website of Philip Bjorge
 -    Your site here! If you are using wok to generate sites, and don't mind
      serving as an example, let me know and I will add a link to your site
      here.
