@@ -15,13 +15,16 @@ resource:
     ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) -
     A custom Minecraft server written in Python.
 -   [robmd.net](http://robmd.net)
-    ([source](https://github.com/robatron/robmd.net)) - Personal web site of 
+    ([source](https://github.com/robatron/robmd.net)) - Personal web site of
     Rob McGuire-Dale.
 -   [uberj.com](http://uberj.com) ([source](https://github.com/uberj/wbsite)) -
     Personal web site of Jacques Uber.
 -   [ngokevin.com](http://ngokevin.com)
     ([source](https://github.com/ngokevin/ngokevin)) - Personal web site of
     Kevin Ngo.
+-   [philipbjorge.com](http://www.philipbjorge.com)
+    ([source](https://github.com/philipbjorge/philipbjorge.com)) - Personal
+    website of Philip Bjorge
 -   [corbinsimpson.com](http://corbinsimpson.com)
     ([source](https://github.com/MostAwesomeDude/website)) - Personal web site
     of Corbin Simpson.
