@@ -1,6 +1,7 @@
-Version 1.0 (In development)
+Version 0.10 (In development)
 ----------------------------
-Woohoo, wok is no longer in beta!
+In which contributors rock.
+
 ### Features
 -   The built in development server now auto reloads when files changes.
     [robatron].
@@ -12,6 +13,8 @@ Woohoo, wok is no longer in beta!
 
 Version 0.9
 -----------
+In which things get interesting.
+
 ### Features
 -   Site hooks, for arbitrary inserting python code into the rendering process.
 -   Add a documentation wok site.
@@ -20,6 +23,8 @@ Version 0.9
 
 Version 0.8.2
 -------------
+In which we leave 1970.
+
 ### Fixes
 -   Fix Github issue 62, in which the next page object was not set on the first
     page of a two page group.
@@ -28,6 +33,8 @@ Version 0.8.2
 
 Version 0.8.1
 -------------
+In which I document things.
+
 ### Features
 -   New template variable, `site.slugs`, which is a dictionary from slugs to
     pages.
@@ -38,6 +45,8 @@ Version 0.8.1
 
 Version 0.8
 -----------
+In which URLs get cleaner.
+
 ### Features
 -   Pagination now has saner sorting defaults.
 -   Raw author objects will now print out nicely in templates.
@@ -56,6 +65,8 @@ Version 0.8
 
 Version 0.7
 -----------
+In which I deprecate my first featured.
+
 ### Features
 -   Define tags and authors as YAML lists, instead of CSV.
 -   File format independence. Non-html files can now be generated.
@@ -71,11 +82,15 @@ Version 0.7
 
 Version 0.6.3
 -------------
+In which git bisect is invaluable.
+
 ### Fixes
 -   Somehow date handling got broken. Make it better.
 
 Version 0.6.2
 -------------
+In which wok stops stomping around.
+
 ### Features
 -   Authors can now be a list of users.
 -   If the current directory doesn't appear to be a wok site, wok will refuse
@@ -87,6 +102,7 @@ Version 0.6.2
 
 Version 0.6.1
 -------------
+In which wok gets a watch.
 ### Features
 -   Added `page.date` and `page.time` template variables.
 
@@ -96,6 +112,8 @@ Version 0.6.1
 
 Version 0.6
 -----------
+In which I tear out my hair.
+
 ### Features
 -   Pagination
 
@@ -104,12 +122,16 @@ Version 0.6
 
 Version 0.5.1
 -------------
+In which pygments isn't required anymore.
+
 ### Fixes
 -   Fix a bug related to optionally depending on pygments.
 -   Fix some output formatting.
 
 Version 0.5
 -----------
+In which the MIT license is applied.
+
 ### Features
 -   The structure of the generated files is now user configurable.
 -   New configuration option: `author`. See docs for more info.
@@ -120,10 +142,12 @@ Version 0.5
 -   The README now references some sample sites.
 -   Added a license. Wok is now officially open source!
 -   Tweaked output formats.
--   Page metadata is now stored in a more consistent way. Sure, you don't care, but I do. :)
+-   Page metadata is now stored in a more consistent way.
 
 Version 0.4
 -----------
+In which things get more flexible.
+
 ### Features
 -   Added a built in testing server, to easily test absolute links on the site.
 -   Add `--version` option.
@@ -140,6 +164,8 @@ Version 0.4
 
 Version 0.3
 -----------
+In which things get brighter.
+
 -   Add optional syntax highlighting using [Pygments][pyg].
 -   Add tags for pages.
 -   Add `--verbose` (`-v`) and `--quiet` (`-q`) options to the script.
@@ -148,12 +174,16 @@ Version 0.3
 
 Version 0.2.2
 -------------
+In which I try to teach better.
+
 -   Improve the sample site.
 -   Enable syntax highlighting for Markdown.
 -   Fix requirements for PyPI/pip
 
 Version 0.2.1
 -------------
+In which I release what should have been v0.2.
+
 -   Add a sample site.
 -   Actually enable reStructuredText support.
 -   Don't try to parse hidden files.
@@ -163,10 +193,14 @@ Version 0.2.1
 
 Version 0.2
 -----------
+In which MostAwesomeDude convinces me to add reStructured Text.
+
 -   Initial support for reStructuredText.
 -   Installable package.
 -   Bug fixes based on user feedback.
 
 Version 0.1
 -----------
+In which things start.
+
 -   First release.
