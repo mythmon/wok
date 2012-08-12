@@ -22,12 +22,14 @@ resource:
 -   [ngokevin.com](http://ngokevin.com)
     ([source](https://github.com/ngokevin/ngokevin)) - Personal web site of
     Kevin Ngo.
--   [philipbjorge.com](http://www.philipbjorge.com)
-    ([source](https://github.com/philipbjorge/philipbjorge.com)) - Personal
-    website of Philip Bjorge
 -   [corbinsimpson.com](http://corbinsimpson.com)
     ([source](https://github.com/MostAwesomeDude/website)) - Personal web site
     of Corbin Simpson.
+-   [philipbjorge.com](http://www.philipbjorge.com)
+    ([source](https://github.com/philipbjorge/philipbjorge.com)) - Personal
+    website of Philip Bjorge
+-   [dmbaughman.com](http://dmbaughman.com) - Personal website of David
+    Baughman
 
 Contributors
 ------------
@@ -47,8 +49,5 @@ Support
 -------
 If there are bugs or feature requests for wok, please send them to [the issue
 tracker][gh-issues].
-
-For real-time support, you can check out the irc channel `#wok` on
-irc.freenode.net.
 
 [gh-issues]: https://github.com/mythmon/wok/issues

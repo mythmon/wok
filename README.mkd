@@ -25,6 +25,9 @@ A bare bones site is included in the wok git repo, in the `test` directory.
 It is really just a playground for devs to test new features, and not a good
 learning tool.
 
+The documentation site available in the `doc` directory should be a fairly
+complete example of a small site that is good to learn from.
+
 For some real world examples check out these sites.
 
 -    [Oregon State University Linux Users Group](http://lug.oregonstate.edu)
@@ -47,6 +50,8 @@ For some real world examples check out these sites.
 -    [philipbjorge.com](http://www.philipbjorge.com)
      ([source](https://github.com/philipbjorge/philipbjorge.com)) - Personal
      website of Philip Bjorge
+-    [dmbaughman.com](http://dmbaughman.com) - Personal website of
+     David Baughman
 -    Your site here! If you are using wok to generate sites, and don't mind
      serving as an example, let me know and I will add a link to your site
      here.
@@ -59,10 +64,8 @@ with other users, you can check out [the wiki][wiki].
 
 Installation
 ------------
-Note that wok is beta quality software. It is under active development;
-its features are still in flux, and there are probably bugs. That being
-said, it is still quite usable. The recommended way to install wok is
-from the [Python Package Index][pypi] with this command.
+The recommended way to install wok is from the [Python Package Index][pypi]
+with this command.
 
     sudo pip install wok
 
@@ -94,6 +97,8 @@ installed from pip.
 
 Usage
 -----
+> You might be interested in [the tutorial](http://wok.mythmon.com/tutorial/)
+
 To use wok, go to the directory where your site files are located, and run the
 command `wok`. No output will be given unless something goes wrong. If it
 returns without error, you should have a shiny new output folder containing
