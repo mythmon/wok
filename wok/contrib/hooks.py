@@ -70,9 +70,14 @@ def compile_sass(output_dir):
     same directory as the Sass file with the same name and an extension of
     .css. For example, foo.scss -> foo.css.
 
-    Hook:
+    Serves as a 'site.output.post' wok hook, e.g., your __hooks__.py file might
+    look like this:
 
-        site.output.post
+        from wok.contrib.hooks import compile_sass
+
+        hooks = {
+            'site.output.post':[compile_sass]
+        }
 
     Dependencies:
 
@@ -92,4 +97,5 @@ def compile_sass(output_dir):
                 try:
                     subprocess.call(['sass', sass_arg])
                 except OSError:
-                    logging.warning('[hook/compile_sass] Could not run SASS hook.')
+                    logging.warning('[hook/compile_sass] Could not run SASS ' +
+                                    'hook. (Is SASS installed?)')
