@@ -97,5 +97,5 @@ def compile_sass(output_dir):
                 try:
                     subprocess.call(['sass', sass_arg])
                 except OSError:
-                    logging.warning('[hook/compile_sass] Could not run SASS '\
-                            + 'hook. (Is SASS installed?)')
+                    logging.warning('[hook/compile_sass] Could not run SASS ' +
+                                    'hook. (Is SASS installed?)')
