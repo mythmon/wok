@@ -166,13 +166,15 @@ similar to Django's templates. Here is the content of `templates/default.html`
                 <a href="/about.html">About This Site</a>
                 <a href="/contact.html">Contact</a>
             </nav>
-        </header
+        </header>
 
         <article>
             {{ page.content }}
         </article>
 
     </body>
+
+    <html>
 
 > `header`? `nav`? `article`? What are all these strange tags you keep using?
 >
