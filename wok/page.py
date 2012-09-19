@@ -285,11 +285,9 @@ class Page(object):
         logging.debug('current page: ' + repr(parts['page']))
 
         # Pull extensions from the template's real file name.
-        match = re.match('.*/[^\.]*\.(.*)$', self.template.filename)
-        if match:
-            parts['ext'] = match.groups()[0]
-        else:
-            parts['ext'] = ''
+        parts['ext'] = os.path.splitext(self.template.filename)[1]
+        if parts['ext']:
+            parts['ext'] = parts['ext'][1:] # remove leading dot
         # Deprecated
         parts['type'] = parts['ext']
         self.meta['ext'] = parts['ext']
