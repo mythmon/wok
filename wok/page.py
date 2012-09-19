@@ -79,7 +79,7 @@ class Page(object):
         page.filename = os.path.basename(path)
 
         with open(path) as f:
-            page.original = f.read()
+            page.original = f.read().decode('utf-8')
             splits = page.original.split('\n---\n')
 
             if len(splits) > 3:
@@ -467,7 +467,7 @@ class Page(object):
         logging.info('writing to {0}'.format(path))
 
         f = open(path, 'w')
-        f.write(self.rendered)
+        f.write(self.rendered.encode('utf-8'))
         f.close()
 
     def __repr__(self):
