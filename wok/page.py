@@ -24,6 +24,13 @@ class Page(object):
 
     tmpl_env = None
 
+    @staticmethod
+    def create_tmpl_env(options):
+        Page.tmpl_env = jinja2.Environment(
+                loader=GlobFileLoader(
+                        options.get('template_dir', 'templates')),
+                extensions=options.get('jinja2_extensions', []))
+
     def __init__(self, options, engine):
         self.options = options
         self.filename = None
@@ -50,8 +57,7 @@ class Page(object):
         # Make a template environment. Hopefully no one expects this to ever
         # change after it is instantiated.
         if Page.tmpl_env is None:
-            Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
-                page.options.get('template_dir', 'templates')))
+            cls.create_tmpl_env(page.options)
 
         page.build_meta()
         return page
@@ -72,8 +78,7 @@ class Page(object):
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
         if Page.tmpl_env is None:
-            Page.tmpl_env = jinja2.Environment(loader=GlobFileLoader(
-                page.options.get('template_dir', 'templates')))
+            cls.create_tmpl_env(page.options)
 
         page.path = path
         page.filename = os.path.basename(path)
