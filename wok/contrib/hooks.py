@@ -57,7 +57,14 @@ class HeadingAnchors(object):
                 heading.set('id', name)
 
         sio_destination = StringIO()
-        tree.write(sio_destination)
+
+	# Use the extension of the template to determine the type of document 
+	if page.template.filename.endswith(".html") or page.filename.endswith(".htm"):
+        	logging.debug('[HeadingAnchors] outputting {0} as HTML'.format(page))
+	        tree.write(sio_destination, method='html')
+	else:
+        	logging.debug('[HeadingAnchors] outputting {0} as XML'.format(page))
+	        tree.write(sio_destination)
         page.rendered = sio_destination.getvalue()
 
 
