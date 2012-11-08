@@ -24,9 +24,9 @@ class Page(object):
 
     tmpl_env = None
 
-    @staticmethod
-    def create_tmpl_env(options):
-        Page.tmpl_env = jinja2.Environment(
+    @classmethod
+    def create_tmpl_env(cls, options):
+        cls.tmpl_env = jinja2.Environment(
                 loader=GlobFileLoader(
                         options.get('template_dir', 'templates')),
                 extensions=options.get('jinja2_extensions', []))
@@ -56,7 +56,7 @@ class Page(object):
 
         # Make a template environment. Hopefully no one expects this to ever
         # change after it is instantiated.
-        if Page.tmpl_env is None:
+        if cls.tmpl_env is None:
             cls.create_tmpl_env(page.options)
 
         page.build_meta()
@@ -77,7 +77,7 @@ class Page(object):
 
         logging.info('Loading {0}'.format(os.path.basename(path)))
 
-        if Page.tmpl_env is None:
+        if cls.tmpl_env is None:
             cls.create_tmpl_env(page.options)
 
         page.path = path
@@ -268,7 +268,7 @@ class Page(object):
         # template
         try:
             template_type = str(self.meta.get('type', 'default'))
-            self.template = Page.tmpl_env.get_template(template_type + '.*')
+            self.template = self.tmpl_env.get_template(template_type + '.*')
         except jinja2.loaders.TemplateNotFound:
             logging.error('No template "{0}.*" found in template directory. Aborting.'
                     .format(template_type))
@@ -421,7 +421,7 @@ class Page(object):
                         'cur_page': idx,
                     }
                 })
-                new_page = Page.from_meta(new_meta, self.options, self.engine,
+                new_page = self.from_meta(new_meta, self.options, self.engine,
                     renderer=self.renderer)
                 logging.debug('page {0} is {1}'.format(idx, new_page))
                 if new_page:
