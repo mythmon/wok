@@ -25,9 +25,12 @@ are:
   like`/category/subcategory/foo.html`. To get "wordpress style" urls, you
   could use `/{category}/{slug}/index.html`. For more information, please see
   the [URL management page][URLs].
-- `url_include_index` (yes) - If this option is turned off, then `index.*` on
+- `url_include_index` (true) - If this option is turned off, then `index.*` on
   the end of urls will be removed in templates. This will turn the url
   `/docs/config/index.html` into `/docs/config/`.
+- `relative_urls` (false) - If this option is turned on, then any urls
+  generated will not include a leading '/'. If this is false, all urls
+  generated will include a leading '/'.
 
 [content]: /docs/content/
 [URLs]: /docs/urls/

@@ -314,12 +314,17 @@ class Page(object):
 
         # Get rid of extra slashes
         self.meta['url'] = re.sub(r'//+', '/', self.meta['url'])
-        logging.debug('{0} will be written to {1}'
-                .format(self.meta['slug'], self.meta['url']))
 
         # If we have been asked to, rip out any plain "index.html"s
         if not self.options['url_include_index']:
             self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
+
+        # Some urls should start with /, some should not.
+        if self.options['relative_urls'] and self.meta['url'][0] == '/':
+            self.meta['url'] = self.meta['url'][1:]
+        if not self.options['relative_urls'] and self.meta['url'][0] != '/':
+            self.meta['url'] = '/' + self.meta['url']
+
         logging.debug('url is: ' + self.meta['url'])
 
         # subpages
@@ -457,7 +462,10 @@ class Page(object):
 
         # Use what we are passed, or the default given, or the current dir
         path = self.options.get('output_dir', '.')
-        path += self.meta['url']
+        url = self.meta['url']
+        if url and url[0] == '/':
+            url = url[1:]
+        path = os.path.join(path, url)
         if path.endswith('/'):
             path += 'index.' + self.meta['ext']
 
@@ -471,6 +479,7 @@ class Page(object):
             # about
         logging.info('writing to {0}'.format(path))
 
+        logging.debug('Writing {0} to {1}'.format(self.meta['slug'], path))
         f = open(path, 'w')
         f.write(self.rendered.encode('utf-8'))
         f.close()

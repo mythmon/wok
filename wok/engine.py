@@ -28,6 +28,7 @@ class Engine(object):
         'site_title': 'Some random Wok site',
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
+        'relative_urls': False,
     }
     SITE_ROOT = os.getcwd()
 
