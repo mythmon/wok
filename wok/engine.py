@@ -174,8 +174,10 @@ class Engine(object):
         # Markdown extra plugins
         markdown_extra_plugins = \
             self.options.get('markdown_extra_plugins', [])
-        renderers.Markdown.plugins.extend(markdown_extra_plugins)
-        renderers.Markdown2.extras.extend(markdown_extra_plugins)
+        if hasattr(renderers, 'Markdown'):
+            renderers.Markdown.plugins.extend(markdown_extra_plugins)
+        if hasattr(renderers, 'Markdown2'):
+            renderers.Markdown2.extras.extend(markdown_extra_plugins)
 
     def sanity_check(self):
         """Basic sanity checks."""
