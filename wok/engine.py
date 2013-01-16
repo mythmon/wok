@@ -29,6 +29,7 @@ class Engine(object):
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
         'relative_urls': False,
+        'markdown_extra_plugins': [],
     }
     SITE_ROOT = os.getcwd()
 
@@ -126,6 +127,7 @@ class Engine(object):
         self.read_options()
         self.sanity_check()
         self.load_hooks()
+        self.renderer_options()
 
         self.run_hook('site.start')
 
@@ -166,6 +168,14 @@ class Engine(object):
             logging.warn('Deprecation Warning: You should use {ext} instead '
                     'of {type} in the url pattern specified in the config '
                     'file.')
+
+    def renderer_options(self):
+        """Monkeypatches renderer options as in `config` file."""
+        # Markdown extra plugins
+        markdown_extra_plugins = \
+            self.options.get('markdown_extra_plugins', [])
+        renderers.Markdown.plugins.extend(markdown_extra_plugins)
+        renderers.Markdown2.extras.extend(markdown_extra_plugins)
 
     def sanity_check(self):
         """Basic sanity checks."""

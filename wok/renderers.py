@@ -40,7 +40,7 @@ try:
 
         plugins = ['def_list', 'footnotes']
         if have_pygments:
-            plugins.append('codehilite(css_class=highlight)')
+            plugins.extend(['codehilite(css_class=codehilite)', 'fenced_code'])
 
         @classmethod
         def render(cls, plain):
