@@ -14,6 +14,7 @@ from wok import renderers
 from wok import util
 from wok.dev_server import dev_server
 
+import locale
 
 class Engine(object):
     """
@@ -29,6 +30,7 @@ class Engine(object):
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
         'relative_urls': False,
+        'locale': None,
         'markdown_extra_plugins': [],
     }
     SITE_ROOT = os.getcwd()
@@ -168,6 +170,16 @@ class Engine(object):
             logging.warn('Deprecation Warning: You should use {ext} instead '
                     'of {type} in the url pattern specified in the config '
                     'file.')
+
+        # Set locale if needed
+        wanted_locale = self.options.get('locale')
+        if wanted_locale is not None:
+            try:
+                locale.setlocale(locale.LC_TIME, wanted_locale)
+            except locale.Error as err:
+                logging.warn('Unable to set locale to `%s`: %s',
+                    wanted_locale, err
+                )
 
     def renderer_options(self):
         """Monkeypatches renderer options as in `config` file."""
