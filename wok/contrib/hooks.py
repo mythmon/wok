@@ -68,7 +68,7 @@ class HeadingAnchors(object):
         page.rendered = sio_destination.getvalue()
 
 
-def compile_sass(output_dir):
+def compile_sass(config, output_dir):
     '''
     Compile Sass files -> CSS in the output directory.
 

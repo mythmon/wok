@@ -194,7 +194,7 @@ class Engine(object):
         returns = []
         try:
             for hook in self.hooks.get(hook_name, []):
-                returns.append(hook(*args))
+                returns.append(hook(self.options, *args))
         except AttributeError:
             logging.info('Hook {0} not defined'.format(hook_name))
         return returns
