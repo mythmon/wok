@@ -1,7 +1,13 @@
 title: Templates
 category: docs
 ---
-Content is then rendered using [Jinja2][] templates. Templates can have any extension, and that extension will carry over to the generated files. So if you want to generate an html file, then your default template would be named `default.html`, and be in the `templates` directory.
+Content is then rendered using [Jinja2][] templates. Templates can have any
+extension, and that extension will carry over to the generated files. So if you
+want to generate an html file, then your default template would be named
+`default.html`, and be in the `templates` directory.
+
+To choose what template a content file should use, specify the `type` metadata
+field. For more information, see the section on [content](/docs/content).
 
 Various variables relating to the site and the current page are provided to the
 template system. For example:
