@@ -30,7 +30,7 @@ class HeadingAnchors(object):
         self.max_heading = max_heading
         logging.info('Loaded hook HeadingAnchors')
 
-    def __call__(self, page):
+    def __call__(self, config, page):
         if not etree:
             return
         logging.debug('Called hook HeadingAnchors on {0}'.format(page))
