@@ -83,7 +83,7 @@ class Page(object):
         page.path = path
         page.filename = os.path.basename(path)
 
-        with open(path) as f:
+        with open(path, 'rU') as f:
             page.original = f.read().decode('utf-8')
             splits = page.original.split('\n---\n')
 
