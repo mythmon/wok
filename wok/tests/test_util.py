@@ -43,8 +43,6 @@ class TestSlugs(TestCase):
         slug = u'dont-use-bobs-stuff'
         self.assertEqual(slug, util.slugify(orig))
 
-    test_apostrophes.todo = "Apostrophes are treated like normal words."
-
 class TestDatetimes(TestCase):
 
     def setUp(self):

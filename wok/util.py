@@ -3,7 +3,7 @@ from unicodedata import normalize
 from datetime import date, time, datetime, timedelta
 
 # From http://flask.pocoo.org/snippets/5/
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+_punct_re = re.compile(r'[\t !"#$%&()*\-/<=>?@\[\\\]^_`{|},.]+')
 def slugify(text, delim=u'-'):
     """
     Generates a slug that will only use ASCII, be all lowercase, have no
@@ -11,7 +11,7 @@ def slugify(text, delim=u'-'):
     """
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
+        word = normalize('NFKD', unicode(word)).encode('ascii','ignore').replace("'", "")
         if word:
             result.append(word)
 
