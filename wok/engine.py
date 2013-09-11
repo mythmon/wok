@@ -206,6 +206,9 @@ class Engine(object):
         """
         if os.path.isdir(self.options['output_dir']):
             for name in os.listdir(self.options['output_dir']):
+                # Don't remove dotfiles
+                if name[0] == ".":
+                    continue
                 path = os.path.join(self.options['output_dir'], name)
                 if os.path.isfile(path):
                     os.unlink(path)
