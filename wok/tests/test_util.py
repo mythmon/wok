@@ -62,7 +62,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(1970, 1, 1),
             'date': date(1970, 1, 1),
-            'time': time(),
+            'time': time(), # time == datetime.time(0, 0)
         }
 
         util.date_and_times(inp)
@@ -73,7 +73,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 10, 12, 0, 0, 0, 0),
             'date': self.date,
-            'time': time(),
+            'time': time(), # time() == datetime.time(0, 0)
         }
 
         util.date_and_times(inp)
