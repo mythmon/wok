@@ -186,7 +186,7 @@ class Engine(object):
             else:
                 # don't catch import errors raised within a hook
                 logging.info('Import error within hooks.')
-                raise ImportError(e)
+                raise #ImportError(e)
 
     def run_hook(self, hook_name, *args):
         """ Run specified hooks if they exist """
