@@ -11,7 +11,7 @@ def slugify(text, delim=u'-'):
     """
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', unicode(word)).encode('ascii','ignore').replace("'", "")
+        word = normalize('NFKD', unicode(word, errors='ignore')).encode('ascii','ignore').replace("'", "")
         if word:
             result.append(word)
 
