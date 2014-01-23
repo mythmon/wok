@@ -106,7 +106,7 @@ class Engine(object):
             directories for changes. The server will regenerate the entire wok
             site if changes are found after every request.
             '''
-            output_dir = os.path.join(self.options['output_dir'])
+            output_dir = os.path.join(self.options['server_root'])
             host = '' if cli_options.address is None else cli_options.address
             port = 8000 if cli_options.port is None else cli_options.port
             server = dev_server(serv_dir=output_dir, host=host, port=port,
@@ -181,6 +181,10 @@ class Engine(object):
                     wanted_locale, err
                 )
 
+        # add a subdir prefix to the output_dir, if present in the config
+        self.options['server_root'] = self.options['output_dir']
+        self.options['output_dir'] = os.path.join(self.options['output_dir'], self.options.get('url_subdir', ''))
+
     def renderer_options(self):
         """Monkeypatches renderer options as in `config` file."""
         # Markdown extra plugins
@@ -239,7 +243,7 @@ class Engine(object):
                 else:
                     shutil.rmtree(path)
         else:
-            os.mkdir(self.options['output_dir'])
+            os.makedirs(self.options['output_dir'])
 
         self.run_hook('site.output.pre', self.options['output_dir'])
 

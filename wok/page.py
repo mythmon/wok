@@ -321,6 +321,12 @@ class Page(object):
         if not self.options['url_include_index']:
             self.meta['url'] = re.sub(r'/index\.html$', '/', self.meta['url'])
 
+        # To be used for writing page content
+        self.meta['path'] = self.meta['url']
+        # If site is going to be in a subdirectory
+        if self.options.get('url_subdir'):
+            self.meta['url'] = self.options['url_subdir'] + self.meta['url']
+
         # Some urls should start with /, some should not.
         if self.options['relative_urls'] and self.meta['url'][0] == '/':
             self.meta['url'] = self.meta['url'][1:]
@@ -463,26 +469,26 @@ class Page(object):
         """Write the page to a rendered file on disk."""
 
         # Use what we are passed, or the default given, or the current dir
-        path = self.options.get('output_dir', '.')
-        url = self.meta['url']
-        if url and url[0] == '/':
-            url = url[1:]
-        path = os.path.join(path, url)
-        if path.endswith('/'):
-            path += 'index.' + self.meta['ext']
+        base_path = self.options.get('output_dir', '.')
+        path = self.meta['path']
+        if path and path[0] == '/':
+            path = path[1:]
+        base_path = os.path.join(base_path, path)
+        if base_path.endswith('/'):
+            base_path += 'index.' + self.meta['ext']
 
         try:
-            os.makedirs(os.path.dirname(path))
+            os.makedirs(os.path.dirname(base_path))
         except OSError as e:
             logging.debug('makedirs failed for {0}'.format(
-                os.path.basename(path)))
+                os.path.basename(base_path)))
             # Probably that the dir already exists, so thats ok.
             # TODO: double check this. Permission errors are something to worry
             # about
-        logging.info('writing to {0}'.format(path))
+        logging.info('writing to {0}'.format(base_path))
 
-        logging.debug('Writing {0} to {1}'.format(self.meta['slug'], path))
-        f = open(path, 'w')
+        logging.debug('Writing {0} to {1}'.format(self.meta['slug'], base_path))
+        f = open(base_path, 'w')
         f.write(self.rendered.encode('utf-8'))
         f.close()
 
