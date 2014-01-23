@@ -43,8 +43,6 @@ class TestSlugs(TestCase):
         slug = u'dont-use-bobs-stuff'
         self.assertEqual(slug, util.slugify(orig))
 
-    test_apostrophes.todo = "Apostrophes are treated like normal words."
-
 class TestDatetimes(TestCase):
 
     def setUp(self):
@@ -64,7 +62,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(1970, 1, 1),
             'date': date(1970, 1, 1),
-            'time': time(),
+            'time': time(), # time == datetime.time(0, 0)
         }
 
         util.date_and_times(inp)
@@ -75,18 +73,19 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 10, 12, 0, 0, 0, 0),
             'date': self.date,
-            'time': time(),
+            'time': time(), # time() == datetime.time(0, 0)
         }
 
         util.date_and_times(inp)
         self.assertEquals(inp, out)
 
     def test_just_time(self):
-        inp = {'time': self.time}
+        t = self.time # otherwise the datetime line gets awful
+        inp = {'time': t}
         out = {
-            'datetime': datetime(1970, 1, 1),
+            'datetime': datetime(1970, 1, 1, t.hour, t.minute, t.second),
             'date': date(1970, 1, 1),
-            'time': self.time,
+            'time': t,
         }
 
         util.date_and_times(inp)

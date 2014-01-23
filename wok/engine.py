@@ -14,6 +14,7 @@ from wok import renderers
 from wok import util
 from wok.dev_server import dev_server
 
+import locale
 
 class Engine(object):
     """
@@ -29,6 +30,8 @@ class Engine(object):
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
         'relative_urls': False,
+        'locale': None,
+        'markdown_extra_plugins': [],
     }
     SITE_ROOT = os.getcwd()
 
@@ -126,6 +129,7 @@ class Engine(object):
         self.read_options()
         self.sanity_check()
         self.load_hooks()
+        self.renderer_options()
 
         self.run_hook('site.start')
 
@@ -167,6 +171,26 @@ class Engine(object):
                     'of {type} in the url pattern specified in the config '
                     'file.')
 
+        # Set locale if needed
+        wanted_locale = self.options.get('locale')
+        if wanted_locale is not None:
+            try:
+                locale.setlocale(locale.LC_TIME, wanted_locale)
+            except locale.Error as err:
+                logging.warn('Unable to set locale to `%s`: %s',
+                    wanted_locale, err
+                )
+
+    def renderer_options(self):
+        """Monkeypatches renderer options as in `config` file."""
+        # Markdown extra plugins
+        markdown_extra_plugins = \
+            self.options.get('markdown_extra_plugins', [])
+        if hasattr(renderers, 'Markdown'):
+            renderers.Markdown.plugins.extend(markdown_extra_plugins)
+        if hasattr(renderers, 'Markdown2'):
+            renderers.Markdown2.extras.extend(markdown_extra_plugins)
+
     def sanity_check(self):
         """Basic sanity checks."""
         # Make sure that this is (probabably) a wok source directory.
@@ -206,6 +230,9 @@ class Engine(object):
         """
         if os.path.isdir(self.options['output_dir']):
             for name in os.listdir(self.options['output_dir']):
+                # Don't remove dotfiles
+                if name[0] == ".":
+                    continue
                 path = os.path.join(self.options['output_dir'], name)
                 if os.path.isfile(path):
                     os.unlink(path)

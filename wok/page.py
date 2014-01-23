@@ -83,7 +83,7 @@ class Page(object):
         page.path = path
         page.filename = os.path.basename(path)
 
-        with open(path) as f:
+        with open(path, 'rU') as f:
             page.original = f.read().decode('utf-8')
             splits = page.original.split('\n---\n')
 
@@ -171,6 +171,8 @@ class Page(object):
         if not 'slug' in self.meta:
             if self.filename:
                 filename_no_ext = '.'.join(self.filename.split('.')[:-1])
+                if filename_no_ext == '':
+                    filename_no_ext = self.filename
                 self.meta['slug'] = util.slugify(filename_no_ext)
                 logging.info("You didn't specify a slug, generating it from the "
                              "filename.")
@@ -342,7 +344,7 @@ class Page(object):
 
         # Handle pagination if we needed.
         if 'pagination' in self.meta and 'list' in self.meta['pagination']:
-            extra_pages = self.paginate()
+            extra_pages = self.paginate(templ_vars)
         else:
             extra_pages = []
 
@@ -368,7 +370,7 @@ class Page(object):
 
         return extra_pages
 
-    def paginate(self):
+    def paginate(self, templ_vars):
         extra_pages = []
         logging.debug('called pagination for {0}'.format(self.meta['slug']))
         if 'page_items' not in self.meta['pagination']:
