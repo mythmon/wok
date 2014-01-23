@@ -24,7 +24,13 @@ setup(
         'Operating System :: POSIX',
         'Programming Language :: Python',
     ],
-    requires=['pyyaml', 'jinja2', 'Markdown', 'docutils', 'Pygments'],
+    install_requires=[
+        'Jinja2>=2.6',
+        'Markdown>=2.1.1',
+        'PyYAML>=3.10',
+        'Pygments>=1.4',
+        'docutils>=0.8.1'
+    ],
     packages=['wok'],
     scripts=['scripts/wok'],
 )
