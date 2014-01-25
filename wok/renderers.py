@@ -1,3 +1,4 @@
+import logging
 from wok import util
 
 # Check for pygments
@@ -5,9 +6,7 @@ try:
     import pygments
     have_pygments = True
 except ImportError:
-    #XXX
-    #logging.info('Pygments not enabled.')
-    print 'Pygments not enabled.'
+    logging.warn('Pygments not enabled.')
     have_pygments = False
 
 # List of available renderers
@@ -49,9 +48,7 @@ try:
     all.append(Markdown)
 
 except ImportError:
-    #XXX
-    #logging.debug("markdown isn't available, trying markdown2")
-    print "markdown isn't available, trying markdown2"
+    logging.warn("markdown isn't available, trying markdown2")
     markdown = None
 
 # Try Markdown2
@@ -72,9 +69,7 @@ if markdown is None:
 
         all.append(Markdown2)
     except ImportError:
-        #XXX
-        #logging.info('Markdown not enabled.')
-        print 'Markdown not enabled.'
+        logging.warn('Markdown not enabled.')
 
 
 # Include ReStructuredText Parser, if we have docutils
@@ -98,9 +93,7 @@ try:
 
     all.append(ReStructuredText)
 except ImportError:
-    #XXX
-    #logging.info('reStructuredText not enabled.')
-    print 'reStructuredText not enabled.'
+    logging.warn('reStructuredText not enabled.')
 
 
 # Try Textile
@@ -116,13 +109,11 @@ try:
 
     all.append(Textile)
 except ImportError:
-    #XXX
-    #logging.info('Textile not enabled.')
-    print 'Textile not enabled.'
+    logging.warn('Textile not enabled.')
 
 
 if len(all) <= 2:
-    print("You probably want to install either a Markdown library (one of "
+    logging.error("You probably want to install either a Markdown library (one of "
           "'Markdown', or 'markdown2'), 'docutils' (for reStructuredText), or "
           "'textile'. Otherwise only plain text input will be supported.  You "
           "can install any of these with 'sudo pip install PACKAGE'.")
