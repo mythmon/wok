@@ -169,7 +169,7 @@ class Page(object):
 
         # slug
         if not 'slug' in self.meta:
-            if self.filename:
+            if self.filename and self.options['slug_from_filename']:
                 filename_no_ext = '.'.join(self.filename.split('.')[:-1])
                 if filename_no_ext == '':
                     filename_no_ext = self.filename

@@ -29,6 +29,7 @@ class Engine(object):
         'site_title': 'Some random Wok site',
         'url_pattern': '/{category}/{slug}{page}.{ext}',
         'url_include_index': True,
+        'slug_from_filename': False,
         'relative_urls': False,
         'locale': None,
         'markdown_extra_plugins': [],
