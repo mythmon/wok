@@ -1,10 +1,7 @@
 .*.swp
 *.pyc
-build
-MANIFEST
+/build
+/MANIFEST
 */output
-_trial_temp
-dist
-bin
-include
-lib
+/venv/
+/wok.egg-info/

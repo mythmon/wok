@@ -1,0 +1,21 @@
+#!/bin/bash
+
+case "$TEST_SITE" in
+  "false"|"")
+    echo 'No $TEST_SITE requested, not testing.'
+    exit 0
+    ;;
+  */*)
+    git clone "https://github.com/$TEST_SITE"
+    TEST_SITE=$(echo $TEST_SITE | awk -F "/" '{print $1}')
+    ;;
+esac
+
+if [[ ! -d $TEST_SITE ]]; then
+  echo "Error: Site $TEST_SITE not found."
+  exit 1
+fi
+
+cd $TEST_SITE
+wok -v
+exit $?
