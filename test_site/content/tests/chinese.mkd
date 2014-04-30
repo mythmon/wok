@@ -1,0 +1,9 @@
+title: Chinese Test Page
+slug: chinese
+category: tests
+tags: [chinese, sample, unicode]
+---
+This is a test page for Chinese characters.
+------------------------------
+
+中華民族
