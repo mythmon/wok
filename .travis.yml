@@ -1,3 +1,10 @@
 language: python
 python: ["2.7"]
 script: py.test wok
+notifications:
+    email: false
+    irc:
+        channels:
+            - "chat.freenode.net#wok"
+        on_success: always
+        on_failure: always
