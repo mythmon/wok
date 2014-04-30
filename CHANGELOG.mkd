@@ -1,14 +1,38 @@
-Version 0.10 (In development)
-----------------------------
-In which contributors rock.
+Version 1.1.1
+-------------
 
-### Features
+-   Switch to awesome-slugify.
+-   Fix the tests.
+-   Improve the CI infrastructure.
+-   Add important sites to CI infrastructure.
+
+Version 1.1
+-----------
+In which we all get on the same page.
+
+-   Added site config as a parameter to all hooks. [Jonathan Goodson]
+-   More robust slugification. [Joe Turner]
+-   Don't remove dotfiles from output directories. [Joe Turner]
+-   Better relative URL support in the form of `url_subdir` config. [stachern]
+-   Experimental support to add extra configuration to Markdown. [stachern]
+-   Universal newline support. [Catherine Devlin]
+-   Fixed pagination on global site attributes. [abbgrade]
+
+
+Version 1.0.0b
+--------------
+In which "The 'b' stands for 'bastard'."
+
 -   The built in development server now auto reloads when files changes.
     [robatron].
 -   A new contributed hook, `wok.contrib.hooks.compile_sass`, that does exactly
     what it says on the tin [robatron].
-
-### Fixes
+-   Add support for Jinja2 extensions.
+-   Better unicode support.
+-   Really use None for missing date/time values. [remram44]
+-   Fix HeadingAnchors to write saner HTML [Hein-Pieter van Bramm]
+-   Experimental support for relative links.
+-   Improvements to pip-installability.
 -   The hook `site.output.post` is now only run once, not once per file.
 
 Version 0.9
