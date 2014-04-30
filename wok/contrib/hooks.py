@@ -6,8 +6,9 @@ import subprocess
 from StringIO import StringIO
 import logging
 
+from slugify import slugify
+
 from wok.exceptions import DependencyException
-from wok.util import slugify
 
 try:
     from lxml import etree

@@ -10,6 +10,7 @@ import copy
 import jinja2
 import yaml
 import re
+from slugify import slugify
 
 # Wok
 from wok import util
@@ -173,15 +174,15 @@ class Page(object):
                 filename_no_ext = '.'.join(self.filename.split('.')[:-1])
                 if filename_no_ext == '':
                     filename_no_ext = self.filename
-                self.meta['slug'] = util.slugify(filename_no_ext)
+                self.meta['slug'] = slugify(filename_no_ext)
                 logging.info("You didn't specify a slug, generating it from the "
                              "filename.")
             else:
-                self.meta['slug'] = util.slugify(self.meta['title'])
+                self.meta['slug'] = slugify(self.meta['title'])
                 logging.info("You didn't specify a slug, and no filename "
                              "exists. Generating the slug from the title.")
 
-        elif self.meta['slug'] != util.slugify(self.meta['slug']):
+        elif self.meta['slug'] != slugify(self.meta['slug']):
             logging.warning('Your slug should probably be all lower case, and '
                             'match "[a-z0-9-]*"')
 

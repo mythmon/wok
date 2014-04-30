@@ -25,11 +25,12 @@ setup(
         'Programming Language :: Python',
     ],
     install_requires=[
-        'Jinja2>=2.6',
-        'Markdown>=2.1.1',
-        'PyYAML>=3.10',
-        'Pygments>=1.4',
-        'docutils>=0.8.1'
+        'Jinja2==2.6',
+        'Markdown==2.1.1',
+        'PyYAML==3.10',
+        'Pygments==1.4',
+        'docutils==0.8.1',
+        'awesome-slugify==1.4',
     ],
     packages=['wok'],
     scripts=['scripts/wok'],
