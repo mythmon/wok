@@ -7,42 +7,6 @@ from datetime import date, time, datetime, tzinfo
 
 from wok import util
 
-class TestSlugs(TestCase):
-
-    def test_noop(self):
-        """Tests that is good slug gets passed through unmodified."""
-        orig = u'agoodslug'
-        slug = orig
-        self.assertEqual(slug, util.slugify(orig))
-
-    def test_caps(self):
-        """Check that case get converted right."""
-        orig = u'abcdABCD'
-        slug = orig.lower()
-        self.assertEqual(slug, util.slugify(orig))
-
-    def test_spaces(self):
-        """Check that spaces are converted to the seperator character."""
-        orig = u'hello world'
-        slug = u'hello-world'
-        self.assertEqual(slug, util.slugify(orig))
-
-    def test_punctuation(self):
-        """Check that punctuation is handled right."""
-        orig = u"This has... punctuation! *<yo>*."
-        slug = u'this-has-punctuation-yo'
-        self.assertEqual(slug, util.slugify(orig))
-
-    def test_unicode(self):
-        """Check that unicode is properly converted."""
-        pass
-
-    def test_apostrophes(self):
-        """Check that apostrophes in words don't end up as ugly seperators"""
-        orig = u"Don't use Bob's stuff"
-        slug = u'dont-use-bobs-stuff'
-        self.assertEqual(slug, util.slugify(orig))
-
 class TestDatetimes(TestCase):
 
     def setUp(self):
@@ -60,9 +24,9 @@ class TestDatetimes(TestCase):
     def test_blanks(self):
         inp = {}
         out = {
-            'datetime': datetime(1970, 1, 1),
-            'date': date(1970, 1, 1),
-            'time': time(), # time == datetime.time(0, 0)
+            'datetime': None,
+            'date': None,
+            'time': None,
         }
 
         util.date_and_times(inp)
@@ -73,7 +37,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 10, 12, 0, 0, 0, 0),
             'date': self.date,
-            'time': time(), # time() == datetime.time(0, 0)
+            'time': None,
         }
 
         util.date_and_times(inp)
@@ -83,8 +47,8 @@ class TestDatetimes(TestCase):
         t = self.time # otherwise the datetime line gets awful
         inp = {'time': t}
         out = {
-            'datetime': datetime(1970, 1, 1, t.hour, t.minute, t.second),
-            'date': date(1970, 1, 1),
+            'datetime': None,
+            'date': None,
             'time': t,
         }
 
@@ -155,7 +119,7 @@ class TestDatetimes(TestCase):
         out = {
             'datetime': datetime(2011, 12, 25),
             'date': date(2011, 12, 25),
-            'time': time(),
+            'time': None,
         }
 
         util.date_and_times(inp)
