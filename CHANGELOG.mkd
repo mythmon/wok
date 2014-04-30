@@ -1,5 +1,6 @@
 Version 1.1.1
 -------------
+In which Travis rocks and OSULUG's website gets fixed.
 
 -   Switch to awesome-slugify.
 -   Fix the tests.
