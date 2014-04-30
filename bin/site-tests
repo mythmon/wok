@@ -16,6 +16,8 @@ if [[ ! -d $TEST_SITE ]]; then
   exit 1
 fi
 
+echo "Testing site $TEST_SITE"
+
 cd $TEST_SITE
 wok -v
 exit $?

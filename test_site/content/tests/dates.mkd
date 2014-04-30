@@ -1,5 +1,6 @@
 title: Dates
 type: index
 category: tests
+date: 2014-04-29
 url: "/{category}/{slug}{page}/{date.year}/{date.month}/{date.day}/index.{ext}"
 ---
