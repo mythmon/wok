@@ -6,8 +6,15 @@ case "$TEST_SITE" in
     exit 0
     ;;
   */*)
-    git clone "https://github.com/$TEST_SITE"
-    TEST_SITE=$(echo $TEST_SITE | awk -F "/" '{print $1}')
+    dir=$(echo $TEST_SITE | awk -F "/" '{print $2}')
+    if [[ -d $dir && -d $dir/.git ]]; then
+      rm -rf $dir
+    fi
+    git clone --depth 1 "https://github.com/$TEST_SITE" $dir
+    if [[ $? -gt 0 ]]; then
+      exit 1
+    fi
+    TEST_SITE=$dir
     ;;
 esac
 
