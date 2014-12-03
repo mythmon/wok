@@ -45,6 +45,17 @@ class Engine(object):
         # -----------
         parser = OptionParser(version='%prog v{0}'.format(wok.version))
 
+        # Add option to initialize an new project
+        init_grp = OptionGroup(parser, "Initialize project",
+                "Creates a config file and the required directories. ")
+        init_grp.add_option('--init', action='store_true',
+                dest='initproject',
+                help="create a confg file before generating the site")
+        init_grp.add_option('--site_title',
+                dest='site_title',
+                help="configures the site title to the given value")
+        parser.add_option_group(init_grp)
+
         # Add option to to run the development server after generating pages
         devserver_grp = OptionGroup(parser, "Development server",
                 "Runs a small development server after site generation. "
@@ -94,6 +105,43 @@ class Engine(object):
             logging_options['stream'] = sys.stdout
 
         logging.basicConfig(**logging_options)
+
+        # Init project
+        # ------------
+
+        if cli_options.initproject:
+            ''' Create the config file and the required directories if the user said to.
+            '''
+            orig_dir = os.getcwd()
+            os.chdir(self.SITE_ROOT)
+
+            # create config
+
+            options = Engine.default_options.copy()
+
+            # read old config if present
+            if os.path.isfile('config'):
+                with open('config') as f:
+                    yaml_config = yaml.load(f)
+
+                if yaml_config:
+                    options.update(yaml_config)
+
+            if cli_options.site_title:
+                options['site_title'] = cli_options.site_title
+
+            # save new config
+            with open('config', 'w') as f:
+                    yaml.dump(options, f)
+
+            # create required dirs
+
+            required_dirs = [options['content_dir'], options['template_dir']]
+            for required_dir in required_dirs:
+                if not os.path.isdir(required_dir):
+                    os.mkdir(required_dir)
+
+            os.chdir(orig_dir)
 
         # Action!
         # -------
