@@ -178,7 +178,7 @@ Possible configuration options (and their defaults) are
     -   `{date}`, `{datetime}`, and `{time}` - The date/time from the metadata
         of the page
 
-- `url_use_index` (Yes) - If true, keep `index.*` in urls.
+- `url_include_index` (Yes) - If true, keep `index.*` in urls.
 
 More info:
 [config](http://wok.mythmon.com/docs/config/),
