@@ -6,7 +6,7 @@ Wok
 Wok is a static website generator. It turns a pile of templates,
 content, and resources (like CSS and images) into a neat stack of plain
 HTML. Wok is distributed under the MIT license (see the LICENSE file for
-more details). 
+more details).
 
 The idea is that you don't need a big server-side engine like PHP to
 generate every page every visit: you can generate them all ahead of
@@ -128,7 +128,7 @@ Pulled from a directory named `content` by default. Content is written
 in lightweight markup or in plain text, with an optional YAML header
 section. The directory structure of the file mean nothing to wok. It
 builds the structure of the site based on the titles and the category
-meta data.
+metadata.
 
 Since wok uses lightweight mark up languages like [Markdown][mkd] and
 [reStructuredText][rst], it is easy to do nice formatting in the pages

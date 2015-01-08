@@ -19,8 +19,8 @@ from wok.jinja import GlobFileLoader, AmbiguousTemplate
 
 class Page(object):
     """
-    A single page on the website in all it's form (raw, rendered, templated) ,
-    as well as it's associated metadata.
+    A single page on the website in all its form (raw, rendered, templated),
+    as well as its associated metadata.
     """
 
     tmpl_env = None
@@ -93,7 +93,7 @@ class Page(object):
                                 'than expected. Squashing the extra together.'
                                 .format(page.path))
 
-            # Handle the case where no meta data was provided
+            # Handle the case where no metadata was provided.
             if len(splits) == 1:
                 page.original = splits[0]
                 page.meta = {}

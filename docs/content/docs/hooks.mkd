@@ -4,7 +4,7 @@ category: docs
 Since version 0.9, wok provides a hook interface to add custom python code to
 the site generation pipeline.
 
-To use hooks, make a new directory in your site root named `hooks`. In this 
+To use hooks, make a new directory in your site root named `hooks`. In this
 directory, make the file `__hooks__.py`. For example:
 
     ::text
@@ -21,9 +21,9 @@ directory, make the file `__hooks__.py`. For example:
         `-- templates/
 
 
-From the `__hooks__.py` file, wok will import the variable `hooks`. 
-This should be a dictionary; The keys are the hook names below, and the values 
-are lists of functions (or other callables) to run for the hooks. Simply give 
+From the `__hooks__.py` file, wok will import the variable `hooks`.
+This should be a dictionary; The keys are the hook names below, and the values
+are lists of functions (or other callables) to run for the hooks. Simply give
 the names of the functions, but do not invoke them. For example:
 
     ::python
@@ -144,7 +144,7 @@ will pass to the hooked functions (if any.)
     :   Dictionary containing site configuration
 :   `page`
     :   The current page object that is being processed.
-:   This hook will be called for each page before the page has it's meta data
+:   This hook will be called for each page before the page has its metadata
     filled in. Some metadata will exist, but it will be in an unnormalized
     state.
 
@@ -153,8 +153,8 @@ will pass to the hooked functions (if any.)
     :   Dictionary containing site configuration
 :   `page`
     :   The current page object that is being processed.
-:   This hook will be called for each page right after the page has it's meta
-    data filled in and normalized.
+:   This hook will be called for each page right after the page has its
+    metadata filled in and normalized.
 
 `page.template.pre(config, page, templ_vars)` <a name="page.template.pre"> </a>
 :   `config`

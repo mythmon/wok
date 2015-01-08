@@ -77,7 +77,7 @@ This will show pagination controls, and then a list of links to subpages.
 
 URLs
 ----
-To get this to work, each page is it's own file, which means each file has to
+To get this to work, each page is its own file, which means each file has to
 have a new name. To provide for this, there is a variable available to url
 generation, `page`, which contains the the current page number, except on the
 first page. On page 1, the `page` variable is an empty string. This way you
