@@ -48,8 +48,8 @@ pages in the YAML metadata.
     `projects/wok/docs` means the page is in the category `docs` which is a
     subcategory of `wok` which is a subcategory of
      `projects`.
- -  `tags` - A comma-separated list of tags, e.g., `foo, bar, herp, derp`.
-    ([More about tagging][tagging])
+ -  `tags` - A comma-separated list of tags in square brackets, e.g.,
+    `[foo, bar, herp, derp]`. ([More about tagging][tagging])
  -  `published` - To exclude some pages from the site, but not remove them
     entirely.
  -  `url` - To manually specify the path for the generated page. If none is
