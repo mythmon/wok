@@ -55,7 +55,7 @@ file, unless otherwise stated.
     not specified.
 -   `page.author` - The first author of the page, as an `Author` object. If
     unspecified in the YAML header, the site default will be used, if that is
-    unspecified, the object will still exist, but will have `None` for it's
+    unspecified, the object will still exist, but will have `None` for its
     attributes. If multiple authors are specified, this will be the first one.
 -   `page.authors` - Like `page.author`, except as a list of all specifed
     authors.

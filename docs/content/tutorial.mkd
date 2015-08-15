@@ -62,7 +62,7 @@ also support reStructuredText, Textile, plain text, and raw text.
 
 ## Home
 
-The home page will be the main landing page for our website. As such it's URL
+The home page will be the main landing page for our website. As such its URL
 should be `/index.html`. Sounds pretty simple, and it is. Make a file named
 `home.mkd` in your content directory, and give it these contents.
 

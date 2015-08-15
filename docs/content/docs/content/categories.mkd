@@ -9,7 +9,7 @@ any pages with no category.
 
 This site tree is built from the `page.slug` and `page.category` fields.
 The page that has a slug of `blog` is the top of the blog category, and
-it's children are any pages that define `category: blog`
+its children are any pages that define `category: blog`
 
 [tree]: http://en.wikipedia.org/wiki/Tree_(data_structure)
 

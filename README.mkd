@@ -128,7 +128,7 @@ Pulled from a directory named `content` by default. Content is written
 in lightweight markup or in plain text, with an optional YAML header
 section. The directory structure of the file mean nothing to wok. It
 builds the structure of the site based on the titles and the category
-meta data.
+metadata.
 
 Since wok uses lightweight mark up languages like [Markdown][mkd] and
 [reStructuredText][rst], it is easy to do nice formatting in the pages

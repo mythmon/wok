@@ -27,7 +27,7 @@ arrange to your liking:
   these, they will default to `None`.
 
 If you don't include `{page}` in your `url_pattern`, then pagination won't
-work. Instead it will overwrite each page with it's sequel, resulting in only
+work. Instead it will overwrite each page with its sequel, resulting in only
 the last page remaining. If you aren't using any pagination, then you don't
 need the variable.
 
@@ -41,7 +41,7 @@ any time the url ends with `index.*`, that will also be removed from the url
 patterns. The files will still be named `index.*`, however. So for example if
 your url pattern is `/{category}/{slug}/index.html`, the a blog post about
 balloons would create a file named `/blog/balloons/index.html`, but anytime you
-reference it in a template it's `url` field will be `/blog/balloons/`. This
+reference it in a template its `url` field will be `/blog/balloons/`. This
 makes URLs look a lot cleaner. This option off set to `true` by default (ie:
 keep index in urls).
 
