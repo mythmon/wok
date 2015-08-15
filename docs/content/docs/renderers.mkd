@@ -135,3 +135,68 @@ Alternatively, you could download a pre-genered pygments CSS file from [this
 repository][pygcss].
 
 [pygcss]: https://github.com/Anomareh/pygments-styles-dump
+
+Overriding renderers
+--------------------
+
+Since version 1.2, wok provides a way to configure the renderers used
+by the site generation pipeline. This can be useful in the following cases.
+
+-   The renderer attached to some extension is not the one that should
+    be called.
+-   Some files need specific treatment that can't be handled by the
+    renderers proposed by default.
+
+The renderers interface is built like the one used to setup
+[hooks](/docs/hooks). Make a new directory in your site root named
+`renderers`. In this directory, create the file `__renderers__.py`.
+For example:
+
+    ::text
+    site-root/
+        |-- config
+        |-- content/
+        |-- hooks/
+        |-- renderers/
+        |   |-- __renderers__.py
+        |   |-- vcard_renderer.py
+        |   `-- html_filter.py
+        |
+        |-- media/
+        |-- output/
+        `-- templates/
+
+From the `__renderers__.py` file, wok will import the variable
+`renderers` which should be a dictionary; the keys are filename
+extensions, and the values are the renderer to use. If a key is
+already defined internally (like `md` or `txt` respectively for
+Markdown or plain text rendering), the renderer defined here will
+override the default one.
+
+A renderer can be any object, class or module as long as it provides a
+`render` function which takes the input document as argument, and
+returns the formatted result. For example:
+
+    ::python
+    ''' __renderers__.py
+
+    Defines wok renderers.
+    '''
+    from bs4 import BeautifulSoup
+
+    class HtmlRenderer(object):
+        @classmethod
+        def render(cls, plain):
+            '''Parse the given HTML document and return only its body.'''
+            soup = BeautifulSoup(plain)
+            return soup.body
+
+    renderers = {
+        'html': HtmlRenderer
+    }
+
+The test site that can be found in [sources][gh] provides the same
+feature with a different syntax.
+
+[gh]: https://github.com/mythmon/wok
+

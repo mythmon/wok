@@ -129,6 +129,7 @@ class Engine(object):
         self.read_options()
         self.sanity_check()
         self.load_hooks()
+        self.load_renderers()
         self.renderer_options()
 
         self.run_hook('site.start')
@@ -216,6 +217,24 @@ class Engine(object):
                 logging.info('Import error within hooks.')
                 raise
 
+    def load_renderers(self):
+        self.renderers = {}
+        for renderer in renderers.all:
+            self.renderers.update((ext, renderer) for ext in renderer.extensions)
+
+        try:
+            sys.path.append('renderers')
+            import __renderers__
+            self.renderers.update(__renderers__.renderers)
+            logging.info('Loaded {0} renderers'.format(len(__renderers__.renderers)))
+        except ImportError as e:
+            if "__renderers__" in str(e):
+                logging.info('No renderers module found.')
+            else:
+                # don't catch import errors raised within a renderer
+                logging.info('Import error within renderers.')
+                raise
+
     def run_hook(self, hook_name, *args):
         """ Run specified hooks if they exist """
         logging.debug('Running hook {0}'.format(hook_name))
@@ -285,13 +304,9 @@ class Engine(object):
                     continue
 
                 ext = f.split('.')[-1]
-                renderer = renderers.Plain
+                renderer = self.renderers.get(ext)
 
-                for r in renderers.all:
-                    if ext in r.extensions:
-                        renderer = r
-                        break
-                else:
+                if renderer is None:
                     logging.warning('No parser found '
                             'for {0}. Using default renderer.'.format(f))
                     renderer = renderers.Renderer

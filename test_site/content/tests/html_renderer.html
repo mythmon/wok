@@ -1,0 +1,32 @@
+title: HTML Renderer Test Page
+slug: html-renderer
+category: tests
+tags: [renderers, sample]
+author: [Me <me@nowhere.com>, Myself <myself@nowhere.com>, I <i@nowhere.com>]
+---
+<html>
+<head>
+  <title>This is the HTML Renderer test page</title>
+  <meta charset="utf-8">
+  <meta name="author" content="I">
+  <meta name="description" content="Some broken meta-information that will be dropped while rendering" />
+  <meta name="generator" content="By hand" />
+  <meta name="keywords" content="wok, renderer, python, soup" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+  <h1>This is a sample HTML test page</h1>
+  <p>
+    This page is rendered by a special renderer which is provided in
+    the <code>renderers</code> directory, with the help of
+    the <b>BeautifulSoup</b> python package.
+  </p>
+  <p>
+    The source document contains a <em>long</em> header
+    with <code>meta</code> and <code>link</code> tags that should be
+    dropped, leaving only a the content of the <code>body</code>; a
+    title and these two paragraphs.
+  </p>
+</body>
