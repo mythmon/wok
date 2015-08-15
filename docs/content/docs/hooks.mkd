@@ -169,14 +169,14 @@ will pass to the hooked functions (if any.)
 :   This hook will be called for each page before the page is sent to
     the template engine. At this point, the content has been transformed
     from markup input (such as markdown) to html output, if applicable.
-    The transformed version is in `templ_vars['content']`. If you
+    The transformed version is in `templ_vars['page']['content']`. If you
     modify the `templ_vars` parameter, those changes will be visible to
     the template engine. The given functions should take in these two
     variables.
 
 [templates]: /docs/templates/
 
-`page.template.post(config, page)` <a name="page.template.postpage"> </a>
+`page.template.post(config, page)` <a name="page.template.post"> </a>
 :   `config`
     :   Dictionary containing site configuration
 :   `page`
