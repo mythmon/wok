@@ -4,6 +4,8 @@ category: docs
 Since version 0.9, wok provides a hook interface to add custom python code to
 the site generation pipeline.
 
+Before starting to programm, check the [wok_hooks project][wok_hooks] for already available plugins. 
+
 To use hooks, make a new directory in your site root named `hooks`. In this 
 directory, make the file `__hooks__.py`. For example:
 
@@ -190,3 +192,5 @@ will pass to the hooked functions (if any.)
     any general modifications to the output, or to do something like upload the
     site for distribution. If the `--server` option has been specified, this
     will happen before the server is run.
+
+[wok_hooks]: https://github.com/abbgrade/wok_hooks

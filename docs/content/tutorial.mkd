@@ -231,6 +231,7 @@ looking site that is quick and easy to add new content to, such as a blog.
 But wok has more power than this. For more advanced features, check out the
 rest of the documentation on this site. Additionally, users are encouraged to
 share and trade tips and cool things that can be done with wok on [the Github
-wiki][wiki].
+wiki][wiki] and share extensions on [the wok_hooks project][wok_hooks].
 
 [wiki]: https://github.com/mythmon/wok/wiki
+[wok_hooks]: https://github.com/abbgrade/wok_hooks
