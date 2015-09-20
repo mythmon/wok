@@ -490,7 +490,7 @@ class Page(object):
 
         logging.debug('Writing {0} to {1}'.format(self.meta['slug'], base_path))
         f = open(base_path, 'w')
-        f.write(self.rendered.encode('utf-8'))
+        f.write(self.rendered)
         f.close()
 
     def __repr__(self):
