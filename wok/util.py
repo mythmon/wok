@@ -4,7 +4,7 @@ from datetime import date, time, datetime, timedelta
 
 def chunk(li, n):
     """Yield succesive n-size chunks from l."""
-    for i in xrange(0, len(li), n):
+    for i in range(0, len(li), n):
         yield li[i:i+n]
 
 def date_and_times(meta):
