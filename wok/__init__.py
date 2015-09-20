@@ -1,1 +1,3 @@
-version = u'1.1.1'
+from __future__ import unicode_literals
+
+version = '1.1.1'
