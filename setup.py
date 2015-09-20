@@ -29,7 +29,7 @@ setup(
         'Markdown==2.1.1',
         'PyYAML==3.10',
         'Pygments==1.4',
-        'docutils==0.8.1',
+        'docutils==0.12',
         'awesome-slugify==1.4',
         'pytest==2.8.0',
     ],
