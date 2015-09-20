@@ -34,7 +34,7 @@ class GlobFileLoader(FileSystemLoader):
             filename = filenames[0]
 
             with open(filename) as f:
-                contents = f.read().decode(self.encoding)
+                contents = f.read()
 
             mtime = os.path.getmtime(filename)
             def uptodate():
