@@ -436,7 +436,12 @@ class Engine(object):
                 },
             }
 
-            for k, v in self.options.iteritems():
+            try:
+                items = self.options.iteritems()
+            except AttributeError:
+                items = self.options.items()
+
+            for k, v in items:
                 if k not in ('site_title', 'output_dir', 'content_dir',
                         'templates_dir', 'media_dir', 'url_pattern'):
 
