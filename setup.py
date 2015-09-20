@@ -25,7 +25,7 @@ setup(
         'Programming Language :: Python',
     ],
     install_requires=[
-        'Jinja2==2.6',
+        'Jinja2==2.7.3',
         'Markdown==2.1.1',
         'PyYAML==3.10',
         'Pygments==1.4',
