@@ -30,8 +30,8 @@ def date_and_times(meta):
 
     if isinstance(time_part, int):
         seconds = time_part % 60
-        minutes = (time_part / 60) % 60
-        hours = (time_part / 3600)
+        minutes = int(time_part / 60) % 60
+        hours = int(time_part / 3600)
 
         time_part = time(hours, minutes, seconds)
 
