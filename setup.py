@@ -6,7 +6,7 @@ from wok import version
 
 setup(
     name='wok',
-    version=version.encode("utf8"),
+    version=version,
     author='Mike Cooper',
     author_email='mythmon@gmail.com',
     url='http://wok.mythmon.com',
