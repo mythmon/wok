@@ -31,7 +31,7 @@ setup(
         'Pygments==1.4',
         'docutils==0.8.1',
         'awesome-slugify==1.4',
-        'pytest==2.5.2',
+        'pytest==2.8.0',
     ],
     packages=['wok'],
     scripts=['scripts/wok'],
