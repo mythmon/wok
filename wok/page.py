@@ -85,7 +85,7 @@ class Page(object):
         page.filename = os.path.basename(path)
 
         with open(path, 'rU') as f:
-            page.original = f.read().decode('utf-8')
+            page.original = f.read()
             splits = page.original.split('\n---\n')
 
             if len(splits) > 3:
