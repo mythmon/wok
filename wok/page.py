@@ -178,7 +178,7 @@ class Page(object):
                 logging.info("You didn't specify a slug, generating it from the "
                              "filename.")
             else:
-                self.meta['slug'] = slugify(self.meta['title'])
+                self.meta['slug'] = slugify(str(self.meta['title']))
                 logging.info("You didn't specify a slug, and no filename "
                              "exists. Generating the slug from the title.")
 
