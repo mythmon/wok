@@ -1,4 +1,4 @@
-title: Chinese Test Page
+title: Chinese Test Page 中華民族
 slug: chinese
 category: tests
 tags: [chinese, sample, unicode]
