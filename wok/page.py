@@ -29,7 +29,8 @@ class Page(object):
     def create_tmpl_env(cls, options):
         cls.tmpl_env = jinja2.Environment(
                 loader=GlobFileLoader(
-                        options.get('template_dir', 'templates')),
+                        searchpath=options.get('template_dir', 'templates'),
+                        ignores=options.get('ignore_files', [])),
                 extensions=options.get('jinja2_extensions', []))
 
     def __init__(self, options, engine):
