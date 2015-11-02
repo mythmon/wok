@@ -1,5 +1,6 @@
 import glob
 import os
+import fnmatch
 
 from jinja2.loaders import FileSystemLoader, TemplateNotFound
 from jinja2.loaders import split_template_path
@@ -22,11 +23,21 @@ class GlobFileLoader(FileSystemLoader):
     by setting the `encoding` parameter to something else.
     """
 
+    def __init__(self, ignores=[], *args, **kwargs):
+        super(GlobFileLoader, self).__init__(*args, **kwargs)
+        self.ignores = ignores
+
     def get_source(self, environment, template):
         pieces = split_template_path(template)
         for searchpath in self.searchpath:
             globbed_filename = os.path.join(searchpath, *pieces)
             filenames = glob.glob(globbed_filename)
+
+            # Filter out files if they match any of the ignore patterns
+            for i in self.ignores:
+                filenames = [ f for f in filenames if not \
+                        fnmatch.fnmatch(os.path.basename(f), i) ]
+
             if len(filenames) > 1:
                 raise AmbiguousTemplate(template)
             elif len(filenames) < 1:
