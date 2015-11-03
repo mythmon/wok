@@ -350,8 +350,8 @@ class Engine(object):
         for root, dirs, files in os.walk(self.options['content_dir']):
             # Filter out files if they match any of the ignore patterns
             for ig in self.options['ignore_files']:
-                files = [ f for f in files if not \
-                        fnmatch.fnmatch(os.path.basename(f), ig) ]
+                files = [ f for f in files 
+                        if not fnmatch.fnmatch(os.path.basename(f), ig) ]
             # Grab all the parsable files
             for f in files:
                 # Don't parse hidden files.

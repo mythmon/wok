@@ -34,9 +34,9 @@ class GlobFileLoader(FileSystemLoader):
             filenames = glob.glob(globbed_filename)
 
             # Filter out files if they match any of the ignore patterns
-            for i in self.ignores:
-                filenames = [ f for f in filenames if not \
-                        fnmatch.fnmatch(os.path.basename(f), i) ]
+            for ig in self.ignores:
+                filenames = [ f for f in filenames 
+                        if not fnmatch.fnmatch(os.path.basename(f), ig) ]
 
             if len(filenames) > 1:
                 raise AmbiguousTemplate(template)
