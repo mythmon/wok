@@ -1,0 +1,23 @@
+<!--
+This is a deliberately bogus template file inserted to test the new
+"ignore_files" config directive.  Without specifing
+ignore_files = [ '*_ignore' ]
+in the config file, this file would cause Wok to generate a
+duplicate/ambiguous template error.
+-->
+{% extends "base.html" %}
+{% block body %}
+    <h1>{{ page.title }}</h1>
+    <h2>by: {% for author in page.authors %}
+        {{author}}{% if not loop.last %}, {% endif %}
+    {% endfor %}</h2>
+    <h2>datetime: {{page.datetime}}, date: {{page.date}}, time: {{page.time}}</h2>
+    <h3>Tags:</h3>
+    <ul>
+    {% for tag in page.tags %}
+        <li>{{ tag }}</li>
+    {% endfor %}
+    </ul>
+    Hooked: {{ hooked }}
+    {{ page.content }}
+{% endblock body %}
