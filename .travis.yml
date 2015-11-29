@@ -1,6 +1,9 @@
-language: python
-python: ["2.7"]
 sudo: false
+language: python
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
 
 env:
   - PYTHON_TESTS=true TEST_SITE=false
@@ -8,14 +11,14 @@ env:
   - PYTHON_TESTS=false TEST_SITE=test_site
   - PYTHON_TESTS=false TEST_SITE=OSULUG/OSULUG-website
 
-script: 
+script:
   - bin/python-tests
   - bin/site-tests
 
 notifications:
-    email: false
-    irc:
-        channels:
-            - "chat.freenode.net#wok"
-        on_success: always
-        on_failure: always
+  email: false
+  irc:
+    channels:
+      - "chat.freenode.net#wok"
+    on_success: always
+    on_failure: always
