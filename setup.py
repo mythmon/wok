@@ -34,5 +34,6 @@ setup(
         'pytest==2.8.0',
     ],
     packages=['wok'],
+    package_data={'wok':['contrib/*']},
     scripts=['scripts/wok'],
 )

@@ -1,3 +1,4 @@
 site_title: Wok
 url_include_index: no
 url_pattern: "/{category}/{slug}/{page}/index.html"
+slug_from_filename: True
