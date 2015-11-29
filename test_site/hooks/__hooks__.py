@@ -1,4 +1,5 @@
 import logging
+from wok.contrib.hooks import compile_sass
 
 hook_count = 0
 def make_hook(name):
@@ -11,7 +12,7 @@ def make_hook(name):
 hooks = {
     'site.start': make_hook('site.start'),
     'site.output.pre': make_hook('site.output.pre'),
-    'site.output.post': make_hook('site.output.post'),
+    'site.output.post': [compile_sass],
     'site.content.gather.pre': make_hook('site.content.gather.pre'),
     'site.content.gather.post': make_hook('site.content.gather.post'),
     'page.meta.pre': make_hook('page.template.pre'),
