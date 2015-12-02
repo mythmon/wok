@@ -2,6 +2,7 @@
 """Some hooks that might be useful."""
 
 import os
+import glob
 import subprocess
 from StringIO import StringIO
 import logging
@@ -15,6 +16,10 @@ try:
 except ImportError:
     etree = None
 
+try:
+    import sass
+except ImportError:
+    sass = None
 
 class HeadingAnchors(object):
     """
@@ -59,7 +64,7 @@ class HeadingAnchors(object):
 
         sio_destination = StringIO()
 
-	# Use the extension of the template to determine the type of document 
+	# Use the extension of the template to determine the type of document
 	if page.template.filename.endswith(".html") or page.filename.endswith(".htm"):
         	logging.debug('[HeadingAnchors] outputting {0} as HTML'.format(page))
 	        tree.write(sio_destination, method='html')
@@ -84,26 +89,34 @@ def compile_sass(config, output_dir):
         from wok.contrib.hooks import compile_sass
 
         hooks = {
-            'site.output.post':[compile_sass]
+            'site.output.post': [compile_sass]
         }
 
     Dependencies:
 
-        - Ruby
-        - Sass (http://sass-lang.com)
+        - libsass
     '''
     logging.info('Running hook compile_sass on {0}.'.format(output_dir))
     for root, dirs, files in os.walk(output_dir):
         for f in files:
             fname, fext = os.path.splitext(f)
-            if fext == ".scss" or fext == ".sass":
+            # Sass partials should not be compiled
+            if not fname.startswith('_') and fext == '.scss' or fext == '.sass':
                 abspath = os.path.abspath(root)
-                sass_src = "%s/%s"%(abspath, f)
-                sass_dest = "%s/%s.css"%(abspath, fname)
-                sass_arg = "%s:%s"%(sass_src, sass_dest)
-                logging.debug('[hook/sass] sass {0}'.format(sass_arg))
-                try:
-                    subprocess.call(['sass', sass_arg])
-                except OSError:
-                    logging.warning('[hook/compile_sass] Could not run SASS ' +
-                                    'hook. (Is SASS installed?)')
+                sass_src  = '{0}/{1}'.format(abspath, f)
+                sass_dest = '{0}/{1}.css'.format(abspath, fname)
+
+                if sass is None:
+                    logging.warning('To use compile_sass hook, you must install '
+                        'libsass-python package.')
+                    return
+
+                compiled_str = sass.compile(filename=sass_src, output_style='compressed')
+                with open(sass_dest, 'w') as f:
+                    f.write(compiled_str)
+
+    # TODO: Get rid of extra housekeeping by compiling Sass files in
+    #   "site.output.pre" hook
+    abspath = os.path.abspath(output_dir)
+    for f in glob.glob(os.path.join(abspath, '**', '*.s[a,c]ss')):
+        os.remove(f)
