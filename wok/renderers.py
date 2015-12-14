@@ -16,7 +16,7 @@ class Renderer(object):
     extensions = []
 
     @classmethod
-    def render(cls, plain):
+    def render(cls, plain, source_path=None):
         return plain
 all.append(Renderer)
 
@@ -25,7 +25,7 @@ class Plain(Renderer):
     extensions = ['txt']
 
     @classmethod
-    def render(cls, plain):
+    def render(cls, plain, source_path=None):
         return plain.replace('\n', '<br>')
 all.append(Plain)
 
@@ -42,7 +42,7 @@ try:
             plugins.extend(['codehilite(css_class=codehilite)', 'fenced_code'])
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, source_path=None):
             return markdown(plain, cls.plugins)
 
     all.append(Markdown)
@@ -64,7 +64,7 @@ if markdown is None:
                 extras.append('fenced-code-blocks')
 
             @classmethod
-            def render(cls, plain):
+            def render(cls, plain, source_path=None):
                 return markdown2.markdown(plain, extras=cls.extras)
 
         all.append(Markdown2)
@@ -87,9 +87,9 @@ try:
         extensions = ['rst']
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, source_path=None):
             w = rst_html_writer()
-            return docutils.core.publish_parts(plain, writer=w)['body']
+            return docutils.core.publish_parts(plain, source_path=source_path, writer=w)['body']
 
     all.append(ReStructuredText)
 except ImportError:
@@ -104,7 +104,7 @@ try:
         extensions = ['textile']
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, source_path=None):
             return textile.textile(plain)
 
     all.append(Textile)
