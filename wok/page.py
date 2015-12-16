@@ -117,11 +117,8 @@ class Page(object):
         page.build_meta()
 
         page.engine.run_hook('page.render.pre', page)
-        print "DEBUG: page.path=\"" + str(page.path) + "\""
-        print "DEBUG: page.renderer=\"" + str(page.renderer) + "\""
-        print "DEBUG: page.renderer.render=\"" + str(page.renderer.render) + "\""
-        page.meta['content'] = page.renderer.render(page.original, source_path=page.path)
-        page.meta['preview'] = page.renderer.render(page.original_preview, source_path=page.path)
+        page.meta['content'] = page.renderer.render(page.original)
+        page.meta['preview'] = page.renderer.render(page.original_preview)
         page.engine.run_hook('page.render.post', page)
 
         return page
@@ -345,7 +342,7 @@ class Page(object):
 
         self.engine.run_hook('page.meta.post', self)
 
-    def render(self, templ_vars=None, source_path=None):
+    def render(self, templ_vars=None):
         """
         Renders the page with the template engine.
         """
