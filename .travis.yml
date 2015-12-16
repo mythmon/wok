@@ -3,10 +3,10 @@ python: ["2.7"]
 sudo: false
 
 env:
-  - PYTHON_TESTS=true TEST_SITE=false
-  - PYTHON_TESTS=false TEST_SITE=docs
-  - PYTHON_TESTS=false TEST_SITE=test_site
-  - PYTHON_TESTS=false TEST_SITE=OSULUG/OSULUG-website
+  - PYTHON_TESTS=true TEST_SITE=false CMP_OUTPUT=false
+  - PYTHON_TESTS=false TEST_SITE=docs CMP_OUTPUT=false
+  - PYTHON_TESTS=false TEST_SITE=test_site CMP_OUTPUT=true
+  - PYTHON_TESTS=false TEST_SITE=OSULUG/OSULUG-website CMP_OUTPUT=false
 
 script: 
   - bin/python-tests
