@@ -1,5 +1,7 @@
 .*.swp
 *.pyc
+*~
+/dist
 /build
 /MANIFEST
 */output
