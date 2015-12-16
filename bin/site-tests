@@ -33,7 +33,7 @@ rc=$?
 
 if [ -n "$CMP_OUTPUT"  -a  "$CMP_OUTPUT" = "true" ]; then
     echo "Comparing output $EXPECTED_FILE $OUTPUT_FILE"
-    cmp $EXPECTED_FILE $OUTPUT_FILE
+    diff $EXPECTED_FILE $OUTPUT_FILE
     rc=$?
 fi
 
