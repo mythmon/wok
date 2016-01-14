@@ -16,7 +16,7 @@ class Renderer(object):
     extensions = []
 
     @classmethod
-    def render(cls, plain):
+    def render(cls, plain, page_meta):   # the page_meta might contain renderer options...
         return plain
 all.append(Renderer)
 
@@ -25,7 +25,7 @@ class Plain(Renderer):
     extensions = ['txt']
 
     @classmethod
-    def render(cls, plain):
+    def render(cls, plain, page_meta):
         return plain.replace('\n', '<br>')
 all.append(Plain)
 
@@ -42,7 +42,7 @@ try:
             plugins.extend(['codehilite(css_class=codehilite)', 'fenced_code'])
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, page_meta):
             return markdown(plain, cls.plugins)
 
     all.append(Markdown)
@@ -64,7 +64,7 @@ if markdown is None:
                 extras.append('fenced-code-blocks')
 
             @classmethod
-            def render(cls, plain):
+            def render(cls, plain, page_meta):
                 return markdown2.markdown(plain, extras=cls.extras)
 
         all.append(Markdown2)
@@ -85,11 +85,23 @@ try:
     class ReStructuredText(Renderer):
         """reStructuredText renderer."""
         extensions = ['rst']
+        options = {}
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, page_meta):
             w = rst_html_writer()
-            return docutils.core.publish_parts(plain, writer=w)['body']
+            #return docutils.core.publish_parts(plain, writer=w)['body']
+            # Problem: missing heading and/or title if it's a lone heading
+            #
+            # Solution:
+            #     Disable the promotion of a lone top-level section title to document title
+            #     (and subsequent section title to document subtitle promotion)
+            #
+            #      http://docutils.sourceforge.net/docs/api/publisher.html#id3
+            #      http://docutils.sourceforge.net/docs/user/config.html#doctitle-xform
+            #
+            overrides = { 'doctitle_xform': page_meta.get('rst_doctitle', cls.options['doctitle']), }
+            return docutils.core.publish_parts(plain, writer=w, settings_overrides=overrides)['body']
 
     all.append(ReStructuredText)
 except ImportError:
@@ -104,7 +116,7 @@ try:
         extensions = ['textile']
 
         @classmethod
-        def render(cls, plain):
+        def render(cls, plain, page_meta):
             return textile.textile(plain)
 
     all.append(Textile)

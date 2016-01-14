@@ -31,6 +31,10 @@ are:
 - `relative_urls` (false) - If this option is turned on, then any urls
   generated will not include a leading '/'. If this is false, all urls
   generated will include a leading '/'.
+- `rst_doctitle` (false) - Disable rst/docutils' promotion of a lone top-level
+  section title to document title (was enabled up to wok 1.1.1 - by mistake).
+  Might be optionally enabled here (or on per page basis) again - for backwards
+  compatibility.
 
 [content]: /docs/content/
 [URLs]: /docs/urls/
