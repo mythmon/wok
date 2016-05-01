@@ -36,6 +36,8 @@ For some real world examples check out these sites.
 
 -    [Oregon State University Linux Users Group](http://lug.oregonstate.edu)
      ([source](https://github.com/OSULUG/OSULUG-Website))
+-    [Source Mage GNU/Linux newsblog](http://sourcemage.org/News/)
+     ([source](https://bitbucket.org/sourcemage/website/src))
 -    [Bravo Server](http://bravoserver.org)
      ([source](https://github.com/MostAwesomeDude/bravo/tree/master/website)) -
      A custom Minecraft server written in Python.
