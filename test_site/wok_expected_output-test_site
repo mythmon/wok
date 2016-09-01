@@ -1,0 +1,6 @@
+WARNING:root:Textile not enabled.
+WARNING:root:HTML rendering relies on the BeautifulSoup library.
+WARNING:root:To use compile_sass hook, you must install libsass-python package.
+ERROR:root:It looks like the page "content/tests/dates1.mkd" is an orphan! This will probably cause problems.
+ERROR:root:It looks like the page "content/tests/dates2.mkd" is an orphan! This will probably cause problems.
+ERROR:root:It looks like the page "content/tests/dates3.mkd" is an orphan! This will probably cause problems.

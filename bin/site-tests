@@ -26,5 +26,15 @@ fi
 echo "Testing site $TEST_SITE"
 
 cd $TEST_SITE
-wok -v
-exit $?
+EXPECTED_FILE=wok_expected_output-${TEST_SITE}
+OUTPUT_FILE=wok_output_travis-ci.${TEST_SITE}.`date +%Y%m%d-%H%M%S`.txt
+wok -v > $OUTPUT_FILE 2>&1
+rc=$?
+
+if [ -n "$CMP_OUTPUT"  -a  "$CMP_OUTPUT" = "true" ]; then
+    echo "Comparing output $EXPECTED_FILE $OUTPUT_FILE"
+    diff $EXPECTED_FILE $OUTPUT_FILE
+    rc=$?
+fi
+
+exit $rc
