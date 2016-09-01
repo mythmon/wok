@@ -117,8 +117,8 @@ class Page(object):
         page.build_meta()
 
         page.engine.run_hook('page.render.pre', page)
-        page.meta['content'] = page.renderer.render(page.original)
-        page.meta['preview'] = page.renderer.render(page.original_preview)
+        page.meta['content'] = page.renderer.render(page.original, page.meta)  # the page.meta might contain renderer options...
+        page.meta['preview'] = page.renderer.render(page.original_preview, page.meta)
         page.engine.run_hook('page.render.post', page)
 
         return page

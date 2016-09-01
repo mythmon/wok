@@ -35,6 +35,7 @@ class Engine(object):
         'locale': None,
         'markdown_extra_plugins': [],
         'ignore_files': [],
+        'rst_doctitle': False,
     }
     SITE_ROOT = os.getcwd()
 
@@ -246,6 +247,12 @@ class Engine(object):
             renderers.Markdown.plugins.extend(markdown_extra_plugins)
         if hasattr(renderers, 'Markdown2'):
             renderers.Markdown2.extras.extend(markdown_extra_plugins)
+
+        # reStructuredText options
+        if hasattr(renderers, 'ReStructuredText'):
+            renderers.ReStructuredText.options.update( \
+                {'doctitle' : self.options.get('rst_doctitle', False), \
+                })
 
     def sanity_check(self):
         """Basic sanity checks."""

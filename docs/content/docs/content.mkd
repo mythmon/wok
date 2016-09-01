@@ -57,6 +57,9 @@ pages in the YAML metadata.
     configuration file will be used. ([More about managing URLs][URLs])
 -   `pagination` - An object who's presence will trigger paginating this page.
     See [pagination][] for more details.
+-   `rst_doctitle` - Re-enable rst/docutils' promotion of a lone top-level
+    section title to document title.
+    (Only for backwards compatibility - was enabled up to wok 1.1.1 - a bug?)
 
 [8601]: http://en.wikipedia.org/wiki/ISO_8601
 [URLs]: /docs/urls/
