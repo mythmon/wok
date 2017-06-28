@@ -146,6 +146,12 @@ class Page(object):
         if not self.meta:
             self.meta = {}
 
+        # source_path
+        if not 'source_path' in self.meta:
+            self.meta['source_path'] = None
+            if self.filename:
+                self.meta['source_path'] = self.filename
+
         # title
         if not 'title' in self.meta:
             if self.filename:
