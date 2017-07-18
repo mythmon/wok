@@ -107,7 +107,7 @@ try:
             #      http://docutils.sourceforge.net/docs/user/config.html#doctitle-xform
             #
             overrides = { 'doctitle_xform': page_meta.get('rst_doctitle', cls.options['doctitle']), }
-            return docutils.core.publish_parts(plain, writer=w, settings_overrides=overrides)['body']
+            return docutils.core.publish_parts(plain, writer=w, settings_overrides=overrides, source_path=page_meta['source_path'])['body']
 
     all.append(ReStructuredText)
 except ImportError:
